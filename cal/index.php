@@ -7,6 +7,6 @@ body {
 </style>
 
 <?php
-echo `./screenfetch | ./aha`
+echo `cal | ./aha`
 ?>
 
