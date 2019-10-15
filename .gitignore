@@ -2,6 +2,7 @@
 *.gif
 *.mp4
 *.png
+*.zip
 
 lab/index.php
 count/count
