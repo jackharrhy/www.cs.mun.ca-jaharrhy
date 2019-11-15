@@ -168,6 +168,19 @@ body {
   color: orange;
 }
 
+@-webkit-keyframes blink {
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes blink {
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+blink {
+  -webkit-animation: blink 2s steps(1, start) infinite;
+  animation: blink 2s steps(1, start) infinite;
+}
+
 </style>
 </head>
 <body>
@@ -182,11 +195,14 @@ body {
     <br>
 
     <hr>
+    <blink>BRING BACK THE BLINK TAG</blink>
+    <hr>
 
     <div id="linkbox">
       <p>linkbox</p>
-      <p><a href="https://tilde.team/~jack/">https://tilde.team/~jack/</a></p>
-      <p><a href="https://www.cs.mun.ca/~jaharrhy/">https://www.cs.mun.ca/~jaharrhy/</a> <span>&lt;- you are here</span></p>
+      <p><a href="https://jackharrhy.dev/">jackharrhy.dev</a></p>
+      <p><a href="https://tilde.team/~jack/">tilde.team/~jack/</a></p>
+      <p><a href="https://www.cs.mun.ca/~jaharrhy/">www.cs.mun.ca/~jaharrhy/</a> <span>&lt;- you are here</span></p>
     </div>
 
     <hr>
