@@ -1,0 +1,61 @@
+<style>
+div {
+  background-color: black;
+  color: white;
+  padding: 1rem;
+  border: 2px solid black;
+}
+</style>
+
+<h1>LabNet goodies</h1>
+
+<hr>
+
+<h2>Permitting access to files in the <code>.www</code> dir</h2>
+
+<p>for the apache user to access your files, ensure your <code>.www</code> directory has open permissions within it, set usually by:</p>
+
+<div><code><pre>
+mkdir -p ~/.www
+echo "Hello, World!" &gt; ~/.www/index.html
+chmod 755 ~/.www
+chmod 655 ~/.www/index.html
+curl "https://www.cs.mun.ca/~$USER/index.html" # produces "Hello, World!"
+</pre></code></div>
+
+<hr>
+
+<h2>PHP</h2>
+
+<p>Apache will execute <i>arbitrary</i> <code>.php</code> files in your home directory, it also seems to have quite a permissive set of extensions open, such as arbitrary commands as the apache user simply using backticks .-.</p>
+
+<div><code><pre>
+&lt;?php
+phpinfo();
+?&gt;
+</pre></code></div>
+
+<hr>
+
+<h2>Limiting access to specific LabNet users</h2>
+
+<p>example <code>.htaccess</code> file, which forces https, and uses muns internal ldap server for authentication, the <code>require</code> line being used to limit what users can access the resource</p>
+
+<div><code><pre>
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R]
+
+&lt;If &quot;%{HTTPS} == 'on'&quot;&gt;
+	AuthType Basic
+	AuthBasicProvider ldap
+	AuthName &quot;Protected Endpoint&quot;
+	AuthLDAPURL ldaps://ldap.cs.mun.ca/ou=People,ou=CSMath,dc=mun,dc=ca STARTTLS
+	require user jaharrhy johndoe janedoe # ...
+&lt;/If&gt;
+</pre></code></div>
+
+<p>throw it in a directory and boom, mun auth!</p>
+
+<p>NOTE: since the files are likely set to be visible to all users within labnet, the files can still be accessed quite easily by others navigating muns internal directory, but ofc. using this method means you should avoid public web scraping</p>
+
