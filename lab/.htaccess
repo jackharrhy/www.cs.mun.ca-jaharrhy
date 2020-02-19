@@ -3,10 +3,10 @@ RewriteCond %{HTTPS} off
 RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R]
 
 <If "%{HTTPS} == 'on'">
-	AuthType Basic
-	AuthBasicProvider ldap
-	AuthName "Protected Endpoint"
-	AuthLDAPURL ldaps://ldap.cs.mun.ca/ou=People,ou=CSMath,dc=mun,dc=ca STARTTLS
-	require user jaharrhy k47swp raflynn gjpower jmurphy17 agstacey
+  AuthType Basic
+  AuthBasicProvider ldap
+  AuthName "Protected Endpoint"
+  AuthLDAPURL ldaps://ldap.cs.mun.ca/ou=People,ou=CSMath,dc=mun,dc=ca STARTTLS
+  require user jaharrhy
 </If>
 
