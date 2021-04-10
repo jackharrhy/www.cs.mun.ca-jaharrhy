@@ -60,15 +60,11 @@
 <html>
 <head>
   <title>Jack A. Harrhy's Home Page</title>
+  <link href="./pattern.min.css" rel="stylesheet">
 <style>
-/* customizable snowflake styling */.snowflake {color: #fff;font-size: 1em;font-family: Arial;text-shadow: 0 0 1px #000;}@-webkit-keyframes snowflakes-fall{0%{top:-10%}100%{top:100%}}@-webkit-keyframes snowflakes-shake{0%{-webkit-transform:translateX(0px);transform:translateX(0px)}50%{-webkit-transform:translateX(80px);transform:translateX(80px)}100%{-webkit-transform:translateX(0px);transform:translateX(0px)}}@keyframes snowflakes-fall{0%{top:-10%}100%{top:100%}}@keyframes snowflakes-shake{0%{transform:translateX(0px)}50%{transform:translateX(80px)}100%{transform:translateX(0px)}}.snowflake{position:fixed;top:-10%;z-index:9999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;cursor:default;-webkit-animation-name:snowflakes-fall,snowflakes-shake;-webkit-animation-duration:10s,3s;-webkit-animation-timing-function:linear,ease-in-out;-webkit-animation-iteration-count:infinite,infinite;-webkit-animation-play-state:running,running;animation-name:snowflakes-fall,snowflakes-shake;animation-duration:10s,3s;animation-timing-function:linear,ease-in-out;animation-iteration-count:infinite,infinite;animation-play-state:running,running}.snowflake:nth-of-type(0){left:1%;-webkit-animation-delay:0s,0s;animation-delay:0s,0s}.snowflake:nth-of-type(1){left:10%;-webkit-animation-delay:1s,1s;animation-delay:1s,1s}.snowflake:nth-of-type(2){left:20%;-webkit-animation-delay:6s,.5s;animation-delay:6s,.5s}.snowflake:nth-of-type(3){left:30%;-webkit-animation-delay:4s,2s;animation-delay:4s,2s}.snowflake:nth-of-type(4){left:40%;-webkit-animation-delay:2s,2s;animation-delay:2s,2s}.snowflake:nth-of-type(5){left:50%;-webkit-animation-delay:8s,3s;animation-delay:8s,3s}.snowflake:nth-of-type(6){left:60%;-webkit-animation-delay:6s,2s;animation-delay:6s,2s}.snowflake:nth-of-type(7){left:70%;-webkit-animation-delay:2.5s,1s;animation-delay:2.5s,1s}.snowflake:nth-of-type(8){left:80%;-webkit-animation-delay:1s,0s;animation-delay:1s,0s}.snowflake:nth-of-type(9){left:90%;-webkit-animation-delay:3s,1.5s;animation-delay:3s,1.5s}/* Demo Purpose Only*/.demo {font-family: sans-serif;color:#fff;display: block;margin: 0 auto;padding: 15px 0;text-align: center;}.demo a{font-family: sans-serif;color: #000;}
-
-html, body{
-  cursor: url("./cursor/snowflake.ani"),url("./cursor/snowflake.gif"), auto;
-}
 
 body {
-  background-color: #CCF1FF;
+  background-color: #dcfed9;
   margin: 0;
   font-size: 1.2em;
 }
@@ -160,7 +156,8 @@ img {
 }
 
 #linkbox {
-  background-color: rgba(255,255,255,0.25);
+  background-color: white;
+  color: rgba(255,0,0,0.05);
   padding: 2em;
   width: 28.9em;
   margin: 2em auto;
@@ -168,6 +165,7 @@ img {
 }
 #linkbox p {
   margin: 0;
+  color: black;
 }
 #linkbox p:first-child {
   text-align: center;
@@ -196,6 +194,12 @@ blink {
   height: 50vh;
 }
 
+.social-distancing {
+  display: inline-block;
+  margin: 1em 0; /* distancing even for the social distancing, because we support our essential worker threads */
+  max-width: 100%;
+}
+
 </style>
 </head>
 <body>
@@ -207,29 +211,35 @@ blink {
     <p><b><a href="https://www.mun.ca/computerscience/">Department of Computer Science</a></b>
     <br>
     <b>E-mail Address:</b> <a href="mailto:jaharrhy@mun.ca">jaharrhy@mun.ca</a></p>
-    <br>
-    <hr>
+    <br />
 
+    <img class="social-distancing" src="./6m.svg" />
+
+    <br />
     <iframe id="paint" src="https://jspaint.app"></iframe>
-    <hr>
+    <br />
 
-    <blink>BRING BACK THE BLINK TAG</blink>
-    <hr>
+    <img class="social-distancing" src="./6m.svg" />
 
-    <div id="linkbox">
+    <br />
+    <div id="linkbox" class="pattern-zigzag-sm">
       <p>linkbox</p>
       <p><a href="https://jackharrhy.dev/">jackharrhy.dev</a></p>
       <p><a href="https://jack.tilde.institute/">jack.tilde.institute/</a></p>
       <p><a href="https://tilde.team/~jack/">tilde.team/~jack/</a></p>
       <p><a href="https://www.cs.mun.ca/~jaharrhy/">www.cs.mun.ca/~jaharrhy/</a> <span>&lt;- you are here</span></p>
     </div>
+    <br />
 
-    <hr>
+    <img class="social-distancing" src="./6m.svg" />
 
+    <br />
     <a href="https://muncompsci.ca"><img width="512px" src="./muncs.png"/></a>
+    <br />
 
-    <hr>
+    <img class="social-distancing" src="./6m.svg" />
 
+    <br />
     <blockquote>
       <em>minecraft is for 10 year olds</em>
       <br>
@@ -333,18 +343,29 @@ blink {
       <br>
       - <a href="./stack">Stack</a>, <i>Compsci Bois Discord</i>, <em> 2020 </em>
     </blockquote>
+    <blockquote>
+      <img src="./bar38.gif"/>
+    </blockquote>
 
-    <hr>
+    <blockquote>
+      <em>can't wait to see Mall Cop</em>
+      <br>
+      <br>
+      - <a href="https://twitter.com/psherren/status/1187364444">@psherren, <i>Twitter</i>, <em> 2009 </em></a>
+    </blockquote>
+
+    <img class="social-distancing" src="./6m.svg" />
     <iframe id="cal" src="./cal"></iframe>
 
-    <hr>
+    <img class="social-distancing" src="./6m.svg" />
     <img src="./think.png" />
 
-    <hr>
+    <img class="social-distancing" src="./6m.svg" />
     <h1>knowledge!</h1>
     <iframe id="knowledge" src="./knowledge"></iframe>
 
-    <hr>
+    <br />
+    <img class="social-distancing" src="./6m.svg" />
     <h3>Projects</h3>
     <ul>
       <li><a href="https://github.com/jackharrhy/muntrunk">muntrunk - broth'd banner served fresh as an api</a></li>
@@ -360,12 +381,12 @@ blink {
       <li><a href="https://github.com/jackharrhy/bullet">bullet - a small vanilla html5 canvas object-avoiding game</a></li>
     </ul>
 
-    <hr>
+    <img class="social-distancing" src="./6m.svg" />
     <a href="./photos"><h2>check out my photos!</h2></a>
     <br>
     <a href="./videos"><h2>or how about some videos!</h2></a>
 
-    <hr>
+    <img class="social-distancing" src="./6m.svg" />
     <h3>Esteemed Colleagues</h3>
     <ul>
       <li><a href="https://www.cs.mun.ca/~oram">Tim Oram - ~oram</a></li>
@@ -381,11 +402,12 @@ blink {
       <li><a href="https://www.cs.mun.ca/~knhardy/">Katie Hardy - ~knhardy</a></li>
     </ul>
 
-    <hr>
+    <img class="social-distancing" src="./6m.svg" />
     <p>despacito</p>
     <img src="https://www.roblox.com/Thumbs/Avatar.ashx?x=100&y=100&username=blablabla443" />
 
-    <hr>
+    <br />
+    <img class="social-distancing" src="./6m.svg" />
     <div id="enter-the-nit-zone">
       <h1>the nit zone</h1>
       <img src="./nit/unknown.png" />
@@ -394,7 +416,7 @@ blink {
       </a>
     </div>
 
-    <hr>
+    <img class="social-distancing" src="./6m.svg" />
     <div id="collarbone-softtissue">
       <h1>Collarbone Softtissue</h1>
       <img src="./collarbone-softtissue/icon.svg" />
@@ -403,7 +425,7 @@ blink {
       </a>
     </div>
 
-    <hr>
+    <img class="social-distancing" src="./6m.svg" />
     <div id="the-stack">
       <h1>the stack</h1>
       <img src="./stack/BINARY_SEARCH_ME.gif" />
@@ -412,11 +434,11 @@ blink {
       </a>
     </div>
 
-    <hr>
+    <img class="social-distancing" src="./6m.svg" />
     <h4>Hosted on the following beast:</h4>
     <iframe id="screenfetch" src="./screenfetch"></iframe>
 
-    <hr>
+    <img class="social-distancing" src="./6m.svg" />
     <img src="./construction.gif" />
     <em>
     <h5> 
@@ -430,12 +452,10 @@ blink {
   <div id="void-spacer">
     <div class="void-div">
       <div class="void-text">
-        <h1>scroll back up</h1>
+        <h1>get away from me i am social distancing please go away i am immunocompromised <code>div</code></h1>
       </div>
     </div>
   </div>
-
-  <div class="snowflakes" aria-hidden="true"><div class="snowflake">&#x2744;</div><div class="snowflake">&#x2744;</div><div class="snowflake">&#x2744;</div><div class="snowflake">&#x2744;</div><div class="snowflake">&#x2744;</div><div class="snowflake">&#x2744;</div><div class="snowflake">&#x2744;</div><div class="snowflake">&#x2744;</div><div class="snowflake">&#x2744;</div><div class="snowflake">&#x2744;</div></div>
 </body>
 </html>
 

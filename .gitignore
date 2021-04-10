@@ -3,6 +3,7 @@
 *.mp4
 *.png
 *.zip
+*.wav
 
 lab/index.php
 count/count
