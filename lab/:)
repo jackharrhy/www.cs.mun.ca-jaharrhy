@@ -9,4 +9,3 @@ RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R]
   AuthLDAPURL ldaps://ldap.cs.mun.ca/ou=People,ou=CSMath,dc=mun,dc=ca STARTTLS
   require user jaharrhy
 </If>
-
