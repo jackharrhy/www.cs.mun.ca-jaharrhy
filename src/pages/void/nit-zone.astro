@@ -1,0 +1,87 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Back from "@components/Back.astro";
+import colabUrl from "@images/void/nit-zone/COLAB.gif";
+import fryUrl from "@images/void/nit-zone/fry4.png";
+import nitoUrl from "@images/void/nit-zone/NITO.jpg";
+import nitodUrl from "@images/void/nit-zone/NITOd.jpg";
+import fry1Url from "@images/void/nit-zone/fry1.png";
+import nitromeUrl from "@images/void/nit-zone/nitrome.gif";
+import fry2Url from "@images/void/nit-zone/fry2.png";
+import nitnitnitUrl from "@images/void/nit-zone/nitnitnitnitnitnit.jpg";
+import nittyoUrl from "@images/void/nit-zone/nittyo.gif";
+import flintUrl from "@images/void/nit-zone/flint.png";
+import colaberation from "@images/void/nit-zone/COLABERATION.gif";
+import fry3Url from "@images/void/nit-zone/fry3.png";
+import crematoriumFlicktronicsUrl from "@images/void/nit-zone/CREMATORIUM_FLICKRONICS.gif";
+import softwareUrl from "@images/void/nit-zone/software.jpg";
+---
+
+<style>
+    body {
+        margin: 0;
+        padding: 0 2rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        background-color: black;
+    }
+
+    header {
+        width: 100vw;
+        text-align: center;
+        font-family: cursive;
+        font-size: 3em;
+    }
+
+    main {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    h1,
+    h2 {
+        color: white;
+    }
+
+    p {
+        margin: 0;
+        color: black;
+    }
+
+    h2 {
+        opacity: 0.2;
+    }
+
+    img {
+        margin: 1em;
+        max-width: 100vw;
+    }
+</style>
+
+<Layout title="jos">
+    <Back href="../../" />
+    <header>
+        <h1>welcome to the nit zone</h1>
+        <h2>please leave your shoes at the door do not bring dirt into here i just cleaned it like five minutes ago
+            thanks enjoy</h2>
+    </header>
+    <main>
+        <img src={colabUrl} />
+        <img src={fryUrl} />
+        <img src={nitoUrl} />
+        <img src={nitodUrl} />
+        <img src={fry1Url} />
+        <img src={nitromeUrl} />
+        <img src={fry2Url} />
+        <img src={nitnitnitUrl} />
+        <img src={nittyoUrl} />
+        <img src={flintUrl} />
+        <img src={colaberation} />
+        <img src={fry3Url} />
+        <img src={crematoriumFlicktronicsUrl} />
+        <img src={softwareUrl} />
+    </main>
+</Layout>

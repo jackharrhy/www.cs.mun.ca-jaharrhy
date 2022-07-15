@@ -1,0 +1,78 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Myself from "@components/Myself.astro";
+import EsteemedColleagues from "@components/EsteemedColleagues.astro";
+import Linkbox from "@components/Linkbox.astro";
+import Projects from "@components/Projects.astro";
+---
+
+<style>
+	body {
+		display: flex;
+		background-color: #fdf2fe;
+	}
+
+	main {
+		margin: 1rem auto;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.created-modified {
+		font-style: italic;
+	}
+
+	.group1 {
+		display: grid;
+		margin: 2rem;
+		grid-template-columns: 23rem 35rem;
+		grid-template-rows: 10rem 1fr;
+		gap: 2rem;
+		grid-template-areas:
+			"colleagues linkbox"
+			"colleagues projects";
+	}
+
+	.linkbox,
+	.projects,
+	.colleagues {
+		display: flex;
+	}
+
+	.linkbox {
+		grid-area: linkbox;
+	}
+
+	.projects {
+		grid-area: projects;
+	}
+
+	.colleagues {
+		grid-area: colleagues;
+	}
+</style>
+
+<Layout title="~jaharrhy - labnet garden">
+	<main>
+		<Myself />
+		<div class="group1">
+			<div class="colleagues">
+				<EsteemedColleagues />
+			</div>
+			<div class="linkbox">
+				<Linkbox />
+			</div>
+			<div class="projects">
+
+				<Projects />
+			</div>
+		</div>
+		<div class="created-modified">
+			<h5>
+				Created: April 9th, 2019
+				<br>
+				Last Modified: July 14th, 2022
+			</h5>
+		</div>
+	</main>
+</Layout>

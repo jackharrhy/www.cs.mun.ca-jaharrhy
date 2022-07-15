@@ -1,0 +1,63 @@
+---
+import Back from "@components/Back.astro";
+import Layout from "@layouts/Layout.astro";
+---
+
+<style>
+    body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0 2.5rem;
+        height: 100%;
+        color: lime;
+        background-color: black;
+    }
+
+    a {
+        margin-bottom: 0.5rem;
+        color: limegreen;
+        font-size: 1.4rem;
+    }
+
+    p {
+        margin: 0.35rem 0;
+    }
+
+    h1 {
+        margin: 0;
+    }
+
+    .container {
+        min-width: 30%;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+    }
+
+    header {
+        margin: 1.5rem 0;
+    }
+
+    main {
+        display: flex;
+        flex-direction: column;
+    }
+</style>
+
+<Layout title="void">
+    <Back />
+    <div class="container">
+        <header>
+            <h1>vơ̵̘̖̈́id</h1>
+            <p>welcome to the void̴̼̑̽</p>
+            <p>there is little structure to the void</p>
+            <p>but there is still void</p>
+        </header>
+        <main>
+            <a href="./jos/">jos</a>
+            <a href="./nit-zone/">nit zone</a>
+            <a href="./stuff-for-pages-like-this/">stuff for pages like this</a>
+        </main>
+    </div>
+</Layout>
