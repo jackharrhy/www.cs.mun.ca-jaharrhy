@@ -4,6 +4,7 @@ import Myself from "@components/Myself.astro";
 import EsteemedColleagues from "@components/EsteemedColleagues.astro";
 import Linkbox from "@components/Linkbox.astro";
 import Projects from "@components/Projects.astro";
+import Quotes from "@components/Quotes.astro";
 ---
 
 <style>
@@ -37,6 +38,9 @@ import Projects from "@components/Projects.astro";
 	.projects,
 	.colleagues {
 		display: flex;
+		flex-direction: column;
+		justify-content: space-around;
+		gap: 2rem;
 	}
 
 	.linkbox {
@@ -49,6 +53,23 @@ import Projects from "@components/Projects.astro";
 
 	.colleagues {
 		grid-area: colleagues;
+		flex-direction: column;
+	}
+
+	.to-void {
+		height: 100%;
+		background-color: black;
+		color: limegreen;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border: 10px inset rgba(255, 255, 255, 0.75);
+	}
+
+	.to-void p {
+		margin: 0;
+		text-align: center;
+		font-size: 1.5rem;
 	}
 </style>
 
@@ -58,15 +79,18 @@ import Projects from "@components/Projects.astro";
 		<div class="group1">
 			<div class="colleagues">
 				<EsteemedColleagues />
+				<a href="./void/" class="to-void">
+					<p>enter the void</p>
+				</a>
 			</div>
 			<div class="linkbox">
 				<Linkbox />
 			</div>
 			<div class="projects">
-
 				<Projects />
 			</div>
 		</div>
+		<Quotes />
 		<div class="created-modified">
 			<h5>
 				Created: April 9th, 2019
