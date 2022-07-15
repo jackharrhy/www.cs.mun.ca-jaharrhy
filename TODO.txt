@@ -31,3 +31,4 @@
 - [ ] created / last modified footer
 - [ ] scroll down to the void
 - [ ] the bottom of page void
+- [ ] way to handle large assets better
