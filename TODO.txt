@@ -1,34 +1,60 @@
+DONE
+
 - [x] header of self
 - [x] esteemed colleagues 
 - [x] jos
 - [x] the nit zone
-- [ ] cuppa icon
-- [ ] cuppa page
-- [ ] bepis rock
-- [ ] 100 grandmas button
-- [ ] ms paint
-- [ ] linkbox
-- [ ] hit counter
-- [ ] way to get to muncs homepage
-- [ ] truth page
-- [ ] way to get to truth page
-- [ ] quotes
-- [ ] calendar
-- [ ] thinkpad wojack
-- [ ] knowledge
-- [ ] punch the keys web component
-- [ ] projects
-- [ ] photos page
-- [ ] videos page
-- [ ] despacito roblox char
-- [ ] link to the nit zone
-- [ ] collarbone softtissue page
-- [ ] link to collarbone softtissue page
-- [ ] the stack page
-- [ ] link to the stack page
-- [ ] hosted on the following beast
-- [ ] under construct footer
-- [ ] created / last modified footer
+- [x] linkbox
+- [x] truth page
+- [x] created / last modified footer
+- [x] under construct footer
+- [x] quotes
+- [x] link to the stack page
+- [x] the stack page
+- [x] link to cuppa
+- [x] way to get to muncs homepage
+- [x] cuppa page
+- [x] despacito roblox image
+- [x] collarbone softtissue page
+- [x] link to collarbone softtissue page
+
+WIP
+
+- [~] stuff for sites like this
+
+HOMEPAGE
+
 - [ ] scroll down to the void
 - [ ] the bottom of page void
+
+STANDALONE PAGES
+
+- [ ] photos page
+- [ ] videos page
+
+PHP THINGS
+- [ ] hit counter
+- [ ] calendar
+- [ ] hosted on the following beast
+
+RANDOM THINGS IN NEED OF A HOME
+
+- [ ] 100 grandmas button
+- [ ] old void resources
+- [ ] bepis rock
+- [ ] punch the keys web component
+- [ ] ms paint
+- [ ] thinkpad wojack
+- [ ] projects
+- [ ] knowledge
+
+IDEAS
+
+- [ ] rejig of collarbone softtissue to be web-based
+- [ ] webring
+- [ ] gba dithered thumbnails on the void page
+- [ ] more things need hover states
+
+META
+
 - [ ] way to handle large assets better

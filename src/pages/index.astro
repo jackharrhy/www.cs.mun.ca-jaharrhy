@@ -4,7 +4,9 @@ import Myself from "@components/Myself.astro";
 import EsteemedColleagues from "@components/EsteemedColleagues.astro";
 import Linkbox from "@components/Linkbox.astro";
 import Projects from "@components/Projects.astro";
-import Quotes from "@components/Quotes.astro";
+import underConstructionUrl from "@images/construction/under-construction-2.gif";
+import cuppaUrl from "@images/jacks-cuppa/cuppa.png";
+import muncsUrl from "@images/muncs/muncs.png";
 ---
 
 <style>
@@ -19,19 +21,16 @@ import Quotes from "@components/Quotes.astro";
 		flex-direction: column;
 	}
 
-	.created-modified {
-		font-style: italic;
+	.group {
+		display: flex;
+		margin: 2rem;
+		gap: 1.5rem;
 	}
 
-	.group1 {
-		display: grid;
-		margin: 2rem;
-		grid-template-columns: 23rem 35rem;
-		grid-template-rows: 10rem 1fr;
-		gap: 2rem;
-		grid-template-areas:
-			"colleagues linkbox"
-			"colleagues projects";
+	.right {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
 	}
 
 	.linkbox,
@@ -40,57 +39,127 @@ import Quotes from "@components/Quotes.astro";
 		display: flex;
 		flex-direction: column;
 		justify-content: space-around;
-		gap: 2rem;
+		gap: 1.5rem;
 	}
 
-	.linkbox {
-		grid-area: linkbox;
+	.to {
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 
-	.projects {
-		grid-area: projects;
+	.to p {
+		margin: 0.5rem 0;
+		text-align: center;
+		font-size: 1.25rem;
 	}
 
-	.colleagues {
-		grid-area: colleagues;
-		flex-direction: column;
+	.to-quotes {
+		background-color: pink;
+		color: aliceblue;
+		text-decoration: none;
+		text-shadow: .1rem .1rem 0 salmon;
+		font-weight: 900;
+		box-shadow: .25rem .25rem 0 salmon;
 	}
 
 	.to-void {
 		height: 100%;
 		background-color: black;
 		color: limegreen;
-		display: flex;
-		align-items: center;
-		justify-content: center;
 		border: 10px inset rgba(255, 255, 255, 0.75);
 	}
 
-	.to-void p {
+	.links {
+		display: flex;
+		justify-content: space-around;
+		height: 5rem;
+		padding: .25rem;
+	}
+
+	.links a {
+		display: contents;
+		color: black;
+	}
+
+	.link {
+		display: flex;
+		max-width: 12rem;
+		align-items: center;
+		gap: .5rem;
+	}
+
+	.links img {
+		height: 100%;
+	}
+
+	.to-cuppa {
+		font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+	}
+
+	.despacito {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		margin: 0 0 1rem 0;
+	}
+
+	.despacito p {
 		margin: 0;
-		text-align: center;
-		font-size: 1.5rem;
+	}
+
+	.construction {
+		width: 24rem;
+	}
+
+	.created-modified {
+		font-style: italic;
 	}
 </style>
 
 <Layout title="~jaharrhy - labnet garden">
 	<main>
 		<Myself />
-		<div class="group1">
-			<div class="colleagues">
-				<EsteemedColleagues />
-				<a href="./void/" class="to-void">
-					<p>enter the void</p>
-				</a>
+		<div class="group">
+			<div class="left">
+				<div class="colleagues">
+					<a href="./quotes/" class="to to-quotes">
+						<p>quotes</p>
+					</a>
+					<EsteemedColleagues />
+					<a href="./void/" class="to to-void">
+						<p>enter the void</p>
+					</a>
+				</div>
 			</div>
-			<div class="linkbox">
-				<Linkbox />
-			</div>
-			<div class="projects">
-				<Projects />
+			<div class="right">
+				<div class="linkbox">
+					<Linkbox />
+				</div>
+				<div class="links">
+					<a href="./jacks-cuppa">
+						<div class="link to-cuppa">
+							<img src={cuppaUrl} />
+							<p>jacks cuppa</p>
+						</div>
+					</a>
+					<a href="https://muncompsci.ca/">
+						<div class="link to-muncs">
+							<img src={muncsUrl} />
+							<p>muncs</p>
+						</div>
+					</a>
+				</div>
+				<div class="projects">
+					<Projects />
+				</div>
 			</div>
 		</div>
-		<Quotes />
+		<div class="despacito">
+			<img src="https://www.roblox.com/headshot-thumbnail/image?userId=8644178&width=60&height=60&format=png" />
+			<p>despacito</p>
+		</div>
+		<img class="construction" src={underConstructionUrl} />
 		<div class="created-modified">
 			<h5>
 				Created: April 9th, 2019
