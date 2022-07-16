@@ -7,6 +7,7 @@ import Projects from "@components/Projects.astro";
 import underConstructionUrl from "@images/construction/under-construction-2.gif";
 import cuppaUrl from "@images/jacks-cuppa/cuppa.png";
 import muncsUrl from "@images/muncs/muncs.png";
+import Knowledge from "@components/Knowledge.astro";
 ---
 
 <style>
@@ -97,6 +98,10 @@ import muncsUrl from "@images/muncs/muncs.png";
 		font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 	}
 
+	.knowledge {
+		margin-bottom: 1rem;
+	}
+
 	.despacito {
 		display: flex;
 		align-items: center;
@@ -154,6 +159,9 @@ import muncsUrl from "@images/muncs/muncs.png";
 					<Projects />
 				</div>
 			</div>
+		</div>
+		<div class="knowledge">
+			<Knowledge />
 		</div>
 		<div class="despacito">
 			<img src="https://www.roblox.com/headshot-thumbnail/image?userId=8644178&width=60&height=60&format=png" />
