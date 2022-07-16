@@ -17,6 +17,8 @@ DONE
 - [x] despacito roblox image
 - [x] collarbone softtissue page
 - [x] link to collarbone softtissue page
+- [x] knowledge
+- [x] projects
 
 WIP
 
@@ -45,8 +47,6 @@ RANDOM THINGS IN NEED OF A HOME
 - [ ] punch the keys web component
 - [ ] ms paint
 - [ ] thinkpad wojack
-- [ ] projects
-- [ ] knowledge
 
 IDEAS
 

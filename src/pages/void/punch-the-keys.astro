@@ -1,0 +1,63 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Back from "@components/Back.astro";
+---
+
+<script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.26/Tone.js"></script>
+<script type="module" crossorigin src="https://evnwttn.github.io/punch-the-keys/ptk.js"></script>
+
+<style>
+    body {
+        margin: 0 1rem;
+    }
+
+    * {
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        text-align: center;
+    }
+
+    h1 {
+        margin: .25rem 0;
+    }
+
+    p {
+        margin: .5rem 0;
+    }
+
+    #desktop,
+    #mobile {
+        display: none;
+    }
+
+    #main {
+        padding: 2rem;
+    }
+
+    #ui {
+        position: initial;
+    }
+
+    #ptk {
+        margin: 0 auto;
+        min-width: 1240px;
+        max-width: 1240px;
+    }
+</style>
+
+<Layout title="punch the keys">
+    <Back />
+    <header>
+        <h1>punch the keys</h1>
+        <a href="https://github.com/evnwttn/punch-the-keys">
+            <p>https://github.com/evnwttn/punch-the-keys</p>
+        </a>
+        <p>a wonderful web component built by <a href="https://github.com/evnwttn/punch-the-keys">evnwttn</a></p>
+    </header>
+    <main>
+        <button id="desktop"></button>
+        <button id="mobile"></button>
+        <div id="ptk">
+            <punch-the-keys></punch-the-keys>
+        </div>
+    </main>
+</Layout>
