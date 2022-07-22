@@ -1,0 +1,62 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Back from "@components/Back.astro";
+import directUrl from "@images/void/the-stack/DIRECTIVE_INDIRECT_ONE_CHUNK_BASE.gif";
+import grepUrl from "@images/void/the-stack/GREP_MY_BTREE_KNEE.gif";
+import idleUrl from "@images/void/the-stack/DECOMPOSING_PYTHON_IDLE.gif";
+import missedUrl from "@images/void/the-stack/SO_MANY_MISSED_STACK.gif";
+import holographicUrl from "@images/void/the-stack/HOLOGRAPHIC_SORTING_STACK.gif";
+import binaryUrl from "@images/void/the-stack/BINARY_SEARCH_ME.gif";
+---
+
+<style>
+    main {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        background-color: white;
+    }
+
+    header {
+        text-align: center;
+    }
+
+    img {
+        border: 2px solid black;
+        margin: 1rem auto;
+    }
+
+    .stack-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 100%;
+    }
+</style>
+
+<Layout title="the stack">
+    <Back />
+    <header>
+        <h1>welcome to the stack</h1>
+    </header>
+    <main>
+        <div class="stack-container">
+            <img src={directUrl} />
+        </div>
+        <div class="stack-container">
+            <img src={grepUrl} />
+        </div>
+        <div class="stack-container">
+            <img src={idleUrl} />
+        </div>
+        <div class="stack-container">
+            <img src={missedUrl} />
+        </div>
+        <div class="stack-container">
+            <img src={holographicUrl} />
+        </div>
+        <div class="stack-container">
+            <img src={binaryUrl} />
+        </div>
+    </main>
+</Layout>

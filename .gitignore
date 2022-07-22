@@ -1,14 +1,8 @@
-*.jpg
-*.gif
-*.mp4
-*.png
-*.zip
-*.wav
+node_modules
+dist
 
-lab/index.php
-count/count
+src/images
+public/downloads
+public/sounds
 
-aha
-screenfetch
-
-dunnie/
+src/todo

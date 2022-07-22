@@ -1,0 +1,16 @@
+---
+export interface Props {
+    name: string;
+    username: string;
+}
+const { name, username } = Astro.props;
+---
+
+<style>
+    code {
+        color: rgba(0, 0, 0, .7);
+        padding: 0.25rem;
+    }
+</style>
+
+<li><a href={`https://www.cs.mun.ca/~${username}`}>{name} - <code>~{username}</code></a></li>

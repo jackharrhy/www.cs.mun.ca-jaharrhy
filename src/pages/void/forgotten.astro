@@ -1,0 +1,19 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Back from "@components/Back.astro";
+import oldHeadshotUrl from "@images/void/forgotten/old-headshot.jpg"
+---
+
+<style>
+</style>
+
+<Layout title="forgotten">
+    <Back />
+    <header>
+        <h1>forgotten</h1>
+        <p>assets from this site that are no longer used, but can still retain a home here</p>
+    </header>
+    <main>
+        <img src={oldHeadshotUrl} />
+    </main>
+</Layout>
