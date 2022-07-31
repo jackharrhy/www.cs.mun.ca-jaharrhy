@@ -1,11 +1,11 @@
 ---
 import headshotUrl from "@images/dither-me.png";
+import Status from "./Status.astro";
 ---
 
 <style>
     .container {
         display: flex;
-        margin: 0 auto;
         gap: 2rem;
         align-items: center;
         font-size: 0.8rem;
@@ -18,7 +18,7 @@ import headshotUrl from "@images/dither-me.png";
 </style>
 
 <div class="container">
-    <div class="image">
+    <div>
         <img src={headshotUrl} alt="me" />
     </div>
     <div class="text">

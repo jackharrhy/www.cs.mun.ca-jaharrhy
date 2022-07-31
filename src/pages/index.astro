@@ -5,10 +5,12 @@ import EsteemedColleagues from "@components/EsteemedColleagues.astro";
 import Linkbox from "@components/Linkbox.astro";
 import Projects from "@components/Projects.astro";
 import Knowledge from "@components/Knowledge.astro";
+import Status from "@components/Status.astro";
 import underConstructionUrl from "@images/construction/under-construction-2.gif";
 import cuppaUrl from "@images/jacks-cuppa/cuppa.png";
 import muncsUrl from "@images/muncs/muncs.png";
 import bonfireUrl from "@images/depth/bonfire.gif";
+import bepisRockUrl from "@images/void/bepis-rock/bepis-rock.png";
 ---
 
 <style>
@@ -19,9 +21,16 @@ import bonfireUrl from "@images/depth/bonfire.gif";
 		background-color: #fdf2fe;
 	}
 
+	header {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		padding-top: 2rem;
+	}
+
 	main {
-		padding: 1rem;
-		margin: 1rem auto;
+		padding: 0 1rem 1rem 1rem;
+		margin: 0 auto 1rem auto;
 		display: flex;
 		flex-direction: column;
 	}
@@ -78,7 +87,7 @@ import bonfireUrl from "@images/depth/bonfire.gif";
 	.links {
 		display: flex;
 		justify-content: space-around;
-		height: 5rem;
+		height: 7rem;
 		padding: .25rem;
 	}
 
@@ -122,7 +131,20 @@ import bonfireUrl from "@images/depth/bonfire.gif";
 	}
 
 	.created-modified {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
 		font-style: italic;
+	}
+
+	.created-modified img {
+		height: 1rem;
+		opacity: .1;
+		transition: all 2s ease;
+	}
+
+	.created-modified img:hover {
+		opacity: 1;
 	}
 
 	.depths-spacer {
@@ -167,19 +189,23 @@ import bonfireUrl from "@images/depth/bonfire.gif";
 
 	.depths p {
 		color: whitesmoke;
+		font-family: monospace;
 		background-color: rgba(0, 0, 0, 0.5);
 		padding: 6rem;
 		text-shadow: 2px 2px 0px slateblue;
-		font-size: 10rem;
+		font-size: 8rem;
 	}
 </style>
 
-<Layout title="~jaharrhy - labnet garden">
-	<main>
+<Layout title="~jaharrhy">
+	<header>
 		<Myself />
+	</header>
+	<main>
 		<div class="group">
 			<div class="left">
 				<div class="colleagues">
+					<Status />
 					<a href="./quotes/" class="to to-quotes">
 						<p>quotes</p>
 					</a>
@@ -226,6 +252,9 @@ import bonfireUrl from "@images/depth/bonfire.gif";
 				<br>
 				Last Modified: July 14th, 2022
 			</h5>
+			<a href="./void/bepis-rock/">
+				<img src={bepisRockUrl } />
+			</a>
 		</div>
 	</main>
 	<div class="depths-spacer">
@@ -236,6 +265,6 @@ import bonfireUrl from "@images/depth/bonfire.gif";
 		</div>
 	</div>
 	<div class="depths">
-		<p>frolic</p>
+		<p>i am error</p>
 	</div>
 </Layout>

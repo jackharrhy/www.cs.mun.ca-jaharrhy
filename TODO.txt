@@ -50,8 +50,9 @@ RANDOM THINGS IN NEED OF A HOME
 
 IDEAS
 
+- [ ] make TODO part of site
 - [ ] rejig of collarbone softtissue to be web-based
-- [ ] webring
+- [ ] webring (inspo from https://tilde.team/ring/)
 - [ ] gba dithered thumbnails on the void page
 - [ ] more things need hover states
 

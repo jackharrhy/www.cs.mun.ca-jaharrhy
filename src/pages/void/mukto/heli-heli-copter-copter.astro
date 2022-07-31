@@ -1,0 +1,81 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Back from "@components/Back.astro";
+import HeliHeliCopterCopter from "@components/HeliHeliCopterCopter";
+---
+
+<style>
+    * {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: 900;
+    }
+
+    body {
+        position: absolute;
+        margin: 0;
+        height: 100vh;
+        width: 100vw;
+        background-color: black;
+        color: white;
+    }
+
+    header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    h1,
+    p {
+        text-shadow: 2px 2px 0px black;
+    }
+
+    h1 {
+        margin: 0;
+    }
+
+    p {
+        margin: .5rem 0;
+    }
+
+    button {
+        margin: 1rem 0;
+        font-size: 2rem;
+        padding: 1rem;
+    }
+
+    #canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 100vw;
+        z-index: -1;
+    }
+
+    #helicopter {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 100vw;
+        z-index: -1;
+    }
+</style>
+
+<Layout title="Dewan Mukto - Heli Heli Copter Copter">
+    <Back />
+    <header>
+        <h1>heli heli copter copter</h1>
+        <p>by dewan mukto</p>
+        <button id="play">play</button>
+    </header>
+    <main>
+        <audio id="audio" src="../../../sounds/mukto/Dewan_Mukto_-_Heli_Heli_Copter_Copter.mp3" />
+        <canvas id="canvas" />
+        <div id="helicopter">
+            <HeliHeliCopterCopter client:only />
+        </div>
+    </main>
+</Layout>
