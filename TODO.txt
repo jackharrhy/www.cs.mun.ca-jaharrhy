@@ -1,0 +1,61 @@
+DONE
+
+- [x] header of self
+- [x] esteemed colleagues 
+- [x] jos
+- [x] the nit zone
+- [x] linkbox
+- [x] truth page
+- [x] created / last modified footer
+- [x] under construct footer
+- [x] quotes
+- [x] link to the stack page
+- [x] the stack page
+- [x] link to cuppa
+- [x] way to get to muncs homepage
+- [x] cuppa page
+- [x] despacito roblox image
+- [x] collarbone softtissue page
+- [x] link to collarbone softtissue page
+- [x] knowledge
+- [x] projects
+
+WIP
+
+- [~] stuff for sites like this
+
+HOMEPAGE
+
+- [ ] scroll down to the void
+- [ ] the bottom of page void
+
+STANDALONE PAGES
+
+- [ ] photos page
+- [ ] videos page
+
+PHP THINGS
+- [ ] hit counter
+- [ ] calendar
+- [ ] hosted on the following beast
+
+RANDOM THINGS IN NEED OF A HOME
+
+- [ ] 100 grandmas button
+- [ ] old void resources
+- [ ] bepis rock
+- [ ] punch the keys web component
+- [ ] ms paint
+- [ ] thinkpad wojack
+
+IDEAS
+
+- [ ] make TODO part of site
+- [ ] rejig of collarbone softtissue to be web-based
+- [ ] webring (inspo from https://tilde.team/ring/)
+- [ ] gba dithered thumbnails on the void page
+- [ ] more things need hover states
+
+META
+
+- [ ] way to handle large assets better

@@ -1,0 +1,126 @@
+---
+import Back from "@components/Back.astro";
+import Layout from "@layouts/Layout.astro";
+import original1Url from "@images/jacks-cuppa/cuppa_original_1.jpg";
+import katie1Url from "@images/jacks-cuppa/cuppa_katie_1.png";
+import leah1Url from "@images/jacks-cuppa/cuppa_leah_1.jpg";
+import leah2Url from "@images/jacks-cuppa/cuppa_leah_2.jpg";
+import wwormguts1Url from "@images/jacks-cuppa/cuppa_wwormguts_1.png";
+import matt1Url from "@images/jacks-cuppa/cuppa_matt_1.png";
+import jacob1Url from "@images/jacks-cuppa/cuppa_jacob_1.jpg";
+---
+
+<style>
+    html,
+    body {
+        height: 100%;
+        font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    }
+
+    body {
+        margin: 0;
+        background-color: #fbceb1;
+    }
+
+    header {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding-bottom: 1rem;
+    }
+
+    header h1,
+    header p {
+        margin: .5rem 0;
+    }
+
+    header p {
+        font-size: 1.25rem;
+    }
+
+    main div {
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    img {
+        height: 80vh;
+    }
+
+    br {
+        height: 25rem;
+        background-color: black;
+    }
+
+    #original-1 {
+        background-color: #c1a083
+    }
+
+    #katie-1 {
+        background-color: #201e1e;
+    }
+
+    #leah-1 {
+        background-color: #b8cbd7;
+    }
+
+    #leah-2 {
+        background-color: #0000fe;
+    }
+
+    #wwormguts-1 {
+        background-color: #b33e3c;
+    }
+
+    #matt-1 {
+        background-color: #f0e3d9;
+    }
+
+    #matt-1 img {
+        border: 10px solid black;
+    }
+
+    #jacob-1 {
+        background-color: black;
+    }
+</style>
+
+<Layout title="jacks cuppa">
+    <Back />
+    <header>
+        <h1>jacks cuppa</h1>
+        <p>i am a fan of tea</p>
+    </header>
+    <main>
+        <div id="original-1" class="section">
+            <img src={original1Url} />
+        </div>
+
+        <div id="katie-1" class="section">
+            <img src={katie1Url} />
+        </div>
+
+        <div id="leah-1" class="section">
+            <img src={leah1Url} />
+        </div>
+
+        <div id="leah-2" class="section">
+            <img src={leah2Url} />
+        </div>
+
+        <div id="wwormguts-1" class="section">
+            <img src={wwormguts1Url} />
+        </div>
+
+        <div id="matt-1" class="section">
+            <img src={matt1Url} />
+        </div>
+
+        <div id="jacob-1" class="section">
+            <img src={jacob1Url} />
+        </div>
+    </main>
+</Layout>
