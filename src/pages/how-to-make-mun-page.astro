@@ -1,0 +1,80 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Back from "@components/Back.astro";
+---
+
+<style>
+  body {
+    font-size: 1rem;
+    background-color: rgb(103, 200, 123);
+  }
+
+  main,
+  div {
+    display: flex;
+    flex-direction: column;
+  }
+  main {
+    margin: 2rem 0;
+    justify-content: center;
+    align-items: center;
+    font-family: monospace;
+  }
+  div {
+    gap: 1.5rem;
+  }
+  code {
+    background-color: black;
+    color: white;
+    padding: 2rem;
+  }
+
+  h1,
+  pre {
+    margin: 0;
+  }
+
+  h1 {
+    font-size: 2rem;
+    text-align: center;
+  }
+</style>
+
+<Layout title="how to make mun page">
+  <Back />
+  <main>
+    <div>
+      <h1>how to make mun page</h1>
+      <code>
+        <pre>ssh MUN_USERNAME@garfield.cs.mun.ca # ssh into the garfield server from your
+                                    # local machine (if you are using a lab machine,
+                                    # this is not required since you are already
+                                    # on labnet)
+
+                                    # this rest of the commands should occur within
+                                    # your ssh connection to garfield
+
+cd ~                                # ensure you're in your home directory
+mkdir .www                          # make the folder that'll contain web content
+chmod 711 .www                      # setup the file mode bits on that folder
+cd .www                             # enter the folder
+echo "hello, world" &gt; index.html    # create a dummy hello world file
+chmod 644 index.html                # setup the file mode bits on that folder too
+
+                                    # now make a brilliant website!
+
+chmod 711 ~                         # this step is optional,
+                                    # but your home directory also needs to have
+                                    # the executable permission bit set to 1 for
+                                    # subdirectories that are viewable, to be
+                                    # actually viewable (some people already have
+                                    # this, but not everybody)
+
+                                    # stuck?
+                                    # reach out to me:
+                                    # email -&gt; me@jackharrhy.com
+                                    # discord -&gt; &lt;i&gt;jack arthur null&lt;i&gt;#7539</pre>
+      </code>
+    </div>
+  </main>
+</Layout>
