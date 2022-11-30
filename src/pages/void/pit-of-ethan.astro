@@ -14,74 +14,75 @@ import talkUrl from "@images/void/pit-of-ethan/germptalk.gif";
 import hungiUrl from "@images/void/pit-of-ethan/hungi.png";
 import kfuzeUrl from "@images/void/pit-of-ethan/kfuze.png";
 import moodUrl from "@images/void/pit-of-ethan/mood.png";
-
 ---
 
 <style>
-    @font-face {
-        font-family: 'Doom';
-        src: url('../../fonts/RVn_Font_of_Doom_1.woff2') format('woff2');
-    }
+  @font-face {
+    font-family: "Doom";
+    src: url("/~jaharrhy/fonts/RVn_Font_of_Doom_1.woff2") format("woff2");
+  }
 
-    * {
-        font-family: Doom;
-        color: red;
+  * {
+    font-family: Doom;
+    color: red;
+  }
 
-    }
+  body {
+    background-image: url("../../images/void/pit-of-ethan/quake-wall-1.gif");
+    background-repeat: repeat;
+    filter: contrast(200%);
+  }
 
-    body {
-        background-image: url("../../images/void/pit-of-ethan/quake-wall-1.gif");
-        background-repeat: repeat;
-        filter: contrast(200%);
-    }
+  h1 {
+    text-align: center;
+    font-size: 5rem;
+  }
 
-    h1 {
-        text-align: center;
-        font-size: 5rem;
-    }
+  header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+  }
 
-    header {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 2rem;
-    }
+  main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4rem;
+    padding: 0 1rem 2rem 1rem;
+  }
 
-    main {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 4rem;
-        padding: 0 1rem 2rem 1rem;
-    }
+  main img {
+    max-width: 60vw;
+    filter: drop-shadow(0 0 0.75rem crimson);
+  }
 
-    main img {
-        max-width: 60vw;
-        filter: drop-shadow(0 0 0.75rem crimson);
-    }
-
-    main p {
-        font-size: 4rem;
-        text-align: center;
-    }
+  main p {
+    font-size: 4rem;
+    text-align: center;
+  }
 </style>
 
 <Layout title="pit of ethan">
-    <Back />
-    <header>
-        <h1>pit of ethan</h1>
-        <img src={talkUrl} />
-    </header>
-    <main>
-        <img src={consumeUrl} />
-        <img src={cursedPullUrl} />
-        <img src={elongatedUrl} />
-        <img src={geogacehUrl} />
-        <img src={noiseEnjoyUrl} />
-        <img src={hungiUrl} />
-        <img src={kfuzeUrl} />
-        <img src={moodUrl} />
-        <img src={divineUrl} />
-        <p>"I want to call a child a troglodyte someday to gauge the reaction from the youth"</p>
-    </main>
+  <Back />
+  <header>
+    <h1>pit of ethan</h1>
+    <img src={talkUrl} />
+  </header>
+  <main>
+    <img src={consumeUrl} />
+    <img src={cursedPullUrl} />
+    <img src={elongatedUrl} />
+    <img src={geogacehUrl} />
+    <img src={noiseEnjoyUrl} />
+    <img src={hungiUrl} />
+    <img src={kfuzeUrl} />
+    <img src={moodUrl} />
+    <img src={divineUrl} />
+    <p>
+      "I want to call a child a troglodyte someday to gauge the reaction from
+      the youth"
+    </p>
+  </main>
 </Layout>

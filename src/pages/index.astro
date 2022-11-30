@@ -14,257 +14,262 @@ import bepisRockUrl from "@images/void/bepis-rock/bepis-rock.png";
 ---
 
 <style>
-	body {
-		margin: 0;
-		display: flex;
-		flex-direction: column;
-		background-color: #fdf2fe;
-	}
+  body {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    background-color: #fdf2fe;
+  }
 
-	header {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		padding-top: 2rem;
-	}
+  header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 2rem;
+  }
 
-	main {
-		padding: 0 1rem 1rem 1rem;
-		margin: 0 auto 1rem auto;
-		display: flex;
-		flex-direction: column;
-	}
+  main {
+    padding: 0 1rem 1rem 1rem;
+    margin: 0 auto 1rem auto;
+    display: flex;
+    flex-direction: column;
+  }
 
-	.group {
-		display: flex;
-		margin: 2rem;
-		gap: 1.5rem;
-	}
+  .group {
+    display: flex;
+    margin: 2rem;
+    gap: 1.5rem;
+  }
 
-	.right {
-		display: flex;
-		flex-direction: column;
-		justify-content: space-between;
-	}
+  .right {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
 
-	.linkbox,
-	.projects,
-	.colleagues {
-		display: flex;
-		flex-direction: column;
-		justify-content: space-around;
-		gap: 1.5rem;
-	}
+  .linkbox,
+  .projects,
+  .colleagues {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    gap: 1.5rem;
+  }
 
-	.to {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
+  .to {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-	.to p {
-		margin: 0.5rem 0;
-		text-align: center;
-		font-size: 1.25rem;
-	}
+  .to p {
+    margin: 0.5rem 0;
+    text-align: center;
+    font-size: 1.25rem;
+  }
 
-	.to-quotes {
-		background-color: pink;
-		color: aliceblue;
-		text-decoration: none;
-		text-shadow: .1rem .1rem 0 salmon;
-		font-weight: 900;
-		box-shadow: .25rem .25rem 0 salmon;
-	}
+  .to-quotes {
+    background-color: pink;
+    color: aliceblue;
+    text-decoration: none;
+    text-shadow: 0.1rem 0.1rem 0 salmon;
+    font-weight: 900;
+    box-shadow: 0.25rem 0.25rem 0 salmon;
+  }
 
-	.to-void {
-		height: 100%;
-		background-color: black;
-		color: limegreen;
-		border: 10px inset rgba(255, 255, 255, 0.75);
-	}
+  .to-void {
+    height: 100%;
+    background-color: black;
+    color: limegreen;
+    border: 10px inset rgba(255, 255, 255, 0.75);
+  }
 
-	.links {
-		display: flex;
-		justify-content: space-around;
-		height: 7rem;
-		padding: .25rem;
-	}
+  .links {
+    display: flex;
+    justify-content: space-around;
+    height: 7rem;
+    padding: 0.25rem;
+  }
 
-	.links a {
-		display: contents;
-		color: black;
-	}
+  .links a {
+    display: contents;
+    color: black;
+  }
 
-	.link {
-		display: flex;
-		max-width: 12rem;
-		align-items: center;
-		gap: .5rem;
-	}
+  .link {
+    display: flex;
+    max-width: 12rem;
+    align-items: center;
+    gap: 0.5rem;
+  }
 
-	.links img {
-		height: 100%;
-	}
+  .links img {
+    height: 100%;
+  }
 
-	.to-cuppa {
-		font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-	}
+  .to-cuppa {
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+  }
 
-	.knowledge {
-		margin-bottom: 1rem;
-	}
+  .knowledge {
+    margin-bottom: 1rem;
+  }
 
-	.despacito {
-		display: flex;
-		align-items: center;
-		gap: 1rem;
-		margin: 0 0 1rem 0;
-	}
+  .despacito {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 0 0 1rem 0;
+  }
 
-	.despacito p {
-		margin: 0;
-	}
+  .despacito p {
+    margin: 0;
+  }
 
-	.construction {
-		width: 24rem;
-	}
+  .construction {
+    width: 24rem;
+  }
 
-	.created-modified {
-		display: flex;
-		align-items: center;
-		gap: 1rem;
-		font-style: italic;
-	}
+  .created-modified {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-style: italic;
+  }
 
-	.created-modified img {
-		height: 1rem;
-		opacity: .1;
-		transition: all 2s ease;
-	}
+  .created-modified img {
+    height: 1rem;
+    opacity: 0.1;
+    transition: all 2s ease;
+  }
 
-	.created-modified img:hover {
-		opacity: 1;
-	}
+  .created-modified img:hover {
+    opacity: 1;
+  }
 
-	.depths-spacer {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		height: 800vw;
-		background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(0, 0, 0, 1) 100%);
-	}
+  .depths-spacer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 800vw;
+    background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(0, 0, 0, 1) 100%
+    );
+  }
 
-	.bonfire {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		color: orange;
-		text-shadow: 2px 2px 0 orangered;
-		font-family: Arial, Helvetica, sans-serif;
-		font-size: 1.25rem;
-	}
+  .bonfire {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: orange;
+    text-shadow: 2px 2px 0 orangered;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.25rem;
+  }
 
-	.bonfire img {
-		margin-bottom: 1rem;
-	}
+  .bonfire img {
+    margin-bottom: 1rem;
+  }
 
-	.bonfire p {
-		margin: .5rem 0;
-	}
+  .bonfire p {
+    margin: 0.5rem 0;
+  }
 
-	.depths {
-		height: 100vh;
-		padding: 2rem;
-		background-color: black;
-		background-image: url("../images/depth/pretty-flower.gif");
-		background-repeat: repeat;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
+  .depths {
+    height: 100vh;
+    padding: 2rem;
+    background-color: black;
+    background-image: url("../images/depth/pretty-flower.gif");
+    background-repeat: repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
 
-
-
-	.depths p {
-		color: whitesmoke;
-		font-family: monospace;
-		background-color: rgba(0, 0, 0, 0.5);
-		padding: 6rem;
-		text-shadow: 2px 2px 0px slateblue;
-		font-size: 8rem;
-	}
+  .depths p {
+    color: whitesmoke;
+    font-family: monospace;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 6rem;
+    text-shadow: 2px 2px 0px slateblue;
+    font-size: 8rem;
+  }
 </style>
 
 <Layout title="~jaharrhy">
-	<header>
-		<Myself />
-	</header>
-	<main>
-		<div class="group">
-			<div class="left">
-				<div class="colleagues">
-					<Status />
-					<a href="./quotes/" class="to to-quotes">
-						<p>quotes</p>
-					</a>
-					<EsteemedColleagues />
-					<a href="./void/" class="to to-void">
-						<p>enter the void</p>
-					</a>
-				</div>
-			</div>
-			<div class="right">
-				<div class="linkbox">
-					<Linkbox />
-				</div>
-				<div class="links">
-					<a href="./jacks-cuppa">
-						<div class="link to-cuppa">
-							<img src={cuppaUrl} />
-							<p>jacks cuppa</p>
-						</div>
-					</a>
-					<a href="https://muncompsci.ca/">
-						<div class="link to-muncs">
-							<img src={muncsUrl} />
-							<p>muncs</p>
-						</div>
-					</a>
-				</div>
-				<div class="projects">
-					<Projects />
-				</div>
-			</div>
-		</div>
-		<div class="knowledge">
-			<Knowledge />
-		</div>
-		<div class="despacito">
-			<img src="https://www.roblox.com/headshot-thumbnail/image?userId=8644178&width=60&height=60&format=png" />
-			<p>despacito</p>
-		</div>
-		<img class="construction" src={underConstructionUrl} />
-		<div class="created-modified">
-			<h5>
-				Created: April 9th, 2019
-				<br>
-				Last Modified: July 14th, 2022
-			</h5>
-			<a href="./void/bepis-rock/">
-				<img src={bepisRockUrl } />
-			</a>
-		</div>
-	</main>
-	<div class="depths-spacer">
-		<div class="bonfire">
-			<img src={bonfireUrl} />
-			<p>hello travler, it seems you have been scrolling some time</p>
-			<p>please take a rest to heal</p>
-		</div>
-	</div>
-	<div class="depths">
-		<p>i am error</p>
-	</div>
+  <header>
+    <Myself />
+  </header>
+  <main>
+    <div class="group">
+      <div class="left">
+        <div class="colleagues">
+          <Status />
+          <a href="./quotes/" class="to to-quotes">
+            <p>quotes</p>
+          </a>
+          <EsteemedColleagues />
+          <a href="./void/" class="to to-void">
+            <p>enter the void</p>
+          </a>
+        </div>
+      </div>
+      <div class="right">
+        <div class="linkbox">
+          <Linkbox />
+        </div>
+        <div class="links">
+          <a href="./jacks-cuppa">
+            <div class="link to-cuppa">
+              <img src={cuppaUrl} />
+              <p>jacks cuppa</p>
+            </div>
+          </a>
+          <a href="https://muncompsci.ca/">
+            <div class="link to-muncs">
+              <img src={muncsUrl} />
+              <p>muncs</p>
+            </div>
+          </a>
+        </div>
+        <div class="projects">
+          <Projects />
+        </div>
+      </div>
+    </div>
+    <div class="knowledge">
+      <Knowledge />
+    </div>
+    <div class="despacito">
+      <img
+        src="https://www.roblox.com/headshot-thumbnail/image?userId=8644178&width=60&height=60&format=png"
+      />
+      <p>despacito</p>
+    </div>
+    <img class="construction" src={underConstructionUrl} />
+    <div class="created-modified">
+      <h5>
+        Created: April 9th, 2019
+        <br />
+        Last Modified: July 14th, 2022
+      </h5>
+      <a href="./void/bepis-rock/">
+        <img src={bepisRockUrl} />
+      </a>
+    </div>
+  </main>
+  <div class="depths-spacer">
+    <div class="bonfire">
+      <img src={bonfireUrl} />
+      <p>hello travler, it seems you have been scrolling some time</p>
+      <p>please take a rest to heal</p>
+    </div>
+  </div>
+  <div class="depths">
+    <p>i am error</p>
+  </div>
 </Layout>

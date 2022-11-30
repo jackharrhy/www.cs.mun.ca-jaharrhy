@@ -4,27 +4,30 @@ import Status from "./Status.astro";
 ---
 
 <style>
-    .container {
-        display: flex;
-        gap: 2rem;
-        align-items: center;
-        font-size: 0.8rem;
-    }
+  .container {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    font-size: 0.8rem;
+  }
 
-    img {
-        height: 180px;
-        border: 2px dashed blue;
-    }
+  img {
+    height: 180px;
+    border: 2px dashed blue;
+  }
 </style>
 
 <div class="container">
-    <div>
-        <img src={headshotUrl} alt="me" />
-    </div>
-    <div class="text">
-        <h1>Jack Arthur Harrhy</h1>
-        <b>Student</b>
-        <p><a href="https://www.mun.ca/computerscience/">Department of Computer Science</a></p>
-        <p>E-mail Address: <a href="mailto:jaharrhy@mun.ca">jaharrhy@mun.ca</a></p>
-    </div>
+  <div>
+    <img src={headshotUrl} alt="me" />
+  </div>
+  <div class="text">
+    <h1>Jack Arthur Harrhy</h1>
+    <b>Student</b>
+    <p>
+      <a href="https://www.mun.ca/computerscience/"
+        >Department of Computer Science</a>
+    </p>
+    <p>E-mail Address: <a href="mailto:jaharrhy@mun.ca">jaharrhy@mun.ca</a></p>
+  </div>
 </div>
