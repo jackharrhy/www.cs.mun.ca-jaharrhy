@@ -272,7 +272,7 @@ this list will quickly become a lot less long as people drop off, but it'll give
 >
 > just how i like it
 
-[[apreynolds1989/AdventOfCode2022]](https://github.com/apreynolds1989/AdventOfCode2022/blob/main/src/Day1/index.ts)
+[[apreynolds1989/AdventOfCode2022]](https://github.com/apreynolds1989/AdventOfCode2022/blob/main/src/Day1/index.ts) typescript
 
 > a nice little typescript solution, good usage of utility functions to make the actual problem solving step _clean_
 >

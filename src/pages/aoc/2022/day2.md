@@ -256,7 +256,7 @@ even those who did the problem later but still pretty early in the morning have 
 > which for this problem isn't a bad strat
 
 [[STollenaar/AdventOfCode2022]](https://github.com/STollenaar/AdventOfCode2022/blob/main/cmd/day2/main.go) golang
->
+
 > clean little go maps and structs again
 >
 > setup means problem is smol :)
@@ -323,7 +323,7 @@ even those who did the problem later but still pretty early in the morning have 
 
 > just mapping the input lines to the resulting score, so _technically_ brute force, but probably the most clean brute force here!
 
-[[apreynolds1989/AdventOfCode2022]](https://github.com/apreynolds1989/AdventOfCode2022/blob/main/src/Day2/index.ts)
+[[apreynolds1989/AdventOfCode2022]](https://github.com/apreynolds1989/AdventOfCode2022/blob/main/src/Day2/index.ts) typescript
 
 > quite switch-casey-brute-forcey, but a solution nonetheless!
 
