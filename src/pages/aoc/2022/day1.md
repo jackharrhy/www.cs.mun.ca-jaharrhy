@@ -114,17 +114,19 @@ this year i have _quite_ a few places that are all actively taking part in adven
 
 most of these have their own leaderboard, and due to staying up until 1:30am to solve the problem, i managed to snag first on ctsnl & ndev, but due to the muncs leaderboard being filled with late night tryhards, even though i took less than 10 minutes to solve, I was 4/5th on that leaderboard
 
-i know placement means nothing, and that sacrificing sleep isn't worthwhile, i just find the first few days of Advent of Code when:
+i know placement means nothing, and that sacrificing sleep isn't worthwhile, i just find the first few days of advent of code are quite fun, when:
 
 - more people are taking part, since its more approachable, and people will fall off quickly over the next few days
 
 - the problems can be solved before 2am, so _some_ sleep is acquired
 
+i will go to bed better for the rest of this month i swear :)
+
 ---
 
 ### others
 
-while this is my ramblings, i'm thinking i can also use this place to advertise other peoples solutions to advent of code problems
+while this is my ramblings, i'm thinking i can also use this place to advertise other peoples solutions to problems, adding in my own bit of (potentially cheeky) commentary as well
 
 this list will quickly become a lot less long as people drop off, but it'll give me more chance to dig into the specifics of each persons solution as the days progress and become more complex, because at the moment most solutions look _quite_ similar
 
@@ -253,3 +255,37 @@ this list will quickly become a lot less long as people drop off, but it'll give
 [[joel1842/advent-of-code-2022]](https://github.com/joel1842/advent-of-code-2022/blob/main/day1/day1.py) python
 
 > joel out here gold golfin' with the bulk of the logic in a one liner!
+
+[[canetoads.ca/day1.js.html]](https://canetoads.ca/day1.js.html) javascript
+
+> an interesting deployment method by nathan over from ndev
+>
+> with an even better way of how i'm noticed of his solutions:
+>
+> > canetoads.ca/rss.rss
+>
+> an _rss_ feed
+>
+> truly living in the future
+>
+> the solution itself is simple and functional
+>
+> just how i like it
+
+[[apreynolds1989/AdventOfCode2022]](https://github.com/apreynolds1989/AdventOfCode2022/blob/main/src/Day1/index.ts)
+
+> a nice little typescript solution, good usage of utility functions to make the actual problem solving step _clean_
+>
+> ```js
+> getThreeHighest(createNestedArr(readFile(file))));
+> ```
+>
+> this is one of those cases where i'd recommend someone to using the pipe operator, if only [[this proposal]](https://github.com/tc39/proposal-pipeline-operator) becomes stable / later stage eventually
+>
+> ```js
+> readFile(file) |> createNestedArr() |> getThreeHighest()
+> ```
+>
+> just imagine if the above was valid syntax!
+>
+> maybe one day

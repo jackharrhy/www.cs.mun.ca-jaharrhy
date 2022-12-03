@@ -319,6 +319,14 @@ even those who did the problem later but still pretty early in the morning have 
 >
 > even a summary at the end, very introspective
 
+[[canetoads.ca/day2.js.html]](https://canetoads.ca/day2.js.html) javascript
+
+> just mapping the input lines to the resulting score, so _technically_ brute force, but probably the most clean brute force here!
+
+[[apreynolds1989/AdventOfCode2022]](https://github.com/apreynolds1989/AdventOfCode2022/blob/main/src/Day2/index.ts)
+
+> quite switch-casey-brute-forcey, but a solution nonetheless!
+
 ---
 
 if you want to have your repo added for me to make a note of / talk about here (or have you repo removed), reach out:
