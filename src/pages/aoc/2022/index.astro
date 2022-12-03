@@ -1,0 +1,31 @@
+---
+import AdventOfCodeLayout from "@layouts/AdventOfCodeLayout.astro";
+
+const days = [1, 2];
+---
+
+<style>
+  h2 {
+    font-size: 2rem;
+    text-align: center;
+  }
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 1.5rem;
+    text-align: center;
+  }
+</style>
+
+<AdventOfCodeLayout year={2022} title="advent of code 2022">
+  <ul>
+    {
+      days.map((day) => (
+        <a href={`./day${day}/`}>
+          <li>[day {day}]</li>
+        </a>
+      ))
+    }
+  </ul>
+</AdventOfCodeLayout>

@@ -1,0 +1,120 @@
+---
+import Back from "@components/Back.astro";
+import Feed from "@components/Feed.astro";
+
+export interface Props {
+  title: string;
+  year?: number;
+}
+
+let { title, year } = Astro.props as Props;
+
+title = `jacks aoc ramble - ${title}`;
+---
+
+<style is:global>
+  * {
+    box-sizing: border-box;
+    font-family: Hack, monospace;
+  }
+
+  :root {
+    --bg: #0f0f23;
+    --text: #cccccc;
+    --terminal: #009900;
+    --terminal-hover: #99ff99;
+    font-size: 19px;
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--text);
+  }
+
+  strong {
+    text-shadow: 0 0 5px white;
+  }
+
+  h2,
+  h2,
+  strong {
+    font-weight: 500;
+  }
+
+  h1 {
+    font-size: 1.3rem;
+  }
+
+  h2 {
+    font-size: 1.7rem;
+  }
+
+  header {
+    text-align: center;
+    margin: 2rem 0;
+  }
+
+  a {
+    text-decoration: none;
+    color: var(--terminal);
+  }
+  a:hover,
+  a:focus {
+    color: var(--terminal-hover);
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  main {
+    margin: 0 auto;
+    max-width: 40rem;
+  }
+
+  .back {
+    background-color: rgba(0, 0, 0, 0.3);
+    border: 3px inset var(--terminal);
+  }
+</style>
+
+<style>
+  h1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  header a {
+    display: inline-flex;
+  }
+</style>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/~jaharrhy/favicon.png" />
+    <link
+      rel="stylesheet"
+      href="//cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack-subset.css"
+    />
+    <title>{title}</title>
+  </head>
+
+  <body>
+    <Back />
+    <header>
+      <h1>
+        jack's <strong>advent of code {year ? ` ${year}` : ""}</strong>
+        ramblings
+        <a href={`${import.meta.env.BASE_URL}aoc/feed.xml`}>
+          <Feed />
+        </a>
+      </h1>
+    </header>
+    <main>
+      <slot />
+    </main>
+  </body>
+</html>
