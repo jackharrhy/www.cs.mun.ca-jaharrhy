@@ -150,7 +150,7 @@ this list will quickly become a lot less long as people drop off, but it'll give
 
 [[nint8835/AdventOfCode2022]](https://github.com/nint8835/AdventOfCode2022/blob/main/Day1/Day1.fsx) f#
 
-> riley going in with the F# again this year! nice to have another functional friend :)
+> riley going in with the f# again this year! nice to have another functional friend :)
 
 [[hamzahap/AdventOfCode2022]](https://docs.google.com/spreadsheets/d/1ZR69KuO6MWHJGjoglgsRJs4t9Tm2CC874XAW3645LIk/edit?usp=sharing) sheets
 

@@ -311,6 +311,14 @@ even those who did the problem later but still pretty early in the morning have 
 
 > brute force, but match statement usage, so nice
 
+[[ecumene/advent_of_code]](https://github.com/ecumene/advent_of_code/blob/main/2022/notebooks/day2.ipynb) python notebook
+
+> a little bit of ai generated art of a man tending to a garden integrated into the notebook, we love to see it
+>
+> brute force, but spread over many compact cells
+>
+> even a summary at the end, very introspective
+
 ---
 
 if you want to have your repo added for me to make a note of / talk about here (or have you repo removed), reach out:
