@@ -238,11 +238,15 @@ even those who did the problem later but still pretty early in the morning have 
 >
 > nice
 
-[[hamzahap/AdventOfCode2022]](https://github.com/hamzahap/AdventOfCode2022/blob/main/Day%202/AOC22Day2.xlsx) excel
+[[hamzahap/AdventOfCode2022]](https://docs.google.com/spreadsheets/d/14X_347m2Yjt-7KavMA145m2vRu2luDlzrg73sLIsmOU/edit) sheets
 
-> i wish github could preview excel files in a table because i am simply not spending the time required to pull this down and view
+> ~~i wish github could preview excel files in a table because i am simply not spending the time required to pull this down and view~~
 >
-> however, keep it up hamzah
+> ~~however,~~ keep it up hamzah
+>
+> edit: turns out it is not being done in excel, but actually being done in sheets and being exported to excel such that there can exist files in the repo
+>
+> fixed :)
 
 [[TheCrypticCanadian/advent-of-code-2022]](https://github.com/TheCrypticCanadian/advent-of-code-2022/tree/main/2) python
 

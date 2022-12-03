@@ -152,7 +152,7 @@ this list will quickly become a lot less long as people drop off, but it'll give
 
 > riley going in with the F# again this year! nice to have another functional friend :)
 
-[[hamzahap/AdventOfCode2022]](https://github.com/hamzahap/AdventOfCode2022/blob/main/Day%201/AoC22Day1.xlsx) excel
+[[hamzahap/AdventOfCode2022]](https://docs.google.com/spreadsheets/d/1ZR69KuO6MWHJGjoglgsRJs4t9Tm2CC874XAW3645LIk/edit?usp=sharing) sheets
 
 > hamzah pls
 >
