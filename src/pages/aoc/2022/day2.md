@@ -218,7 +218,7 @@ even those who did the problem later but still pretty early in the morning have 
 
 ### others
 
-[[Mudkip/AdventOfCode]](https://github.com/Mudkip/AdventOfCode/blob/main/2022/2.py) python
+[[Mudkip/AdventOfCode]](https://github.com/Mudkip/AdventOfCode/blob/main/2022/day02/2.py) python
 
 > a python solution, with ample usage of dicts to map input to expected output
 >

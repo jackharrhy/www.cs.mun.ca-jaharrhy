@@ -140,7 +140,7 @@ then, i do the same as before, pluck out the answer, get the priority, and sum e
 
 ### others
 
-[[Mudkip/AdventOfCode]](https://github.com/Mudkip/AdventOfCode/blob/main/2022/day3/3.py) python
+[[Mudkip/AdventOfCode]](https://github.com/Mudkip/AdventOfCode/blob/main/2022/day03/3.py) python
 
 > a nice and compact solution
 >
@@ -305,6 +305,12 @@ then, i do the same as before, pluck out the answer, get the priority, and sum e
 > im gonna say it
 >
 > clean
+
+[[devthedevel/advent_of_code]](https://github.com/devthedevel/advent_of_code/blob/master/2022/3/index.ts)
+
+> > Dev: Also no //@ts-ignore this time @Jack Harrhy
+>
+> the clouds have heeded my advice, i am forever blessed
 
 ---
 
