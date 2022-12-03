@@ -4,6 +4,13 @@ title: day 3
 pubDate: 2022-12-02
 ---
 
+3rd night in a row up until 1:30am .-.
+
+why do i make these choices
+
+oh well this one was nice, got to pull out more functional programming goodies today,
+and found reviewing others submissions a little more engaging than previous days, hopefully that continues!
+
 ---
 
 <details>
