@@ -209,7 +209,7 @@ then, i do the same as before, pluck out the answer, get the priority, and sum e
 
 [[zcvaters/adventofcode2022]](https://github.com/zcvaters/adventofcode2022/blob/main/day03/day03.swift) swift
 
-> zach has a pretty gnarly function to go from rucksack item -> priority, but by the time i am writing this, its much cleaner :)
+> zach had a pretty gnarly function to go from rucksack item -> priority, but by the time i am writing this, its much cleaner :)
 >
 > swift has sets!, which are being used here, although using [[intersection]](https://developer.apple.com/documentation/swift/set/intersection(_:)-1zh8f) would be cleaner imo
 
