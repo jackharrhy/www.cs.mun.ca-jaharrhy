@@ -1,0 +1,345 @@
+---
+layout: "@layouts/AdventOfCodeLayoutDay.astro"
+title: day 4
+pubDate: 2022-12-04
+---
+
+import Other from "@components/aoc/Other.astro";
+
+managed to snag this one faster than yesterdays, although i found due to having pulled out set
+operations yesterday, my brain went right back to them again, even though clearly there were
+tricks here to avoid doing that
+
+oh well, currently optimizing for _speed of solution_, therefore the first method that pops into
+my head is what i run with :)
+
+---
+
+<details>
+<summary>click to view my solution</summary>
+
+<br />
+
+given the sample input:
+
+```
+2-4,6-8
+2-3,4-5
+5-7,7-9
+2-8,3-7
+6-6,4-6
+2-6,4-8
+```
+
+assuming `input` is the above as one big string,
+
+```elixir
+sets =
+  input
+  |> String.split("\n", trim: true)
+  |> Enum.map(fn line ->
+    line
+    |> String.split(",")
+    |> Enum.map(fn pair ->
+      pair
+      |> String.split("-")
+      |> Enum.map(&String.to_integer/1)
+      |> Enum.reduce(&Range.new(&1, &2))
+      |> MapSet.new()
+    end)
+  end)
+```
+
+a busier input parse today!
+
+i usually consider 'input parsing' to include converting
+the input into some data structure / set of data structures
+that are the preamble to the actually problems solving meat
+
+here we take each line, split it by `,`, and then iterate
+over each pair
+
+then we split the inner pair into two values, map them to integers,
+and use reduce to go from `[1,4]` to the _range_ `0..4`
+
+with this range, we can then use `MapSet.new`, which will decompose the range
+into a set of its values
+
+```elixir
+[
+  [MapSet.new([2, 3, 4]), MapSet.new([6, 7, 8])],
+  [MapSet.new([2, 3]), MapSet.new([4, 5])],
+  [MapSet.new([5, 6, 7]), MapSet.new([7, 8, 9])],
+  [MapSet.new([2, 3, 4, 5, 6, 7, 8]), MapSet.new([3, 4, 5, 6, 7])],
+  [MapSet.new([6]), MapSet.new([4, 5, 6])],
+  [MapSet.new([2, 3, 4, 5, 6]), MapSet.new([4, 5, 6, 7, 8])]
+]
+```
+
+here is what we end up with after input parsing
+
+_yet again_, a _list of lists appears infront of us_
+
+and, for the second day in a row, i have reached for `MapSet`s
+
+### part 1
+
+```elixir
+sets
+|> Enum.filter(fn [a, b] -> MapSet.subset?(a, b) || MapSet.subset?(b, a) end)
+|> Enum.count() # -> 2
+```
+
+then, we filter out every pair in which one `MapSet` is a subset of the other `MapSet`, and count it
+
+### part 2
+
+```elixir
+sets
+|> Enum.filter(fn [a, b] -> MapSet.intersection(a, b) |> Enum.count() != 0 end)
+|> Enum.count() # -> 4
+```
+
+similarly, for the second part, we filter out every pair in the intersection of the `MapSet`s results in nothing, i.e. no intersection, and count it
+
+my code for today is clean, but as you can see by quite a few of the solutions bellow, this is quite inefficient :P
+
+<br />
+
+</details>
+
+---
+
+### others
+
+less people here than in previous days, but that might
+also just be folk taking a break on the weekend
+
+while i write this, its 2:25pm, so some might not gotten
+around to completing it yet either, i will try my best
+to go back and review peoples repos to add them, _but
+i am simply human_
+
+<Other person="mudkip" day="4" />
+
+> ```py
+> def parse_inputs():
+>     inputs = open('4.in', 'r').read().splitlines()
+>     return [(list(map(int, pair[0].split("-"))), list(map(int, pair[1].split("-")))) for pair in [input.split(",") for input in inputs]]
+>
+> def solve(pairs, condition):
+>     return len([pair for pair in pairs if condition(pair)])
+>
+> pairs = parse_inputs()
+> print(f"Part 1: {solve(pairs, lambda pair: (pair[0][0] >= pair[1][0] and pair[0][1] <= pair[1][1]) or (pair[0][0] <= pair[1][0] and pair[0][1] >= pair[1][1]))}")
+> print(f"Part 2: {solve(pairs, lambda pair: max(pair[0][0], pair[1][0]) <= min(pair[0][1], pair[1][1]))}")
+> ```
+>
+> day 2 of having mudkip's code inline within this page due to it being
+> so _smol_
+>
+> > [9:39 AM] flooding 27015 with A2S_INFO: Guess I’m going with writing as little lines of code as possible while not completely jeopardizing performance
+>
+> and if this is the case, this streak will continue!
+
+<Other person="brianna" day="4" />
+
+> compact, list comprehension for input data parsing is clean
+>
+> actually the list comprehension usage here is nice, i
+> don't feel like i need a degree in python to understand
+> each statement, yet its still quite compact
+>
+> nice
+
+<Other person="kent" day="4" />
+
+> a bit less compact, input parsing could be more concise
+>
+> also using `;` to use one line for _many statements_, not epic
+>
+> ```py
+> a1 = int(x[0]); a2 = int(x[1]); b1 = int(x[2]); b2 = int(x[3])
+> ```
+>
+> this could be done using a `map` over `x` to convert it to ints,
+> and then a list unpack to pluck each value out into a variable
+
+<Other person="riley" day="4" />
+
+> nice and functional, but uses the trick that doesn't require a range/mapset
+>
+> ```f#
+> let tryBothOrders (func: int [] -> int [] -> bool) (pair: int [] []) : bool =
+>   func pair[0] pair[1] || func pair[1] pair[0]
+> ```
+>
+> i like this usage of this function to try both orders of pairs
+>
+> nice
+
+<Other person="hamzah" day="4" />
+
+> my laptop fans continue to cry when opening up this browser tab
+>
+> ```
+> =IFS(AND(D3>=F3,D3<=G3),1,AND(E3<=G3,E3>=F3),1,AND(F3<=D3,F3>=E3),1,AND(G3<=E3,G3>=D3),1)
+> ```
+>
+> its neat to look at this formula here, and while my google-sheets-fu isn't this
+> strong, i still _get_ whats its doing having seen other solutions that have
+> similar boolean logic in them
+
+<Other person="ethan" day="4" />
+
+> the jupyter notebook is coming out here tonight
+>
+> and, kept for the sake of learnings i assume, ethan
+> has left his 'initial failure' as a cell here
+>
+> nice
+>
+> this is a pretty minimal range / set solution
+>
+> nice
+
+<Other person="sven" day="4" />
+
+> clean little `Range` struct here, makes the rest of the code clean
+>
+> ```go
+> type Range struct {
+>   min, max int
+> }
+> ```
+>
+> i pick on go for being too simple sometimes, but sometimes
+> that simplicity is nice
+
+<Other person="mathieu" day="4" />
+
+> nice and simple set-based solution
+>
+> but i have one comment
+>
+> ```py
+> def is_subset(subset,superset):
+>     # Check if the extremas of the subset are within the superset
+>     if subset[0]>=superset[0] and subset[1]<=superset[1]:
+>         return True
+>     else:
+>         return False
+> ```
+>
+> this utility can be made a one-statement function :)
+
+<Other person="steve" day="4" />
+
+> input parsing could be a but simplier, but its quaint, so its _nice_
+
+<Other person="cameron" day="4" />
+
+> capitalized variable names, not very :snakelang:
+>
+> could be good to rely on sets instead of hand rolling count functions
+
+<Other person="ryan" day="4" />
+
+> clean util function usage here
+>
+> as usual, i likea-da-ruby
+
+<Other person="nathan" day="4" />
+
+> these lines be long, but they be clean
+>
+> could havae some util functions for input parsing,
+> since there is already util functions for inrange / nrange
+>
+> still a nice solution though
+
+<Other person="andrewReynolds" day="4" />
+
+> > Andrew Reynolds: The majority of my time was spent ensuring I implemented reduce in place of any forEach.
+>
+> i have influced andrew to learn the ways of the `reduce`, presumably
+> from previous mentions of how he was close to a functional solution
+> in these ramblings
+
+<Other person="david" day="4" />
+
+> was curious what the `[<AutoOpen]` does, seems to be something related to scope
+>
+> i like the fact that each problem here is passed the input stream as a `StreamReader`
+>
+> nice and smol
+
+<Other person="ethanDenny" day="4" />
+
+> a c++ solution, but a _pretty compact_ c++ solution
+>
+> nice
+
+<Other person="marty" day="4" />
+
+> > "i feel like i smurfed today"
+>
+> \- marty
+>
+> <img
+>   class="small-image"
+>   src="https://cdn.discordapp.com/attachments/565307255029760041/1049027482612936714/image.png"
+> />
+>
+> marty is getting more functional
+>
+> he is learning
+
+<Other person="eric" day="4" />
+
+> result usage! nice :)
+>
+> breaking out each part into util functions, pretty clean
+>
+> would be nice if like other languages you could destructure the `Vec` into multiple variables,
+> but after a quick google, it doesn't look like its possible
+
+---
+
+### meta
+
+building this summary of each day has been fun, but i started it on friday night,
+and it has consumed quite a bit of my weekend, but i really do want to keep it up!
+
+there is a [[secret page]](../jack-utils/) that i've put together to help myself:
+
+1. **get the links to everyones repos** / places they are putting their solutions,
+   so i can hunt down if people have completed days or not easier
+
+2. **automagically generate, based on the day, links to each persons solutions**
+   some people have a file-per-solution
+
+   so i link directly to those, and some have folders that usually contain part 1 & two, so i link to the folders
+
+   some people are too tricky to link to, so i either have a custom handling solution for them, or
+   fall back to just linking to the repository itself
+
+3. after making quick inventory of who has completed a day, **generate the boilerplate markdown**
+   for the 'others' section
+
+i still want to write out each block, so that bit isn't being automated away, i just want
+during the work week to speed this up :)
+
+all of this is being done [[within this repository]](https://github.com/jackharrhy/www.cs.mun.ca-jaharrhy)
+if you are curious to peep the inner workings
+
+in a future _meta_ section i will cover more about the static site generator being used here,
+how i recreated the advent of code _look and feel_, and other meta goodies
+
+---
+
+if you want to have your repo added for me to make a note of / talk about here (or have you repo removed), reach out:
+
+email -> `me@jackharrhy.com`
+
+discord -> `<i>jack arthur null</i>#7539`

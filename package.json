@@ -14,6 +14,7 @@
     "react-dom": "^18.2.0"
   },
   "dependencies": {
+    "@astrojs/mdx": "^0.12.0",
     "@astrojs/rss": "^1.0.3",
     "@react-spring/three": "^9.5.5",
     "@react-three/fiber": "^8.9.1",

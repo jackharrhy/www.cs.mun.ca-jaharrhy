@@ -1,8 +1,10 @@
 ---
 layout: "@layouts/AdventOfCodeLayoutDay.astro"
 title: day 3
-pubDate: 2022-12-02
+pubDate: 2022-12-03
 ---
+
+import Other from "@components/aoc/Other.astro";
 
 3rd night in a row up until 1:30am .-.
 
@@ -40,7 +42,7 @@ rucksacks =
 
 a pretty simple input parse today, just split on newlines, and then split each string into a list of characters
 
-```
+```elixir
 [
   ["v", "J", "r", "w", "p", "W", "t", "w", "J", "g", "W", "r", "h", "c", "s", "F", "M", "M", "f",
    "F", "F", "h", "F", "p"],
@@ -140,18 +142,18 @@ then, i do the same as before, pluck out the answer, get the priority, and sum e
 
 ### others
 
-[[Mudkip/AdventOfCode]](https://github.com/Mudkip/AdventOfCode/blob/main/2022/day03/3.py) python
+<Other person="mudkip" day="3" />
 
 > a nice and compact solution
 >
 > ```py
 > def part1():
 >     input = open("3.in", "r").read().splitlines()
->     rucksacks = ((set(list(x[:len(x)//2])), set(list(x[len(x)//2:]))) for x in input)
+>     rucksacks = ((set(list(x[:len(x)//3])), set(list(x[len(x)//2:]))) for x in input)
 >     prios = (ord((rucksack[0] & rucksack[1]).pop())-96 for rucksack in rucksacks)
 >     normalize = (prio if prio > 0 else prio+58 for prio in prios)
 >     return sum(normalize)
-> 
+>
 > def part2():
 >     input = open("3.in", "r").read().splitlines()
 >     groups = [input[i:i+3] for i in range(0,len(input), 3)]
@@ -165,13 +167,13 @@ then, i do the same as before, pluck out the answer, get the priority, and sum e
 >
 > a bit code golfy, but sometimes thats **the _vibe_**
 
-[[krbarter/Advent-Of-Code-2022]](https://github.com/krbarter/Advent-Of-Code-2022/blob/main/Day3/day3.py) python
+<Other person="kent" day="3" />
 
 > some set operations, and being sneaky using a string to map the resulting duplicate to the value
 >
-> part 2 is heading into code golf territories, but i usually feel that whenever i see a complicated list comprehension statement that i haven't authored :)
+> part 3 is heading into code golf territories, but i usually feel that whenever i see a complicated list comprehension statement that i haven't authored :)
 
-[[nint8835/AdventOfCode2022]](https://github.com/nint8835/AdventOfCode2022/blob/main/Day3/Day3.fsx) f#
+<Other person="riley" day="3" />
 
 > feelin' a lot like my solution with regards to the mapping / usage of set intersections
 >
@@ -179,7 +181,7 @@ then, i do the same as before, pluck out the answer, get the priority, and sum e
 >
 > i prefer this implementation of the string map because i am a functional programming fiend
 
-[[hamzahap/AdventOfCode2022]](https://docs.google.com/spreadsheets/d/1FV8KutkeZDnm8LlvTgG7Rb1NuVNWjU1JIc1fMJS6wBg/edit?usp=sharing) sheets
+<Other person="hamzah" day="3" />
 
 > opening up this sheet on my laptop makes it unhappy and loud initially
 >
@@ -193,11 +195,11 @@ then, i do the same as before, pluck out the answer, get the priority, and sum e
 >
 > time will tell
 
-[[TheCrypticCanadian/advent-of-code-2022]](https://github.com/TheCrypticCanadian/advent-of-code-2022/tree/main/3) python
+<Other person="ethan" day="3" />
 
 > input parsing looks to be more than whats needed, but still using set operations, so _clean_
 
-[[STollenaar/AdventOfCode2022]](https://github.com/STollenaar/AdventOfCode2022/blob/main/cmd/day3/main.go) golang
+<Other person="sven" day="3" />
 
 > it seems sven have the same realization as myself and mudkip, but
 >
@@ -205,19 +207,19 @@ then, i do the same as before, pluck out the answer, get the priority, and sum e
 >
 > therefore his solution _looks_ like the solution of someone who has sets in their head, but not actually using sets
 >
-> its still compact so  _nice_
+> its still compact so _nice_
 
-[[zcvaters/adventofcode2022]](https://github.com/zcvaters/adventofcode2022/blob/main/day03/day03.swift) swift
+<Other person="zach" day="3" />
 
 > zach had a pretty gnarly function to go from rucksack item -> priority, but by the time i am writing this, its much cleaner :)
 >
 > swift has sets!, which are being used here, although using [[intersection]](https://developer.apple.com/documentation/swift/set/intersection(_:)-1zh8f) would be cleaner imo
 
-[[chadmroberts88/advent-of-code-2022]](https://github.com/chadmroberts88/advent-of-code-2022/blob/main/src/day3/solutions.ts) typescript
+<Other person="chad" day="3" />
 
 > clean little ts solution, _almost_ functional if that `forEach` usage could be a `reduce` instead :)
 
-[[mathieuboudreau/advent]](https://github.com/mathieuboudreau/advent/tree/main/day-03) python notebook
+<Other person="mathieu" day="3" />
 
 > `set` and `ord`, the python tricks that make this solution clean
 >
@@ -225,35 +227,38 @@ then, i do the same as before, pluck out the answer, get the priority, and sum e
 >
 > now thats mathy
 
-[[Keenan-Nicholson/AdventOfCode]](https://github.com/Keenan-Nicholson/AdventOfCode/blob/main/2022/day3/day3.ts) typescript
+<Other person="keenan" day="3" />
 
 > > [12:31 PM] keeborg: As a mathematician I’m disappointed my first thought was not set intersection
 >
 > keenans solution does not use sets, and he's sad it doesn't use sets
 >
-> i still think its nice though <3
+> i still think its nice though &lt;3
 
-[[CameronSquires/AdventOfCode2022]](https://github.com/CameronSquires/AdventOfCode2022/blob/main/Day3.py) python
+<Other person="cameron" day="3" />
 
 > a bitta [[indent hadouken]](https://old.reddit.com/r/ProgrammerHumor/comments/27yykv/indent_hadouken/) going on here
 
-[[joel1842/advent-of-code-2022]](https://github.com/joel1842/advent-of-code-2022/blob/main/day3/day3.py) python
+<Other person="joel" day="3" />
 
 > joel keeps up the list comprehension grind yet again
 
-[[ecumene/advent_of_code]](https://github.com/ecumene/advent_of_code/blob/main/2022/notebooks/day3.ipynb) python notebook
+<Other person="mitch" day="3" />
 
 > mitch out here managing to be the first person on the muncs leaderboard to complete both part 1 nand 2, _nice_
 >
 > he has also blessed us with another ai image:
 >
-> > <img class="small-image" src="https://raw.githubusercontent.com/ecumene/advent_of_code/1b901efb90ef9647a6e8c0feda84f307ea091cd8/2022/notebooks/images/day3.jpeg" />
+> > <img
+> >   class="small-image"
+> >   src="https://raw.githubusercontent.com/ecumene/advent_of_code/1b901efb90ef9647a6e8c0feda84f307ea091cd8/2022/notebooks/images/day3.jpeg"
+> > />
 > >
 > > prompt: an elf filling bags with supplies for a journey into the jungle
 >
 > **thank you mitchell, very cool**
 
-[[canetoads.ca/day2.js.html]](https://canetoads.ca/day3.js.html) javascript
+<Other person="nathan" day="3" />
 
 > interesting, constructing a map from item -> priority programmatically
 >
@@ -261,21 +266,19 @@ then, i do the same as before, pluck out the answer, get the priority, and sum e
 >
 > but its still nice and compact, and set-intersectiony, so nice
 
-[[apreynolds1989/AdventOfCode2022]](https://github.com/apreynolds1989/AdventOfCode2022/blob/main/src/Day3/index.ts) typescript
+<Other person="andrewReynolds" day="3" />
 
 > another day that is so close to being functional! make those `forEach` statements reducers!
 >
 > a nice solution though, and catches the strict of char code conversion depending on if upper or lower case
 
-[[lilmert/aoc]](https://github.com/lilmert/aoc/blob/main/src/years/y22/d3.rs)
+<Other person="marty" day="3" />
 
 > marty's aoc utils are :clean:
 >
 > rfind on the `ALPHABET` is :clean:
->
-> 
 
-[[RyanBrushett/adventofcode2022]](https://github.com/RyanBrushett/adventofcode2022/tree/main/day3)
+<Other person="ryan" day="3" />
 
 > its ruby so im biased for the third day in the row, that this is _clean_
 >
@@ -294,7 +297,7 @@ then, i do the same as before, pluck out the answer, get the priority, and sum e
 >
 > **_nice_**
 
-[[ajhynes7/advent-of-code-2022]](https://github.com/ajhynes7/advent-of-code-2022/blob/main/days/03.jl)
+<Other person="andrewHynes" day="3" />
 
 > julia and ruby are def. the nicest here to skim through, probably because syntactically its similar to my own solution :)
 >
@@ -306,7 +309,7 @@ then, i do the same as before, pluck out the answer, get the priority, and sum e
 >
 > clean
 
-[[devthedevel/advent_of_code]](https://github.com/devthedevel/advent_of_code/blob/master/2022/3/index.ts)
+<Other person="devin" day="3" />
 
 > > Dev: Also no //@ts-ignore this time @Jack Harrhy
 >
