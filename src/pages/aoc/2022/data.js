@@ -273,6 +273,35 @@ const marty = {
   days: [1, 2, 3],
 };
 
+const brandon = {
+  display: "bjbemister19/AdventOfCode",
+  link: "https://github.com/bjbemister19/AdventOfCode",
+  language: "rust",
+  dayLinkFunc: (day) =>
+    `https://github.com/bjbemister19/AdventOfCode/blob/master/2022/day_${day}/src/main.rs`,
+  days: [1, 2, 3, 4],
+};
+
+const mohammadArafatZaman = {
+  display: "M-ArafatZaman/AdventOfCode",
+  link: "https://github.com/M-ArafatZaman/AdventOfCode",
+  dayLinkFunc: (day) =>
+    `https://github.com/M-ArafatZaman/AdventOfCode/tree/main/day_${day}`,
+  language: "python",
+  days: [1, 2, 3, 4],
+};
+
+const scott = {
+  display: "skanes17/Advent2022",
+  link: "https://github.com/skanes17/Advent2022",
+  dayLinkFunc: (day) =>
+    `https://github.com/skanes17/Advent2022/tree/main/Advent2022/src/day${pad(
+      day
+    )}`,
+  language: "javascript",
+  days: [1, 2, 3],
+};
+
 export const people = {
   mudkip,
   mat,
@@ -303,4 +332,7 @@ export const people = {
   alexis,
   leah,
   marty,
+  brandon,
+  mohammadArafatZaman,
+  scott,
 };

@@ -1,0 +1,168 @@
+---
+layout: "@layouts/AdventOfCodeLayoutDay.astro"
+title: tips
+---
+
+during my ramblings, i comment on the solutions of others
+
+sometimes i pick at things, rather it be something that i see
+as more busy than it needs to be, or a solution that looks like
+its not making use of a language feature / library / syntax
+that it could to be _cleaner_
+
+instead of pointing out solutions to everything, this _tips_
+page will be used as a point of reference of how to do things
+_a bit cleaner_, and but most importantly **_in my opinion_**,
+therefore **please take what i say with a grain of salt**, but
+if you do respect and apply my recommendations, _nice_
+
+<br />
+
+table of contents:
+
+- [[general]](#general)
+  > - [[functional programming]](#functional-programming)
+- [[language-specific]](#language-specific)
+  > - [[python]](#python)
+  >   > - [[list comprehension]](#list-comprehension)
+  > - [[typescript]](#typescript)
+  >   > - [[deno]](#deno)
+
+<br />
+
+## general
+
+### functional programming
+
+_use the functions, luke!_
+
+this is the one to take **_the most grains of salt_** with
+
+<br />
+
+i am solving my problems with [[Elixir]](https://elixir-lang.org/) this year,
+which is a functional programming language, so my headspace while solving
+the problems myself is _very functional_, therefore suprisingly when i
+look at other peoples code, i will probably notice when it is / isn't
+functional
+
+a great example of this was commenting on [[andrew reynolds]](https://github.com/apreynolds1989/AdventOfCode2022/)
+day 3 solution, that it was _so close_ to being functional, and recommended refactoring his `forEach`
+a `reduce`, since it was being used to create a sum
+
+now andrew did go and do this _the next day_, which is flattering,
+but mentioned that it ate up the 'majority' of his time refactoring
+a `forEach` into a `reduce`
+
+its not my goal here to affect peoples problem solving strategies in such a way
+that things get harder, only to point out my comment / opinions on things
+
+(while its not my goal, if it happens, and the person enjoys my methodology, i
+won't complain .-. )
+
+<br />
+
+i've gotten ahead of myself and not even defined functional programming, oops
+
+from [[wikipedia]](https://en.wikipedia.org/wiki/Functional_programming):
+
+> _In computer science, functional programming is
+> a programming paradigm where programs are constructed by **applying and
+> composing functions**. It is a declarative programming paradigm in which
+> function definitions are trees of expressions that map values to other values,
+> rather than a sequence of imperative statements which update the running
+> state of the program._
+
+## language-specific
+
+### python
+
+#### list comprehension
+
+with list comprehension
+
+```py
+squares = []
+
+for x in range(10):
+    squares.append(x**2)
+```
+
+this
+
+```py
+squares = [x**2 for x in range(10)]
+```
+
+can become this
+
+list comprehension is a neat tool to be aware of, and use to
+iterate over things without the use of a full-size for loop, in one
+small line
+
+the [[official python docs]](https://docs.python.org/3/tutorial/datastructures.html#list-comprehensions)
+cover them well
+
+_but **please don't go crazy with these**_
+
+i usually find reading _other peoples_ list comprehension statements
+confusing, and that might just be a personal preference thing, but
+i think there is potentially a sacrifice of readability over space
+
+if your goal is to [[code golf]](https://en.wikipedia.org/wiki/Code_golf) and get
+your solution as _small_ as possible, 100% abuse these to the max
+
+<br />
+
+to pluck some [[day 3 code from mudkip]](https://github.com/Mudkip/AdventOfCode/blob/main/2022/day03/3.py#L3)
+
+```py
+rucksacks = ((set(list(x[:len(x)//2])), set(list(x[len(x)//2:]))) for x in input)
+```
+
+there is too much going on here!
+
+now, for mudkip, the goal _is_ to have lots going on in one line, i.e. code golfing
+
+but if i see this sort of thing in code at my workplace, i screech
+
+<br />
+
+but, from [[brianna's solution to day4]](https://github.com/briannamcdonald/advent-of-code-2022/blob/main/day04/day4_part1.py#LL8C9-L8C55)
+
+```py
+r1x, r1y = [int(x) for x in range1.split("-")]
+```
+
+this is a _nice_, but more importantly in my opinion, _simple_ usage of list comprehension
+
+this is still doing a lot! its splitting some string on `"-"`, mapping each value
+returned from this to an interger, and unpacking the returned list into two values
+
+### typescript
+
+#### deno
+
+_the land of the dinosaurs_
+
+might not be following a good tutorial / the correct path, but i find quickly bootstrappping
+a sensible typescript node project _frustrating_, usually i reach for `ts-node`, but i always
+run into several different issues, and have to play wack-a-mole with them to make it behave /
+not give me errors / actually run the code
+
+if this is the case, you might want to **give [[Deno]](https://deno.land/) a go** instead
+
+even if its not to have a better typescript expierence,
+[[check out the deno standard library]](https://deno.land/std@0.167.0),
+which is packed with useful modules, such as [[collections]](https://deno.land/std@0.167.0/collections/mod.ts)
+
+> _Functions for specific common tasks around collection types like Array and Record. This module is heavily inspired by kotlins stdlib._
+
+with functions / classes such as
+
+1. `intersect`: _Returns all distinct elements that appear at least once in each of the given arrays._
+
+2. `BinarySearchTree`: _An unbalanced binary search tree. The values are in ascending order by default, using JavaScript's built-in comparison operators to sort the values._
+
+and look how easy / simple it is to do basic things like [[read a file]](https://deno.land/api@v1.28.3?s=Deno.open)
+without a bunch of fluff
