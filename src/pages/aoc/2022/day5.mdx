@@ -190,7 +190,7 @@ i am simply human_
 > i spy `assert!`. avoid this, it's probably an artifact of something else you want to do.
 > [is there a better way?](https://github.com/bjbemister19/AdventOfCode/blob/master/2022/day_5/src/stacks.rs#L6-L25)
 > 
-> yes! the core of iterative tools in rust is the [`Iterator`](), and things built for / around it.
+> yes! the core of iterative tools in rust is the [`Iterator`](https://doc.rust-lang.org/std/primitive.str.html#method.split) & [itertools](https://docs.rs/itertools/0.10.5/itertools/index.html#), and things built for / around it.
 > You can typically chain your operations around this iterator type and achieve what you want.
 > Also, a reimagination of the problem maybe isn't splitting at every `n`th index, but rather
 > splitting at every occurence of an alphabetical character. 
