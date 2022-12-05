@@ -1,0 +1,246 @@
+---
+layout: "@layouts/AdventOfCodeLayoutDay.astro"
+title: day 5
+pubDate: 2022-12-05
+---
+
+import Other from "@components/aoc/Other.astro";
+
+hey guys, [mert](https://github.com/lilmert) here. I'm filling in for jack today cause he slept in and told his fans he needed
+an earned break. Until then you're stuck with my shitty, less productive reviews... onwards!
+
+as of 4:56PM Dec. 5th NDT, we have... counting all of jack's friends... 
+
+my general comments for today - _the spice level is increasing_. We rarely see this in AoC but
+today was an instance of our input data having its form defined prior to, what would be more 
+commonly referred to as, the action data. 
+
+there's a couple ways I see you could handle this. The first would be a brute force copy paste
+into a manual refactoring and storage of the data you want. When it comes to speed, this might
+be considered quicker with less brain overhead, as the second you choose to parse the input and
+make sense of it, you've more of less added a 3rd programming part to the problem.
+
+---
+
+<details>
+<summary>click to view my solution</summary>
+
+<br />
+
+{/* put code here */}
+
+<br />
+
+</details>
+
+---
+
+### others
+
+less people here than in previous days, but that might
+also just be folk taking a break on the weekend
+
+while i write this, its 2:25pm, so some might not gotten
+around to completing it yet either, i will try my best
+to go back and review peoples repos to add them, _but
+i am simply human_
+
+<Other person="mudkip" day="5" />
+
+> ah, yes, my python wizard.
+> 
+> there's a little bit of python magic here and there,
+> but i like it. 
+> 
+> ```python
+> def parseInputs():
+>     stacks, instructions = {}, []
+>     for line in open("5.in", "r").read().splitlines():
+>         if (line.strip().startswith('1')): continue
+>         if (line.startswith('move')): 
+>             instructions.append(list((int(x) if x.isdigit() else x for x in line.split(' ')))[1::2])
+>             continue
+>         for i in range(0, len(line), 4):
+>             index = (i//4)+1
+>             crate = line[i+1:i+2].strip()
+>             if index not in stacks: stacks[index] = []
+>             if crate != '': stacks[index].insert(0, crate)
+>     return stacks, instructions>
+> ```
+>
+> including this function cause not only is it _clean_, but it's a good demonstration of the mental overhead
+> that can exist in these coding challenges sometimes. If you're the _golfy_ type,
+> copy-pasting and letting your text editor do this work would be the speed solution
+> to grab the data structures you want, quickly. vim-max anyone?
+
+<Other person="brianna" day="5" />
+
+> i LOVE the assumptions and just raw coding the stacks. The mental effort to
+> arriving at a solution feels a lot lower. Not only that, it's easy for me
+> to understand whats happening.
+
+<Other person="kent" day="5" />
+
+> Nice. Take the input, put it into the form you want cause f&$! parsing it,
+> then do your logical operations. 
+>
+> _clean_
+>
+> however, if this _WAS_ an exercise in learning python, which I'm assuming it
+> wasn't, then I'd be intentional with doing the parsing programitically for learning
+> sake.
+
+<Other person="riley" day="5" />
+
+> f# gives me life.
+> ```f#
+> let instructions =
+>     inputData[ 1 ].Split "\n"
+>     |> Array.map (fun instruction -> instruction.Split " ")
+>     |> Array.map (fun instruction ->
+>         { count = int instruction[1]
+>           from_col = int instruction[3]
+>           to_col = int instruction[5] })
+>```
+> i like looking at this code. its instructional, clean, and to the point.
+> 
+> obligatory jack: "nice"
+
+<Other person="hamzah" day="5" />
+
+> where r u sheets god
+
+<Other person="ethan" day="5" />
+
+> COPY PASTA GOD MODE
+
+<Other person="sven" day="5" />
+
+> is my brain melting or is it just the _go_
+
+<Other person="mathieu" day="5" />
+
+> YES. GOOD.
+>
+> ```python
+> stack = {
+>     1: 'WRF',
+>     2: 'THMCDVWP',
+>     3: 'PMZNL',
+>     4: 'JCHR',
+>     5: 'CPGHQTB',
+>     6: 'GCWLFZ',
+>     7: 'WVLQZJGC',
+>     8: 'PNRFWTVC',
+>     9: 'JWHGRSV'
+> }
+> ```
+
+<Other person="steve" day="5" />
+
+> where r u sabor tooth tiger
+
+<Other person="cameron" day="5" />
+
+> where r u mr. squires
+
+<Other person="ryan" day="5" />
+
+> i just fell in love with ruby, you will find me in my cave.
+
+<Other person="nathan" day="5" />
+
+> somewhat cursed, somewhat ok cause javascript does whatever IT PLEASES
+
+<Other person="andrewReynolds" day="5" />
+
+> where r u my reynolds.
+
+<Other person="david" day="5" />
+
+> where r u my reynolds.
+
+<Other person="ethanDenny" day="5" />
+
+> could link your helper functions together for code reuse.
+> c++ always makes me happy, the code feels clean and correct
+> 
+> obligatory jack: "nice"
+
+<Other person="marty" day="5" />
+
+> wait, why did i just look at my own code and hate it?
+> it's ok. i've perused the internet of rust solutions for this
+> one and I didn't miss much other THAN the mutability crisis i
+> found myself in when trying to grab things from the hashmap.
+> Note to self: if this happens again, it's almost always the case
+> that a vector is preferred, and simplifies the solution a touch.
+
+<Other person="eric" day="5" />
+
+> my rust brother has left me for a better life
+> [where are u !? AND I'M SO SORRY](https://www.youtube.com/watch?v=s1tAYmMjLdY)
+
+<Other person="mitch" day="5" />
+
+> MITCH IS MISSING SOMEONE CALL AND CHECK ON HIS SAFETY.
+
+<Other person="brandon" day="5" />
+
+> i spy `assert!`. avoid this, it's probably an artifact of something else you want to do.
+> [is there a better way?](https://github.com/bjbemister19/AdventOfCode/blob/master/2022/day_5/src/stacks.rs#L6-L25)
+> 
+> yes! the core of iterative tools in rust is the [`Iterator`](), and things built for / around it.
+> You can typically chain your operations around this iterator type and achieve what you want.
+> Also, a reimagination of the problem maybe isn't splitting at every `n`th index, but rather
+> splitting at every occurence of an alphabetical character. 
+>
+> [Here's an option](https://github.com/lilmert/aoc/blob/main/src/years/y22/d5.rs#L29-L39)
+
+<Other person="mohammadArafatZaman" day="5" />
+
+> i don't love the aesthetics of the code (naming, organization), but it got the job done.
+
+<Other person="scott" day="5" />
+
+> where r u?
+
+---
+
+### meta
+
+building this summary of each day has been fun, but i started it on friday night,
+and it has consumed quite a bit of my weekend, but i really do want to keep it up!
+
+there is a [[secret page]](../jack-utils/) that i've put together to help myself:
+
+1. **get the links to everyones repos** / places they are putting their solutions,
+   so i can hunt down if people have completed days or not easier
+
+2. **automagically generate, based on the day, links to each persons solutions**
+   some people have a file-per-solution
+
+   so i link directly to those, and some have folders that usually contain part 1 & two, so i link to the folders
+
+   some people are too tricky to link to, so i either have a custom handling solution for them, or
+   fall back to just linking to the repository itself
+
+3. after making quick inventory of who has completed a day, **generate the boilerplate markdown**
+   for the 'others' section
+
+i still want to write out each block, so that bit isn't being automated away, i just want
+during the work week to speed this up :)
+
+all of this is being done [[within this repository]](https://github.com/jackharrhy/www.cs.mun.ca-jaharrhy)
+if you are curious to peep the inner workings
+
+in a future _meta_ section i will cover more about the static site generator being used here,
+how i recreated the advent of code _look and feel_, and other meta goodies
+
+---
+
+if you want to have your repo added for me to make a note of / talk about here (or have you repo removed), reach out:
+
+email -> `me@jackharrhy.com`
+
+discord -> `<i>jack arthur null</i>#7539`
