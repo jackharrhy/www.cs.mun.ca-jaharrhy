@@ -3,7 +3,7 @@ import { people } from "src/pages/aoc/2022/data";
 
 const { person: personKey, day } = Astro.props;
 const person = people[personKey];
-const dayLink = person.dayLinkFunc(day);
+const dayLink = person.dayLinkFunc(Number(day));
 ---
 
 <a href={dayLink}>[{person.display}]</a>

@@ -1,0 +1,512 @@
+---
+layout: "@layouts/AdventOfCodeLayoutDay.astro"
+title: day 6
+pubDate: 2022-12-06
+---
+
+import Other from "@components/aoc/Other.astro";
+
+a **calm** (before the storm)
+
+much easier parsing today, no need to even bother reading seperate lines!
+
+clean solutions galore as well
+
+lets get on with it
+
+---
+
+<details>
+<summary>click to view my solution</summary>
+
+<br />
+
+given the sample input:
+
+```
+mjqjpqmgbljsphdztnvjfqwrcgsmlb
+```
+
+assuming `input` is the above as one big string,
+
+```elixir
+packets = input |> String.graphemes()
+```
+
+split input into its characters
+
+i say _characters_, but the [[underlying function]](https://hexdocs.pm/elixir/1.14/String.html#graphemes/1) is named graphemes,
+since it is splitting on _unicode graphemes_
+
+```elixir
+["m", "j", "q", "j", "p", "q", "m", "g", "b", "l", "j", "s", "p", "h", "d", "z", "t", "n", "v", "j",
+ "f", "q", "w", "r", "c", "g", "s", "m", "l", "b"]
+```
+
+we are left with list of... i'm gonna call them charcaters again its easier to write
+
+```elixir
+defmodule CommunicationDevice do
+  def find_first_duplicate(packets, chunk_size) do
+    index =
+      packets
+      |> Enum.chunk_every(chunk_size, 1, :discard)
+      |> Enum.map(&MapSet.new(&1))
+      |> Enum.with_index()
+      |> Enum.find(fn {set, _index} -> MapSet.size(set) == chunk_size end)
+      |> elem(1)
+
+    index + chunk_size
+  end
+end
+```
+
+nice little single function module here!
+
+`find_first_duplicate/2` accepts our list of packets, and a _chunk_size_ parameter
+
+```elixir
+# ...
+packets
+|> Enum.chunk_every(chunk_size, 1, :discard)
+# ...
+```
+
+this solution relies on [[Enum.chunk_every/4]](https://hexdocs.pm/elixir/1.14/Enum.html#chunk_every/4)
+quite a bit, it basically acts as a _sliding window_
+
+<br />
+
+say i was given the list `[1,2,3,4]`, and used this chunk_every function
+with the firt argument the list, the second the chunk size (2), and the
+third being the step, (with the :discard atom), we would get the following enumerable:
+
+```elixir
+[[1,2], [2,3], [3,4]]
+```
+
+(the :discard atom is used to ensure we don't get a `[4]` show up in
+this list, if any returned enumerable is less than the size of the chunk,
+it is discarded)
+
+<br />
+
+back to the function,
+
+```elixir
+# ...
+|> Enum.map(&MapSet.new(&1))
+|> Enum.with_index()
+# ...
+```
+
+then, we map over each one of these chunks into `MapSet`s
+
+and we include the index (what step we are on) by mapping
+the resulting `MapSet`s enumerable with `Enum.with_index`
+
+```elixir
+[
+  {MapSet.new(["j", "m", "q"]), 0},
+  {MapSet.new(["j", "p", "q"]), 1},
+  {MapSet.new(["j", "p", "q"]), 2},
+  {MapSet.new(["j", "m", "p", "q"]), 3},
+  {MapSet.new(["g", "m", "p", "q"]), 4},
+  # ...
+]
+```
+
+we are left with this, the first three `MapSet`s with a length less
+than 4 characters, even though 4 characters (we are using part 1 as the example
+here) were used to generate them, _but_ the 4th item in this list having
+a `MapSet` with a size of 4, implies no duplicates in the characters used to
+produce this one!
+
+```elixir
+# ...
+|> Enum.find(fn {set, _index} -> MapSet.size(set) == chunk_size end)
+|> elem(1)
+# ...
+```
+
+pluck out the first tuple with a `MapSet` the size of our chunk size, and pluck
+the second item out of the tuple, since we are concerned with the index and not
+the actual `MapSet` itself
+
+```elixir
+# ...
+
+index + chunk_size
+```
+
+then, with this index, return it _plus_ the `chunk_size`, since the value on
+the end of the window would be the first non-duplicate we run into in the
+devices stream, and if we just returned the index, it would be incorrectly
+offset
+
+### part 1
+
+```elixir
+CommunicationDevice.find_first_duplicate(packets, 4) # -> 7
+```
+
+with our new fangled device module, use it, with a chunk size of 4
+
+### part 2
+
+```elixir
+CommunicationDevice.find_first_duplicate(packets, 14) # -> 19
+```
+
+and, do it again, but with a chunk size of 14
+
+nice
+
+the full solution can be found [[here]](https://github.com/jackharrhy/advent2022/blob/main/day6.livemd)
+
+<br />
+
+</details>
+
+---
+
+### others
+
+there's going to be _lots of inline code_ today
+
+<Other person="mudkip" day="6" />
+
+> ```py
+> def solve(n):
+>   input = open("6.in", "r").read().strip()
+>   return next(i+n for i in range(len(input)) if len(set(input[i:i+n])) == n)
+> print(f"Part 1: {solve(4)}")
+> print(f"Part 2: {solve(14)}")
+> ```
+>
+> super clean, but also not crazy busy? maybe i've just
+> read too many of your list comprehensions and grown to
+> not hate them :D
+>
+> i really like the usage of `next` here to find the first
+> valid item that matches the conditonal bit of the list comp.
+>
+> as usual, compact and epic
+
+<Other person="brianna" day="6" />
+
+> a solution, could probably be compacted quite a bit though
+>
+> `chars_unique` could early return false instead of
+> continually iterating after setting `unique` to false
+
+<Other person="kent" day="6" />
+
+> ```python
+> line  = open("input.txt", "r").readlines()[0]
+>
+> def solve(line, length):
+>     for x in range(0,  len(line) - (length - 1)):
+>         if len(set([line[x + y] for y in range(0, length)])) == length:
+>             return (x + length)
+> print("Part1: ", solve(line, 4), "Part2: ", solve(line, 14))
+> ```
+>
+> nice
+>
+> a compact python solution
+>
+> yeah
+
+<Other person="riley" day="6" />
+
+> ```f#
+> let inputData =
+>     (System.IO.File.ReadAllText "Day6/input.txt")
+>
+> let findMarker (size: int) (input: string) : int =
+>     input
+>     |> Array.ofSeq
+>     |> Array.windowed size
+>     |> Array.map (fun window -> (window |> Set.ofArray |> Set.count))
+>     |> Array.findIndex (fun uniqueCount -> uniqueCount = size)
+>     |> (+) size
+>
+> printfn $"%A{findMarker 4 inputData}"
+> printfn $"%A{findMarker 14 inputData}"
+> ```
+>
+> first riley solution included fully inline, and its **_clean_**
+>
+> quite similar conceptually to my solution, but i do like
+> converting the array to a set, and then just counting the
+> number of values in the set, since the find statement is then just
+> comparing between the length of the chunks and how many items were
+> in the set
+>
+> also the `(+) size` is nice, i should look to see how i would do this
+> in elixir :)
+
+<Other person="hamzah" day="6" />
+
+> ```
+> =IF(COUNTUNIQUE(B1427:B1430)=4,"You reached my guy","You no reach noob")
+> ```
+>
+> _you reached my guy_
+
+<Other person="ethan" day="6" />
+
+> ok so to begin with, how **dare** you [[change your folder naming structure]](https://github.com/TheCrypticCanadian/advent-of-code-2022/commit/310ad96613beb6e8e621b88dee490dadf9fa216b)
+> without consulting **me** first
+>
+> i kid, i have [[the tools]](https://github.com/jackharrhy/www.cs.mun.ca-jaharrhy/blob/927317f086678c710823a5b45f885be95a685005/src/pages/aoc/2022/data.js#L71) to update
+> this in one spot, and have every link from here to your solution
+> automagically update
+>
+> your solution though, is _nice_, although you could have defined
+> a cell above with a function to make your part 1 & 2
+> reusable :)
+>
+> good job gump
+
+<Other person="sven" day="6" />
+
+> clean go
+>
+> not compact enough to include inline, but i don't _think_ a go
+> solution will ever be that? it feels like it goes against the
+> language design if it does
+>
+> but still, clean go
+
+<Other person="emily" day="6" />
+
+> woooaaahhh a little queue
+>
+> this is nice, fill up the queue, check for dups, and if dupes
+> move on, but always be poppin' one off of the queue to keep
+> it with a length of 4 / 14
+>
+> nice
+>
+> you could probably do your part 1 & 2 in one file
+> since, like most, the only thing seperating them
+> is putting a 1 infront of the 4 in part one to make it
+> 14
+
+<Other person="zach" day="6" />
+
+> nice
+>
+> this also gives the vibes of emilys queue solution,
+> but uses a set to do the duplication finding, therefore
+> no need for a utility function
+>
+> nice
+
+<Other person="chad" day="6" />
+
+> _interesting solution here_, reaching for a regular expression
+>
+> ```
+> /(.).*\1/.
+> ```
+>
+> i put this into [[regexr.com]](https://regexr.com/) to get a better
+> understanding of it (since my regex-fu is lacking)
+>
+> i sort of get it, but i don't really understand the magic
+> going on with capture group backreferencing here
+>
+> > Chad Roberts: Love it when you can use one function to
+> > solve both parts! (Full Disclosure: I Googled the RegEx!)
+>
+> i feel like this is the response of most people who say
+> "where did you get this regex?"
+>
+> still neat to think of this as a possible solution method!
+
+<Other person="devin" day="6" />
+
+> dev from the clouds, has duplicated code between
+> part 1 and 2
+>
+> are the clouds to be trusted?
+>
+> i thought i should ask lord poseidon about this, via [[ChatGPT]](https://chat.openai.com/),
+> here is his response:
+>
+> > _Dear Devin,_
+> >
+> > _I, Lord Poseidon, have noticed that your code is quite impressive. However, I must point out that you have included duplicated code in your solutions. As a wise programmer, you should know that it is best practice to break out your code into utility functions to avoid repetition and make your code more organized and efficient._
+> >
+> > _Please consider this advice and continue to strive for excellence in your coding endeavors._
+> >
+> > _Best regards,_
+> >
+> > _Lord Poseidon_
+
+<Other person="mathieu" day="6" />
+
+> nice
+>
+> could probably cut out `num_chars` by iterating over a range
+> and then breaking once you get to the value
+>
+> and because python will keep the value you iterate over in-scope
+> you can just print it at the end
+>
+> ```py
+> for x in range(5):
+>   if x == 3:
+>     break
+>
+> print(x) # -> 3
+> ```
+>
+> ^ an example of what i'm talking about, a sneaky pythonism
+
+<Other person="andrewHynes" day="6" />
+
+> **_nice, very nice_**
+>
+> the usage of [[CircularDeque]](https://juliacollections.github.io/DataStructures.jl/latest/circ_deque/) is cool,
+> a more sensible data structure to use since yeah the only operation you need
+> to do if you are doing it the listy way is enqueue and dequeue
+>
+> and also the function here acting directly on the file, but
+> still remaining super clean
+>
+> also `allunique` being a top-level function???
+>
+> julia is good for this stuff wow
+
+<Other person="ryan" day="6" />
+
+> > [[overengineer it, why not]](https://github.com/RyanBrushett/adventofcode2022/commit/8642216e4320200ca32f12132eebd74fc2e0f644)
+>
+> test cases! nice
+>
+> ```rb
+> def run
+>   input_data.each_char.with_index do |x, i|
+>     if packet.length < signal_length
+>       packet << x
+>       next
+>     end
+>     return i if packet & packet == packet
+>
+>     (packet << x).shift
+>   end
+> end
+> ```
+>
+> clean, i always like seeing `&` being used for set operations
+
+<Other person="joel" day="6" />
+
+> i can tell by your file path you are on linux, _nice_
+>
+> _but_, this is because your full fat file path is in the file :P
+>
+> _stop that_
+>
+> interesting approach though, basically calculating both at the same time
+>
+> it would technically add a line, but i would break from the for loop
+> when startOfPacket and startOfMessage are both defined
+>
+> also, [[preferably you'd be using `snake_case`]](https://peps.python.org/pep-0008/#function-and-variable-names) instead of `camelCase`
+
+<Other person="nathan" day="6" />
+
+> i don't think there will ever be a nathan solution without a
+> horizontal scroll bar :P
+>
+> ```js
+> console.log(
+>   fs
+>     .readFileSync(io)
+>     .toString()
+>     .split("")
+>     .map((x, i, a) => new Set(a.slice(i - 14, i)))
+>     .map(function (x, i) {
+>       if (x.size == 14) return { x, i };
+>     })
+>     .filter((x) => x)
+>     .map((x) => x.i)
+> );
+> ```
+>
+> now, _i know this isn't as compact_, but
+> this is a bit nicer to grok
+>
+> also this is _technically_ only a part 2 solution
+> since 14 is hard coded, could be broken out into a util
+> function and invoked twice below to get 1 & 2
+>
+> but hey, i am not your mum
+
+<Other person="andrewReynolds" day="6" />
+
+> _**REDUCER**_
+>
+> even i didn't pull out a reducer today, _nice_
+>
+> good set usage as well
+>
+> epic
+
+<Other person="ethanDenny" day="6" />
+
+> a c++ solution
+>
+> pretty nice and simple
+>
+> yeah
+
+<Other person="marty" day="6" />
+
+> :clean:
+>
+> itertools usage with windowing and unique counting
+>
+> _but whats this_
+>
+> **_unwrap usage_**
+>
+> marty please, think of the children
+
+<Other person="brandon" day="6" />
+
+> no unwraps in this rust code, phew
+>
+> feels quite similar logically to the c++ solution, but
+> more crustacean-like
+
+<Other person="mohammadArafatZaman" day="6" />
+
+> nice c++ solution
+>
+> you read the input twice though, could read once and pass to both
+> solve calls, or just put it in a global variable because _there are
+> no rules_
+
+<Other person="sheldon" day="6" />
+
+> a java solution!
+>
+> quite decent
+>
+> this is a nitpiq, but i'd run your code through the [[google-java-format]](https://github.com/google/google-java-format)
+> utility (or some other java formatter) to clean it up a bit, a little too much in the way of newlines
+> here
+
+---
+
+if you want to have your repo added for me to make a note of / talk about here (or have you repo removed), reach out:
+
+email -> `me@jackharrhy.com`
+
+discord -> `<i>jack arthur null</i>#7539`
