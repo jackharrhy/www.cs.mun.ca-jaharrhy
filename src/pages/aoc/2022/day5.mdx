@@ -1,0 +1,850 @@
+---
+layout: "@layouts/AdventOfCodeLayoutDay.astro"
+title: day 5
+pubDate: 2022-12-05
+---
+
+import Other from "@components/aoc/Other.astro";
+import DitherMert from "@components/dither/Mert.astro";
+import DitherJack from "@components/dither/Jack.astro";
+
+a _spicy_ day!
+
+not a hard problem to understand, but a wonky thing to parse into something useful
+before actually solving the problem
+
+seems like some people skipped bothering to parse the input as-is and just manually
+typed up the stacks into their programs
+
+this probably would be the way to go for speed, but as mudkip said today:
+
+> [12:01 PM] mudkip: I treat input as sacred and immutable
+
+i too, treat input as sacred and immutable, but power to you if you did otherwise
+
+---
+
+<details>
+<summary>click to view my solution</summary>
+
+<br />
+
+given the sample input:
+
+```
+    [D]
+[N] [C]
+[Z] [M] [P]
+ 1   2   3
+
+move 1 from 2 to 1
+move 3 from 1 to 3
+move 2 from 2 to 1
+move 1 from 1 to 2
+```
+
+assuming `input` is the above as one big string,
+
+```elixir
+[initial_state_string, instructions_string] =
+  input
+  |> Kino.Input.read()
+  |> String.split("\n\n", trim: true)
+```
+
+pull out the `\n\n` split trick, but this time to break the two
+parts of the problem into their own chunks
+
+```elixir
+[
+  "    [D]    \n[N] [C]    \n[Z] [M] [P]\n 1   2   3 ",
+  "move 1 from 2 to 1\nmove 3 from 1 to 3\nmove 2 from 2 to 1\nmove 1 from 1 to 2"
+]
+```
+
+its time for some _fun_ parsing
+
+### parsing initial state
+
+```elixir
+rows =
+  initial_state_string
+  |> String.split("\n")
+  |> Enum.reverse()
+  |> tl()
+  |> Enum.reverse()
+```
+
+so first, i will focus on parsing the initial state into
+something useful
+
+split on newline, the usual, and a quick reverse -> `tl` -> reverse
+to pluck the stack labels away
+
+```elixir
+[
+  "    [D]    ",
+  "[N] [C]    ",
+  "[Z] [M] [P]"
+]
+```
+
+we are left with this, which is still quite _raw_, but we can work with this
+
+```elixir
+rows =
+  rows
+  |> Enum.map(fn line ->
+    line
+    |> String.graphemes()
+    |> tl
+    |> Enum.take_every(4)
+  end)
+```
+
+so, we're only concerned with every 4 characters, the `] [` that seperate them
+are not important to us, so we do just that!
+
+firstly, using `String.graphemes` on the line splits it from a string to a list
+of its characters
+
+since the `Enum.take_every` function will always take the first element
+of the given enumerable, we take the tail of the linked list (using `tl`)
+and then take every 4th value from the list of characters
+
+```elixir
+[
+  [" ", "D", " "],
+  ["N", "C", " "],
+  ["Z", "M", "P"]
+]
+```
+
+we are left with this, a lot nicer than the input, _but_ its the wrong way,
+visually here the columns are aligned, but the underlying rows are not!
+
+```elixir
+initial_state =
+  rows
+  |> Enum.reduce(List.duplicate([], length(rows) + 1), fn row, acc ->
+    Enum.zip(row, acc)
+    |> Enum.map(fn {row, acc} -> [row | acc] end)
+    |> Enum.map(&Enum.filter(&1, fn item -> item != " " end))
+  end)
+  |> Enum.map(&Enum.reverse(&1))
+```
+
+doing a bit of reduce magic, start with a list of empty lists of length of the
+amount of rows we have
+
+then, reduce each row into the lists of lists by inserting each nth item of the
+row into the nth list of lists, and filter out any values that are simply space characters
+
+```elixir
+[
+  ["N", "Z"],
+  ["D", "C", "M"],
+  ["P"]
+]
+```
+
+this is better, visually this isn't as nice as the above, but now each
+column is in its own seperate list, which will make operating on it later
+a lot nicer
+
+### parsing instructions
+
+```elixir
+instructions =
+  instructions_string
+  |> String.split("\n")
+  |> Enum.map(fn instruction ->
+    instruction
+    |> String.split(" ")
+    |> tl
+    |> Enum.take_every(2)
+    |> Enum.map(&String.to_integer(&1))
+  end)
+```
+
+parsing the instructions is much nicer than the initial state :)
+
+similar usage of `Enum.take_every` happens here, except acting on a list
+of words instead of characters
+
+```elixir
+[
+  [1, 2, 1],
+  [3, 1, 3],
+  [2, 2, 1],
+  [1, 1, 2]
+]
+```
+
+here, the 0th item is the amount to move, the second is the from location, and the third is the two location
+
+### utils
+
+```elixir
+defmodule CargoCrane do
+  def activate(model, instructions, initial_state) do
+    Enum.reduce(instructions, initial_state, fn [move, from, to], state ->
+      to_move =
+        state
+        |> Enum.at(from - 1)
+        |> Enum.take(move)
+
+      state
+      |> List.update_at(to - 1, fn stack ->
+        case model do
+          :CrateMover9000 -> (to_move |> Enum.reverse()) ++ stack
+          :CrateMover9001 -> to_move ++ stack
+          _ -> raise "I don't know that model of crane!"
+        end
+      end)
+      |> List.update_at(from - 1, fn stack ->
+        stack |> Enum.drop(move)
+      end)
+    end)
+  end
+
+  def inspect_tops(state) do
+    state |> Enum.map(&hd(&1)) |> Enum.join()
+  end
+end
+```
+
+the _meat_
+
+#### activate/3
+
+```elixir
+def activate(model, instructions, initial_state) do
+```
+
+here, we accept 3 arguments, `model`, `instructions`, and `initial_state`
+
+model should either `:CrateMover9000` or `:CrateMover9001`, depending on the mode
+of operation expected by the user
+
+instructions is simply our list of instructions
+
+and initial_state is our list of stacks that we will apply the instructions
+to
+
+```elixir
+Enum.reduce(instructions, initial_state, fn [move, from, to], state ->
+```
+
+the first thing we do is start a `Enum.reduce`, and pass in the
+instructions as the thing we shall be reducing over, but the initial
+accumulator will be our initial state
+
+the idea here, is that the accumulator should always be something
+that represents a list of stacks, and each time we reduce over the
+list of instructions, what we return from this inner function is
+the _next_ state after applying a given instruction
+
+also happening on this line is destucturing the list into three
+variables, `move`, `from`, and `to`
+
+```elixir
+to_move =
+  state
+  |> Enum.at(from - 1)
+  |> Enum.take(move)
+```
+
+within this inner function, take the items we need from the stack
+we are moving from, and store them in a `to_move` variable
+
+this does not mutate anything, because in this language thats
+not on the table
+
+```elixir
+state
+|> List.update_at(to - 1, fn stack ->
+  case model do
+    :CrateMover9000 -> (to_move |> Enum.reverse()) ++ stack
+    :CrateMover9001 -> to_move ++ stack
+    _ -> raise "I don't know that model of crane!"
+  end
+end)
+|> List.update_at(from - 1, fn stack ->
+  stack |> Enum.drop(move)
+end)
+```
+
+the next block is busy, but not bad
+
+as mentioned previously mutations are no bueno, so `List.update_at`
+can be used to _update_ an item within a list at a given index, and return
+a new list with the changes made
+
+the first `List.update_at` is to put the items we just stored in `to_move`
+into the target location
+
+here, we use a case statement on model to match if we are the 9000 or
+9001 model, and either append the reversed version of the list to the target
+stack, or the list as-is
+
+or just raise with "I don't know that model of crane!" if that case fails
+
+and for the second `List.update_at`, we drop the amount we moved from the
+stack we moved from
+
+#### inspect_tops/1
+
+```elixir
+def inspect_tops(state) do
+  state |> Enum.map(&hd(&1)) |> Enum.join()
+end
+```
+
+given a state, pluck the heads from each of the stacks, and join them
+together into a string
+
+this is used to spit out the answer that can be fed directly into the
+advent of code text field
+
+### part 1
+
+```elixir
+CargoCrane.activate(:CrateMover9000, instructions, initial_state)
+|> CargoCrane.inspect_tops() # -> "CMZ"
+```
+
+so there was a lot of preamble before, but as you can see, our
+part 1 is a two liner
+
+### part 2
+
+```elixir
+CargoCrane.activate(:CrateMover9001, instructions, initial_state)
+|> CargoCrane.inspect_tops() # -> "MCD"
+```
+
+and our part 2 is a similar two liner with a different crate mover model!
+
+wow
+
+<br />
+
+</details>
+
+---
+
+i stayed up early, again, but this one was the longest to figure out solutions so far
+
+```
+5   00:47:43  9363      0   00:50:06  8313      0
+```
+
+from my [[personal stats]](https://adventofcode.com/2022/leaderboard/self) page,
+you can see it took me 47 minutes, from problem release, to solve, to answer this question
+
+_but_, then only about two minutes after that to solve part 2, so a tiny delta between
+solutions :D
+
+i had work in the morning, and two alarms that should have woken me up for it, but alas
+due to flying too close to the sun, i slept through the alarms and awoke at 11am
+
+no more 1:30am problem solving for me :), now to see if i can flip around to waking up
+super early to complete problems instead...
+
+<br />
+
+due to i think sloppy wording on my part, we have **a guest star** today
+helping out with the rambling!
+
+<br />
+
+for context, earlier in conversation with [[sven]](https://github.com/STollenaar/AdventOfCode2022/), he mentioned
+
+> [1:44 PM] Secure Cluster Nerd 5000: Just waiting for the rambling now 🙂
+
+to which i replied
+
+> [2:30 PM] ja (gmup): ramblings will be later during the work week sadly
+
+what i meant here was that ramblings would be later during _the day_, during the work week,
+not that i would do them later in the work week
+
+marty then jumped in and said
+
+> [4:10 PM] mort: i'll do jacks writeup for him today and put up a PR
+>
+> [4:10 PM] mort: xD
+
+i didn't immediately correct him and assumed the `xD` implied it was a joke
+
+it was not a joke, [[he did end up putting up a pr]](https://github.com/jackharrhy/www.cs.mun.ca-jaharrhy/pull/4)
+
+so this post is a combination of his preabmle / comments, and also my own ramblings
+
+_ramble 2x_
+
+(everything marty wrote is from the perspective of me not being here)
+
+here is the marty preamble:
+
+---
+
+<DitherMert /> hey guys, [[mert]](https://github.com/lilmert) here. I'm filling
+in for jack today cause he slept in and told his fans he needed an earned break.
+Until then you're stuck with my shitty, less productive reviews... onwards!
+
+my general comments for today - _the spice level is increasing_. We rarely see this in AoC but
+today was an instance of our input data having its form defined prior to, what would be more
+commonly referred to as, the action data.
+
+there's a couple ways I see you could handle this. The first would be a brute force copy paste
+into a manual refactoring and storage of the data you want. When it comes to speed, this might
+be considered quicker with less brain overhead, as the second you choose to parse the input and
+make sense of it, you've more of less added a 3rd programming part to the problem.
+
+<br />
+
+### others
+
+since we have a guest star today, there is _double_ the review
+
+<div>
+  <DitherMert />
+  <span class="shake">🤝</span>
+  <DitherJack />
+</div>
+
+<br />
+
+<Other person="mudkip" day="5" />
+
+> <DitherMert /> mert
+>
+> ```python
+> def parseInputs():
+>     stacks, instructions = {}, []
+>     for line in open("5.in", "r").read().splitlines():
+>         if (line.strip().startswith('1')): continue
+>         if (line.startswith('move')):
+>             instructions.append(list((int(x) if x.isdigit() else x for x in line.split(' ')))[1::2])
+>             continue
+>         for i in range(0, len(line), 4):
+>             index = (i//4)+1
+>             crate = line[i+1:i+2].strip()
+>             if index not in stacks: stacks[index] = []
+>             if crate != '': stacks[index].insert(0, crate)
+>     return stacks, instructions>
+> ```
+>
+> ah, yes, my python wizard.
+>
+> there's a little bit of python magic here and there,
+> but i like it.
+>
+> including this function cause not only is it _clean_, but it's a good demonstration of the mental overhead
+> that can exist in these coding challenges sometimes. If you're the _golfy_ type,
+> copy-pasting and letting your text editor do this work would be the speed solution
+> to grab the data structures you want, quickly. vim-max anyone?
+>
+> <DitherJack /> jack
+>
+> yeah, what mert said
+>
+> regarding python _magic_, i've made some [[notes over in the new tips section]](http://localhost:3000/~jaharrhy/aoc/2022/tips/#list-comprehension)
+> regarding my thoughts on list comprehension
+>
+> here, its being used to keep things super compact, but i hope
+> nobody is doing this sort of thing in production code :)
+
+<Other person="brianna" day="5" />
+
+> <DitherMert /> mert
+>
+> i LOVE the assumptions and just raw coding the stacks. The mental effort to
+> arriving at a solution feels a lot lower. Not only that, it's easy for me
+> to understand whats happening.
+>
+> <DitherJack /> jack
+>
+> ```py
+> # parse stacks
+> stacks = {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: []}
+> offset = 1
+> for i in range(0, 8):
+>     line = data[i]
+>     for j in range(0, 9):
+>         if line[offset] != ' ':
+>             stacks[j].append(line[offset])
+>         offset += 4
+>     offset = 1
+> ```
+>
+> i like this input parsing, the stacks dict could probably be created
+> in a list comprehension, but hey, it works
+
+<Other person="kent" day="5" />
+
+> <DitherMert /> mert
+>
+> Nice. Take the input, put it into the form you want cause f&$! parsing it,
+> then do your logical operations.
+>
+> _clean_
+>
+> however, if this _WAS_ an exercise in learning python, which I'm assuming it
+> wasn't, then I'd be intentional with doing the parsing programitically for learning
+> sake.
+>
+> <DitherJack /> jack
+>
+> but marty, this is about solving problems, and kent
+> be out here solving problems
+>
+> ```py
+> final = []
+> for x in crates:
+>   final.append(x[-1])
+> ```
+>
+> this could be a list comprehension :)
+>
+> ```py
+> final = [x[-1] for x in crates]
+> ```
+>
+> much better
+>
+> sorry marty is doing so well, i can only add little bits of critique
+>
+> and for someone who warns people about list comprehension usage, i sure
+> do be telling people to use list comprehension
+
+<Other person="riley" day="5" />
+
+> <DitherJack /> jack
+>
+> nice
+>
+> ```f#
+> let applyMovement (reverse: bool) (grid: char [] []) (instruction: Instruction) : char [] [] =
+>     grid
+>     |> Array.copy
+>     |> Array.updateAt (instruction.from_col - 1) grid[instruction.from_col - 1].[instruction.count ..]
+>     |> Array.updateAt
+>         (instruction.to_col - 1)
+>         (Array.concat [| grid[instruction.from_col - 1].[0 .. instruction.count - 1]
+>                          |> (if reverse then Array.rev else id)
+>                          grid[instruction.to_col - 1] |])
+> ```
+>
+> this feels quite like my solutions reducer usage! neat
+>
+> i see usage of `Array.copy` here, i assume `Array.updateAt` potentially mutates the underlying array?
+> therefore you make a copy beforehand?
+>
+> interesting
+>
+> <DitherMert /> mert
+>
+> f# gives me life.
+>
+> ```f#
+> let instructions =
+>     inputData[ 1 ].Split "\n"
+>     |> Array.map (fun instruction -> instruction.Split " ")
+>     |> Array.map (fun instruction ->
+>         { count = int instruction[1]
+>           from_col = int instruction[3]
+>           to_col = int instruction[5] })
+> ```
+>
+> i like looking at this code. its instructional, clean, and to the point.
+>
+> obligatory jack: "nice"
+
+<Other person="hamzah" day="5" />
+
+> <DitherJack /> jack
+>
+> i thought today would stump hamzah / force him to return to _actually programming language land_
+>
+> but alas, he is here, and its glorious
+>
+> its neat to see a set of columns representing the intermediate states the stacks are in,
+> which makes sense that the _memory_ would be visible in a sheets-based solution
+>
+> also marty couldn't find the link to your sheet so he has nothing to say
+>
+> hey marty if you are reading this you can put up a pr to add something here
+
+<Other person="ethan" day="5" />
+
+> <DitherMert /> mert
+>
+> COPY PASTA GOD MODE
+>
+> <DitherJack /> jack
+>
+> COPY PASTA GOD MODE
+>
+> also, not sure if this is my browser, but there seems to be a lot of newlines in these cells
+> making them much bigger than their contents
+>
+> but yeah
+>
+> COPY PASTA GOD MODE
+>
+> (i don't know what that means but mert is chanting it so i will chant as well)
+
+<Other person="sven" day="5" />
+
+> <DitherMert /> mert
+>
+> is my brain melting or is it just the _go_
+>
+> <DitherJack /> jack
+>
+> its just the _go_, i think this is a decent solution
+>
+> the utility functions here aren't exactly that small,
+> but they aren't exactly busy either
+>
+> it does result the in main function being pretty simple
+>
+> the state-based line-by-line input parser isn't bad
+>
+> ```go
+> line = strings.ReplaceAll(line, "    ", " ") // WHY 4 SPACES, WHYYYYYY, DAMN CLEANUP
+> ```
+>
+> a nice little rage inclusion here from sven as well
+>
+> nice
+
+<Other person="mathieu" day="5" />
+
+> <DitherMert /> mert
+>
+> YES. GOOD.
+>
+> ```python
+> stack = {
+>     1: 'WRF',
+>     2: 'THMCDVWP',
+>     3: 'PMZNL',
+>     4: 'JCHR',
+>     5: 'CPGHQTB',
+>     6: 'GCWLFZ',
+>     7: 'WVLQZJGC',
+>     8: 'PNRFWTVC',
+>     9: 'JWHGRSV'
+> }
+> ```
+>
+> <DitherJack /> jack
+>
+> good indeed
+>
+> > mathieuboudreau: I didn't bother parsing the the stacks list in my code,
+> > if a user gave me that in this format I'd send it back to them hahaha.
+> > Much quicker to simplify it manually than to code it
+>
+> i like the stance here on user kickback :D
+
+<Other person="ryan" day="5" />
+
+> <DitherJack /> jack
+>
+> lets see what marty has to say about ruby
+>
+> <DitherMert /> mert
+>
+> i just fell in love with ruby, you will find me in my cave.
+>
+> <DitherJack /> jack
+>
+> yeah
+
+<Other person="nathan" day="5" />
+
+> <DitherMert /> mert
+>
+> somewhat cursed, somewhat ok cause javascript does whatever IT PLEASES
+>
+> <DitherJack /> jack
+>
+> ```js
+> stacks[destination].push(...stacks[origin].splice(-n).reverse().reverse()); //hehee
+> ```
+>
+> hehee indeed nathan
+
+<Other person="andrewReynolds" day="5" />
+
+> <DitherJack /> jack
+>
+> ```js
+> const crateMover9001 = (procedures: number[][], stacks: (string | undefined)[][]) => {
+>    // Turn on Air Conditioning
+>    // Admire Leather seats
+>    // Place ANOTHER coffee in the EXTRA cup holder
+> ```
+>
+> where do i get me one of these create mover 9001s this sounds amazing
+>
+> i could _um akctually_ into another reducer conversation, but i'm just happy
+> to see you are still along for the ride, even after saying you were struggling to
+> parse the file :)
+
+<Other person="david" day="5" />
+
+> <DitherJack /> jack
+>
+> ```f#
+> // read the stacks
+> let stackLines = List.tail preMoveLines
+> let stacks =
+>   seq {
+>     for i in colIndices do
+>       let mutable col = []
+>       for line in stackLines do
+>         if not (Char.IsWhiteSpace(line[i])) then
+>           col <- line[i]::col
+>       yield col
+>   } |> Seq.toList
+> ```
+>
+> _mutable usage???_
+>
+> just kidding, i like this
+>
+> usage of seq with what looks to be a nested scope that yields a column being
+> expanded to a list is nice
+
+<Other person="ethanDenny" day="5" />
+
+> <DitherMert /> mert
+>
+> could link your helper functions together for code reuse.
+> c++ always makes me happy, the code feels clean and correct
+>
+> obligatory jack: "nice"
+>
+> <DitherJack /> jack
+>
+> yeah this is nice
+>
+> pretty not busy
+
+<Other person="marty" day="5" />
+
+> <DitherMert /> mert
+>
+> wait, why did i just look at my own code and hate it?
+> it's ok. i've perused the internet of rust solutions for this
+> one and I didn't miss much other THAN the mutability crisis i
+> found myself in when trying to grab things from the hashmap.
+> Note to self: if this happens again, it's almost always the case
+> that a vector is preferred, and simplifies the solution a touch.
+>
+> <DitherJack /> jack
+>
+> i like your code marty &lt;3
+>
+> the `create_stacks` function is :clean:
+>
+> ```rs
+> .filter(|(_, c)| c.is_alphabetic())
+> ```
+>
+> filtering out the non-alphabetic chars to remove noise is epic
+>
+> also, matching on which part you're on to figure out rather
+> to reverse or not, is :clean:
+>
+> also thanks for taking part in my ramblings, this is fun
+
+<Other person="brandon" day="5" />
+
+> <DitherMert /> mert
+>
+> i spy `assert!`. avoid this, it's probably an artifact of something else you want to do.
+> [[is there a better way?]](https://github.com/bjbemister19/AdventOfCode/blob/master/2022/day_5/src/stacks.rs#L6-L25)
+>
+> yes! the core of iterative tools in rust is the [[`Iterator`]](https://doc.rust-lang.org/std/primitive.str.html#method.split)
+> & [[itertools]](https://docs.rs/itertools/0.10.5/itertools/index.html#), and things built for / around it.
+> You can typically chain your operations around this iterator type and achieve what you want.
+> Also, a reimagination of the problem maybe isn't splitting at every `n`th index, but rather
+> splitting at every occurence of an alphabetical character.
+>
+> [[Here's an option]](https://github.com/lilmert/aoc/blob/main/src/years/y22/d5.rs#L29-L39)
+>
+> <DitherJack /> jack
+>
+> look at mert linking to his own rust solution :P
+
+<Other person="mohammadArafatZaman" day="5" />
+
+> <DitherMert /> mert
+>
+> i don't love the aesthetics of the code (naming, organization), but it got the job done.
+>
+> <DitherJack /> jack
+>
+> yeah this could be broken up into more utility functions, even just to
+> section code / give names to what is doing what, and then having
+> a main area in which everything is composed
+
+<Other person="zach" day="5" />
+
+> <DitherJack /> jack
+>
+> very nice input parsing
+>
+> and pulling out the reducer on moves to reduce the crates
+> from one state to the next!
+>
+> _its giving functional_
+
+<Other person="devin" day="5" />
+
+> <DitherJack /> jack
+>
+> > Devin: I liked the actual processing of this,
+> > but hated the input parsing.
+>
+> yeah
+>
+> > Devin: Also this is one where i hate that JS/TS has no
+> > built in deep clone: i spent the majority of the time
+> > trying to find a way to do it without using a lib
+>
+> easy,
+>
+> ```ts
+> const clonedThing = JSON.parse(JSON.stringify(thing));
+> ```
+>
+> look ma, no libaries!
+
+---
+
+### meta
+
+as covered in [[yesterdays  meta]](../day4/#meta), my little jack utils page has helped
+speed up the creation of this document, but today was a bit different anyways with the
+accidental guest apperance, if this happens again (which i hope it does!), hopefully
+it'll be arranged instead :)
+
+i created a page yesterday and didn't talk about it, but i might as well mention
+it now, there is a [[tips]](../tips/) page, which i am using to collect different
+recommendations / jackisms / etc. in one place
+
+---
+
+if you want to have your repo added for me to make a note of / talk about here (or have you repo removed), reach out:
+
+email -> `me@jackharrhy.com`
+
+discord -> `<i>jack arthur null</i>#7539`

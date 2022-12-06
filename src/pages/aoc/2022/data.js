@@ -84,7 +84,7 @@ const sven = {
 const daniel = {
   display: "DanielPower/AdventOfCode2022",
   link: "https://github.com/DanielPower/AdventOfCode2022/",
-  days: [1, 2, 3],
+  days: [1, 2, 3, 4],
   dayLinkFunc: (day) =>
     `https://github.com/DanielPower/AdventOfCode2022/blob/master/src/Day${day}.hs`,
   language: "haskell",
