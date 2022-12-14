@@ -1,5 +1,7 @@
+import { useMemo } from "react";
 import { useState } from "react";
 import { people } from "./data";
+import { dayTemplate } from "./day-template";
 
 const personTemplate = (personKey, day) =>
   `
@@ -36,6 +38,16 @@ const ShowPeople = ({ day }) =>
 
 export default function JackUtils() {
   const [day, setDay] = useState(new Date().getDate());
+
+  const allPeopleTemplate = useMemo(
+    () =>
+      Object.entries(people)
+        .filter(([_personKey, person]) => person.days.includes(day))
+        .map(([personKey, _person]) => `${personTemplate(personKey, day)}\n\n`)
+        .join(""),
+    [day]
+  );
+
   return (
     <>
       day:{" "}
@@ -45,14 +57,13 @@ export default function JackUtils() {
       />
       <br />
       <br />
+      <p>full template</p>
       <div>
-        <pre>
-          {Object.entries(people)
-            .filter(([_personKey, person]) => person.days.includes(day))
-            .map(
-              ([personKey, _person]) => `${personTemplate(personKey, day)}\n\n`
-            )}
-        </pre>
+        <pre>{dayTemplate(day, allPeopleTemplate)}</pre>
+      </div>
+      <p>just others</p>
+      <div>
+        <pre>{allPeopleTemplate}</pre>
       </div>
       <br />
       <ul>

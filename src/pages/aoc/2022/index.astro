@@ -1,7 +1,10 @@
 ---
 import AdventOfCodeLayout from "@layouts/AdventOfCodeLayout.astro";
 
-const days = [1, 2, 3, 4, 5, 6];
+// writing too much elixir has affectd how i write javascript :)
+const days = Object.keys(import.meta.glob("./day*.mdx")).map((fileName) =>
+  Number(fileName.split(".")[1].slice(4))
+);
 ---
 
 <style>
@@ -20,6 +23,16 @@ const days = [1, 2, 3, 4, 5, 6];
   .tips {
     margin-top: 2rem;
   }
+
+  .jack-utils {
+    margin-top: 2rem;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .jack-utils:focus {
+    opacity: 1;
+  }
 </style>
 
 <AdventOfCodeLayout year={2022} title="advent of code 2022">
@@ -33,6 +46,9 @@ const days = [1, 2, 3, 4, 5, 6];
     }
     <a href={`./tips/`} class="tips">
       <li>[tips]</li>
+    </a>
+    <a href={`./jack-utils/`} class="jack-utils">
+      <li>[jack-utils]</li>
     </a>
   </ul>
 </AdventOfCodeLayout>

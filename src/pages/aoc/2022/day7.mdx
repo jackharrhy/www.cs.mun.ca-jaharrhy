@@ -1,0 +1,582 @@
+---
+layout: "@layouts/AdventOfCodeLayoutDay.astro"
+title: day 7
+pubDate: 2022-12-07
+---
+
+import Other from "@components/aoc/Other.astro";
+
+_note: i had this mostly written on day 7, but i didn't finish it off_
+
+_my focus switched to my [[DevFest 2022]](https://gdg.community.dev/events/details/google-gdg-st-johns-presents-devfest-2022/) talk, hence this is being posted on the 13th :)_
+
+---
+
+it was indeed the calm before the storm
+
+i'd argue the storm _wasn't that bad_, however
+it did seem to cause a few people to be missing
+from the other section that have been staples
+previously
+
+---
+
+<details>
+<summary>click to view my solution</summary>
+
+<br />
+
+given the sample input:
+
+```
+$ cd /
+$ ls
+dir a
+14848514 b.txt
+8504156 c.dat
+dir d
+$ cd a
+$ ls
+dir e
+29116 f
+2557 g
+62596 h.lst
+$ cd e
+$ ls
+584 i
+$ cd ..
+$ cd ..
+$ cd d
+$ ls
+4060174 j
+8033020 d.log
+5626152 d.ext
+7214296 k
+```
+
+assuming `input` is the above as one big string,
+
+```elixir
+raw_session =
+  input
+  |> String.split("$")
+  |> tl
+  |> Enum.map(&String.trim/1)
+  |> Enum.map(&String.split(&1, "\n"))
+```
+
+split on `$` breaks each command into its own (initially messy) chunk
+
+also leaves an empty string in a list, so we pluck the tail via `tl`
+of the linked list to remove it
+
+trim the lines, and split them on `\n` (because ls commands produce
+multiple lines below them)
+
+```elixir
+[
+  ["cd /"],
+  ["ls", "dir a", "14848514 b.txt", "8504156 c.dat", "dir d"],
+  ["cd a"],
+  ["ls", "dir e", "29116 f", "2557 g", "62596 h.lst"],
+  ["cd e"],
+  ["ls", "584 i"],
+  ["cd .."],
+  ["cd .."],
+  ["cd d"],
+  ["ls", "4060174 j", "8033020 d.log", "5626152 d.ext", "7214296 k"]
+]
+```
+
+we are left with a nicer-to-parse list of commands, that i refer
+to as a _session_
+
+```elixir
+session =
+  raw_session
+  |> Enum.map(fn raw_command ->
+    case length(raw_command) do
+      1 -> {:cd, raw_command |> Enum.at(0) |> String.split(" ") |> Enum.at(1)}
+      _ -> {:ls, raw_command |> Enum.drop(1) |> Enum.map(&String.split(&1, " "))}
+    end
+  end)
+```
+
+we want to clean up this raw session into something nicer with
+atoms & lists, so go over each of the previously created commands,
+and depending on the length of them, create even nicer looking
+commands based on the input
+
+```elixir
+[
+  cd: "/",
+  ls: [["dir", "a"], ["14848514", "b.txt"], ["8504156", "c.dat"], ["dir", "d"]],
+  cd: "a",
+  ls: [["dir", "e"], ["29116", "f"], ["2557", "g"], ["62596", "h.lst"]],
+  cd: "e",
+  ls: [["584", "i"]],
+  cd: "..",
+  cd: "..",
+  cd: "d",
+  ls: [["4060174", "j"], ["8033020", "d.log"], ["5626152", "d.ext"], ["7214296", "k"]]
+]
+```
+
+look at that, so pretty
+
+### utils
+
+```elixir
+defmodule DeviceFS do
+  def dir_to_string(dir), do: "/#{dir |> Enum.reverse() |> tl |> Enum.join("/")}"
+
+  def expand_contents(dir, contents) do
+    Enum.map(contents, fn content ->
+      case content do
+        ["dir", name] -> ["dir", dir_to_string([name | dir])]
+        _ -> content
+      end
+    end)
+  end
+
+  def generate_fs(fs, curdir, [{:cd, ".."} | session]) do
+    generate_fs(fs, Enum.drop(curdir, 1), session)
+  end
+
+  def generate_fs(fs, curdir, [{:cd, dir} | [{:ls, contents} | session]]) do
+    dir = [dir | curdir]
+    fs = Map.put(fs, dir_to_string(dir), expand_contents(dir, contents))
+    generate_fs(fs, dir, session)
+  end
+
+  def generate_fs(fs, _curdir, []), do: fs
+
+  def generate_fs(session), do: generate_fs(%{}, [], session)
+end
+```
+
+ah
+
+so this is the day where i whip out [[tail recursion]](https://en.wikipedia.org/wiki/Tail_recursion),
+and [[multiple clauses]](https://elixir-lang.org/getting-started/modules-and-functions.html#named-functions)
+
+its time to get funky in here
+
+but before explaining this, it would probably be first better to show
+what this _does_ first
+
+```elixir
+fs = DeviceFS.generate_fs(session)
+```
+
+pass in our session (the cleaned up list of commands)
+to generate_fs/1`
+
+```elixir
+%{
+  "/" => [["dir", "/a"], ["14848514", "b.txt"], ["8504156", "c.dat"], ["dir", "/d"]],
+  "/a" => [["dir", "/a/e"], ["29116", "f"], ["2557", "g"], ["62596", "h.lst"]],
+  "/a/e" => [["584", "i"]],
+  "/d" => [["4060174", "j"], ["8033020", "d.log"], ["5626152", "d.ext"], ["7214296", "k"]]
+}
+```
+
+and we get this!
+
+now this isn't a tree, but a mapping from each directory, to its contents
+
+i'll explain later how we use this, but first, how do we go from the commands to
+this map?
+
+first, lets see how we even enter this module
+
+```elixir
+def generate_fs(session), do: generate_fs(%{}, [], session)
+```
+
+this sneaky little one line function is our entrance into the
+recursive function, since generate_fs needs 4 arguments (and we
+initalize them all here instead of relying on the caller to set
+this up)
+
+the first argument here will _become_ our map of directories -> contents,
+but for now we make it an empty map
+
+the second argument is what directory we are currently in (represented
+as a linked list), also assumed to be empty initially
+
+and then, our sessions, untouched from the input
+
+```elixir
+def generate_fs(fs, curdir, [{:cd, dir} | [{:ls, contents} | session]]) do
+  dir = [dir | curdir]
+  fs = Map.put(fs, dir_to_string(dir), expand_contents(dir, contents))
+  generate_fs(fs, dir, session)
+end
+```
+
+there are multiple definitions of `generate_fs/3`, and pattern
+matching is used to figure out which one to use
+
+elixir will try each one in order, but this will end up being the first
+one hit, since the first line of the input data is `cd /`
+
+we _expect_ there to be a tupple `{:cd, ...}` as the head of
+the list, but since we need to handle any dir name, we leave
+that a variable named `dir` which will be an argument to the function
+
+we then expect the tail of the linked list node in the session to
+be a linked node referencing a `{:ls, ...}` command
+
+again, we don't care whats associated with this command, so we
+set it as the variable `contents`
+
+we also set the tail of this inner linked list node to be session,
+since after having ran through the body of this function we have
+consumed these commands, and can continue onto the next session
+operations after the next tail call
+
+```elixir
+dir = [dir | curdir]
+```
+
+the first line of the function appends the dir we have `cd`'d into
+to the dir we came from
+
+```elixir
+fs = Map.put(fs, dir_to_string(dir), expand_contents(dir, contents))
+```
+
+we then update our `fs` variable (the map from filesystem path to
+contents, using two utility methods)
+
+#### `dir_to_string/1`
+
+```elixir
+def dir_to_string(dir), do: "/#{dir |> Enum.reverse() |> tl |> Enum.join("/")}"
+```
+
+`dir_to_string/1` will take in a directory (which we represent as a linked list),
+reverse it, trim off the top, and join on `/`
+
+```elixir
+# ...
+  "/a/e" => [["584", "i"]],
+# ...
+```
+
+this produced the key of the map we are generating
+
+#### `expand_contents/2`
+
+```elixir
+def expand_contents(dir, contents) do
+  Enum.map(contents, fn content ->
+    case content do
+      ["dir", name] -> ["dir", dir_to_string([name | dir])]
+      _ -> content
+    end
+  end)
+end
+```
+
+expand contents
+
+isn't too busy, just need to ensure that when we save
+directories to our 'filesystem', that they are the full
+fat directories `/a/b/c` and not _just_ `c`
+
+the sample input doesn't have any duplicate entries,
+but (at least my) _puzzle input_ does
+
+i didn't have this function (or `dir_to_string/1`) initially,
+and it caused me to get the correct answer for the sample, but
+incorrect for part 1 .-.
+
+```elixir
+def generate_fs(fs, curdir, [{:cd, ".."} | session]) do
+  generate_fs(fs, Enum.drop(curdir, 1), session)
+end
+```
+
+our second (first within the code order-wise) `generate_fs/3`
+clause is the case where we go up a directory, so we simply
+drop one value from the current directory linked list
+
+```elixir
+def generate_fs(fs, _curdir, []), do: fs
+```
+
+lastly, the final `generate_fs/3` clause, both the final
+to be covered, the final order wise, and also the last
+clause before we've finished calculating `fs`, is when the
+session is empty
+
+i.e. we've exuasted the commands, therefore just return `fs`
+
+<br />
+
+ok, back to the actual size bit
+
+```elixir
+%{
+  "/" => [["dir", "/a"], ["14848514", "b.txt"], ["8504156", "c.dat"], ["dir", "/d"]],
+  "/a" => [["dir", "/a/e"], ["29116", "f"], ["2557", "g"], ["62596", "h.lst"]],
+  "/a/e" => [["584", "i"]],
+  "/d" => [["4060174", "j"], ["8033020", "d.log"], ["5626152", "d.ext"], ["7214296", "k"]]
+}
+```
+
+reminder, we just generated this, as the variable `fs`
+
+```elixir
+defmodule DeviceFSUtils do
+  def get_size_of_dir(fs, dir) do
+    dir = Map.get(fs, dir)
+
+    sizes =
+      for item <- dir do
+        case item do
+          ["dir", name] -> get_size_of_dir(fs, name)
+          [number, _name] -> String.to_integer(number)
+        end
+      end
+
+    Enum.sum(sizes)
+  end
+
+  def get_sizes_of_dirs(fs) do
+    Map.keys(fs) |> Enum.map(&get_size_of_dir(fs, &1))
+  end
+end
+```
+
+another module! this one is just for figuring out the sizes of
+given directories, or all directories
+
+i won't explain this one, and leave it as exercise to the
+reader, if you wish
+
+it uses recursion but its a lot less scary
+
+### part 1
+
+```elixir
+DeviceFSUtils.get_sizes_of_dirs(fs)
+|> Enum.filter(&(&1 <= 100_000))
+|> Enum.sum() # -> 95437
+```
+
+use our new module to get the size of every dir
+
+then filter them by values less than the threshold
+
+then sum them
+
+### part 2
+
+```elixir
+total_size_of_fs = 70_000_000
+space_needed_to_update = 30_000_000
+
+size_of_root_dir = DeviceFSUtils.get_size_of_dir(fs, "/")
+# ^ 48381165 ^
+```
+
+define some specs of the fs we are on, the upgrade, and the size of the
+root dir (using our own util again)
+
+```elixir
+space_to_free_up = size_of_root_dir + space_needed_to_update - total_size_of_fs
+# ^ 8381165 ^
+```
+
+figure out the space we need to free up, based on the above calculations
+
+```elixir
+DeviceFSUtils.get_sizes_of_dirs(fs)
+|> Enum.filter(&(&1 >= space_to_free_up))
+|> Enum.min() # -> 24933642
+```
+
+do more filtering, but this time get the min values
+
+nice
+
+the full solution can be found [[here]](https://github.com/jackharrhy/advent2022/blob/main/day7.livemd)
+
+<br />
+
+</details>
+
+---
+
+_no mudkip :o_
+
+some long solutions here today, but also some quite small ones!
+
+### others
+
+<Other person="brianna" day="7" />
+
+> very nice, a solution that increments the parents sizes
+> as its navigates through the tree, constructing a mapping
+> from directory to size without an intermediate data structure
+>
+> good list. comp. as always
+>
+> and nice usage of `while` loop to keep plucking from path
+>
+> nice
+
+<Other person="kent" day="7" />
+
+> similar vibes to briannas soltuion, but even more compact,
+> and fits both part one and two into a single solution!
+>
+> the usage of `defaultdict` is neat
+>
+> nice
+
+<Other person="riley" day="7" />
+
+> _riley, **.py**?_
+>
+> _have i lost my functional friend???_
+>
+> thats ok, this is a nice python solution, and as you mentioned,
+> you picked a language that would give you a soltuion in time
+> to work in the morning, which is very fair
+>
+> i support completing advent of code over functional
+> programming limitations, but i might not follow that
+> path myself at this rate :)
+
+<Other person="hamzah" day="7" />
+
+> the usage of cells to keep track of the current 'state' as you
+> scroll down the page is interesting
+>
+> love the 'Yea this aint it' cell :)
+
+<Other person="ethan" day="7" />
+
+> nice little tree class, with some directory traversal code
+>
+> could clean up some of the conditional stuff a bit by switching
+> to using the new [[match-case]](https://blog.teclado.com/python-match-case/) syntax
+
+<Other person="sven" day="7" />
+
+> can / should structs have lowercase names? thought they were variables for a second
+>
+> pretty clean tree-based solution otherwise
+>
+> nice usage of util. functions for part 1 / 2
+
+<Other person="emily" day="7" />
+
+> nice and smol python solution
+>
+> i like the `totals.append` usage when you `..`!
+>
+> feels like a slightly more clean version of kents
+>
+> nice
+
+<Other person="mitch" day="7" />
+
+> > <img
+> >   class="small-image"
+> >   src="https://raw.githubusercontent.com/ecumene/advent_of_code/280212a0ab40233d9dfc9252c98b923391ff9aa1/2022/notebooks/images/day7.jpeg"
+> > />
+> >
+> > prompt: elf looking surprised at terminal output
+>
+> this one is trippy
+>
+> nice mitch writeups on the approach in this one
+>
+> broken out into the tree creation step, and the tree size calculation one,
+> in their own cells
+>
+> nice
+
+<Other person="devin" day="7" />
+
+> always love the preamble of good typescript usage in dev solutions
+>
+> a node class! exported too!
+>
+> input parsing broken out into its own function... the clouds have blessed us
+> with a brilliant solution today
+>
+> > because jack and shawn and poseidon complained about re-using a function in a one off script
+>
+> &lt;3
+
+<Other person="mathieu" day="7" />
+
+> lots of functions today!
+>
+> also, a _class for testing_, snazzy
+>
+> i've seen pytest before but never using a test like this
+>
+> nice
+>
+> i'd recommend looking at using [[dataclasses]](https://docs.python.org/3/library/dataclasses.html)
+> to encapsulate data into a little class rather than working with dictionaries directly
+
+<Other person="andrewHynes" day="7" />
+
+> a nice solution!
+>
+> > Admittedly I looked for help on this one. This is based off a Python solution by krbarter.
+>
+> yeah kents was a good solution, i read the compute_sizes function
+> without reading the first comment and noticed it was quite like
+> kents solution
+>
+> i like that the `compute_answers` figures out part 1 and two in one go rather than two passes
+
+<Other person="ryan" day="7" />
+
+> very ruby, quite a few methods, but the methods aren't too busy!
+>
+> inner class usage to encapsulate state into little reusable things
+>
+> and tests again!
+
+<Other person="nathan" day="7" />
+
+> regular expressions galore
+>
+> nice recusrive `checkSize` function
+>
+> almost a nathan solution without a scrollbar if it
+> wasn't for the `const sections = fs.readFileSync(...` line
+> that reaches into the clouds :P
+
+<Other person="mohammadArafatZaman" day="7" />
+
+> nice little `Directory` class!
+>
+> similar to mathieu, i'd look into using [[dataclasses]](https://docs.python.org/3/library/dataclasses.html)
+> instead, since it would basically write your `__init__` method for you, and give you great intellisense
+
+<Other person="ben" day="7" />
+
+> oooo r has pipes!
+>
+> ill be honest i don't really grok what is going on here
+>
+> but its pretty compact!
+
+---
+
+if you want to have your repo added for me to make a note of / talk about here (or have you repo removed), reach out:
+
+email -> `me@jackharrhy.com`
+
+discord -> `<i>jack arthur null</i>#7539`
