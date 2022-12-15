@@ -1,0 +1,607 @@
+---
+layout: "@layouts/AdventOfCodeLayoutDay.astro"
+title: day 8
+pubDate: 2022-12-08
+---
+
+import Other from "@components/aoc/Other.astro";
+
+_note: i took a break writing rambles, and wrote this one on december 14th_
+
+---
+
+today wasn't a hard problem to conceptualize, but thanks to taking a sneaky
+approach for part 1 (that didn't pay off for part 2), it was the first problem
+that i didn't complete on the day of, causing me to take a break from aoc for a bit
+(mostly then switching focus to my [[DevFest 2022]](https://gdg.community.dev/events/details/google-gdg-st-johns-presents-devfest-2022/) talk)
+
+still, here i am writing the ramble
+
+a lot more written in my 'solution' section though, i have a feeling this will be the
+case from here on out... :)
+
+---
+
+<details>
+<summary>click to view my solution</summary>
+
+<br />
+
+given the sample input:
+
+```
+30373
+25512
+65332
+33549
+35390
+```
+
+assuming `input` is the above as one big string,
+
+```elixir
+trees =
+  input
+  |> String.split("\n")
+  |> Enum.map(fn row -> row |> String.graphemes() |> Enum.map(&String.to_integer/1) end)
+```
+
+split on newline, then take each row, convert it to characters, and then map those to integers
+
+```elixir
+[
+  [3, 0, 3, 7, 3],
+  [2, 5, 5, 1, 2],
+  [6, 5, 3, 3, 2],
+  [3, 3, 5, 4, 9],
+  [3, 5, 3, 9, 0]
+]
+```
+
+basic 2d grid of trees
+
+### drawing
+
+not required for problem solving, but just to make the output pretty :)
+
+```elixir
+defmodule Draw do
+  def grid(grid) do
+    for row <- grid do
+      for x <- row do
+        if x, do: "X", else: "_"
+      end
+      |> Enum.join("")
+    end
+    |> Enum.join("\n")
+  end
+end
+```
+
+go over each row / item, depending on if that value is `true` or `false`, either print `X` or `_`,
+then join back together into one big string
+
+### utils
+
+```elixir
+defmodule Quadcopter do
+  def navigate(trees) do
+    x = trees
+    x_rev = x |> Enum.map(&Enum.reverse/1)
+
+    y = trees |> Enum.zip() |> Enum.map(&Tuple.to_list/1)
+    y_rev = y |> Enum.map(&Enum.reverse/1)
+
+    [x, x_rev, y, y_rev]
+  end
+
+  def analyze_visibility(line) do
+    Enum.map_reduce(line, -1, fn x, acc ->
+      if x > acc do
+        {false, x}
+      else
+        {true, acc}
+      end
+    end)
+    |> elem(0)
+  end
+
+  def analyze_scenic_score(value, line, score \\ 0)
+
+  def analyze_scenic_score(value, [compare | remainder], score) do
+    if value > compare do
+      analyze_scenic_score(value, remainder, score + 1)
+    else
+      score + 1
+    end
+  end
+
+  def analyze_scenic_score(_value, [], score), do: score
+
+  def analyze_scenic_score(line) do
+    for {x, index} <- Enum.with_index(line) do
+      seen = Enum.drop(line, index + 1)
+      analyze_scenic_score(x, seen)
+    end
+  end
+
+  def realign([x, x_rev, y, y_rev]) do
+    x_rev = x_rev |> Enum.map(&Enum.reverse/1)
+    y = y |> Enum.zip() |> Enum.map(&Tuple.to_list/1)
+    y_rev = y_rev |> Enum.map(&Enum.reverse/1) |> Enum.zip() |> Enum.map(&Tuple.to_list/1)
+    [x, x_rev, y, y_rev]
+  end
+
+  def combine_results(directions, combiner) do
+    Enum.reduce(directions, fn direction, acc ->
+      Enum.zip(direction, acc)
+      |> Enum.map(&Tuple.to_list/1)
+      |> Enum.map(&Enum.zip/1)
+      |> Enum.map(fn line ->
+        Enum.map(line, fn {a, b} -> combiner.(a, b) end)
+      end)
+    end)
+  end
+end
+```
+
+chonky module
+
+first thing of note (and the entry point that takes in our tree structure)
+is `navigate/1`
+
+```elixir
+def navigate(trees) do
+  x = trees
+  x_rev = x |> Enum.map(&Enum.reverse/1)
+
+  y = trees |> Enum.zip() |> Enum.map(&Tuple.to_list/1)
+  y_rev = y |> Enum.map(&Enum.reverse/1)
+
+  [x, x_rev, y, y_rev]
+end
+```
+
+this function returns a list of 4 different 'views' of the trees
+
+\- `x` is just the trees as-is
+
+\- `x_rev` is the columns in order, but with the rows reversed
+
+\- `y` is the trees zipped and put back together, which basically
+functions as rotating the grid such that each nested list represents
+not the x axis but a y axis
+
+\- `y_rev` the above `y` variable but flipped, so the `y` in the other
+direction as well
+
+the code that actually figured out the visibility / scenic score acts on these
+lists
+
+### visibility
+
+```elixir
+def analyze_visibility(line) do
+  Enum.map_reduce(line, -1, fn x, acc ->
+    if x > acc do
+      {false, x}
+    else
+      {true, acc}
+    end
+  end)
+  |> elem(0)
+end
+```
+
+`analyze_visibility/1` takes in a line (any one of the inner lists within the 4 lists
+we created with `navigate/1`)
+
+it then does a map reduce to figure out if a tree is hidden or not
+
+the accumulator defaults to `-1` initially, therefore the first tree that is seen
+regardless of value will be considered higher than `-1`, therefore visible, and that
+value will be set as the current accumulator
+
+the next tree that is seen will have the accumulator of the currently highest seen tree
+compared to itself, and if it is greater than, will be set to visible with the accumulator
+updated, or set as not visible, with the accumulator staying the same value (the highest
+tree seen so far does not update)
+
+we discard the accumulator with `|> elem(0)`, which returns a list of booleans for the given line
+on if something is visible or not
+
+### scenic score
+
+```elixir
+def analyze_scenic_score(value, line, score \\ 0)
+
+def analyze_scenic_score(value, [compare | remainder], score) do
+  if value > compare do
+    analyze_scenic_score(value, remainder, score + 1)
+  else
+    score + 1
+  end
+end
+
+def analyze_scenic_score(_value, [], score), do: score
+
+def analyze_scenic_score(line) do
+  for {x, index} <- Enum.with_index(line) do
+    seen = Enum.drop(line, index + 1)
+    analyze_scenic_score(x, seen)
+  end
+end
+```
+
+`analyze_scenic_score`, with 4 different clauses, is used to calculate the scenic
+score of a given line
+
+my first approach to writing this function was done using `Enum.map_reduce`, but i
+wasn't able to get that to work (and aren't sure if its even possible), and went with
+this recursive approach instead
+
+```
+def analyze_scenic_score(line) do
+  for {x, index} <- Enum.with_index(line) do
+    seen = Enum.drop(line, index + 1)
+    analyze_scenic_score(x, seen)
+  end
+end
+```
+
+`analyze_scenic_score/1` takes in the line, and iterates over it, dropping the lines up until
+the index + 1, so we only compare values that are ahead of `x`, rather than starting at the beginning
+of the line each time
+
+we then pass it off to `analyze_scenic_score/3` (third value, score, defaults to 0) to actually
+calculate the scenic score for the given point in the line
+
+```
+def analyze_scenic_score(value, [compare | remainder], score) do
+  if value > compare do
+    analyze_scenic_score(value, remainder, score + 1)
+  else
+    score + 1
+  end
+end
+```
+
+our recursion function `analyze_scenic_score/3` will keep plucking items from the remainder
+of the list, and comparing it to the value
+
+if the value is greater than the thing we are comparing against, we keep going with the value
+compared to the tail (the rest of the line), and increase our score by one
+
+if we have a tree we are comparing against that is equal to or greater than or current value
+we just return `score + 1` (this is still a tree we can _see_, therefore it is used in the scenic score)
+
+```elixir
+def analyze_scenic_score(_value, [], score), do: score
+```
+
+there is also a base case for when we run out of trees, here we just pass back the score since there are
+no more trees to get points for
+
+#### realign
+
+```elixir
+def realign([x, x_rev, y, y_rev]) do
+  x_rev = x_rev |> Enum.map(&Enum.reverse/1)
+  y = y |> Enum.zip() |> Enum.map(&Tuple.to_list/1)
+  y_rev = y_rev |> Enum.map(&Enum.reverse/1) |> Enum.zip() |> Enum.map(&Tuple.to_list/1)
+  [x, x_rev, y, y_rev]
+end
+```
+
+so `navigate/1` took our grid, and made it 4 different but technically the same grids,
+but now for us to figure out the results we need to realign them, here is where the `realign`
+function comes in!
+
+it still returns a list of 4 values, however, these 4 values will all be back onto the same
+orientation, therefore our next function comes in handy!
+
+#### combine results
+
+```elixir
+def combine_results(directions, combiner) do
+  Enum.reduce(directions, fn direction, acc ->
+    Enum.zip(direction, acc)
+    |> Enum.map(&Tuple.to_list/1)
+    |> Enum.map(&Enum.zip/1)
+    |> Enum.map(fn line ->
+      Enum.map(line, fn {a, b} -> combiner.(a, b) end)
+    end)
+  end)
+end
+```
+
+combine results will take any number of 'directions' (such as our 4 aligned grids),
+and combine them back together, not before using the paseed in `combiner` function
+to combine lines from one 'direction' with another
+
+### part 1
+
+```elixir
+visibility =
+  trees
+  |> Quadcopter.navigate()
+  |> Enum.map(fn direction -> Enum.map(direction, &Quadcopter.analyze_visibility/1) end)
+  |> Quadcopter.realign()
+  |> Quadcopter.combine_results(&(&1 and &2))
+
+Draw.grid(visibility) |> IO.write()
+```
+
+now its time to use the functions!
+
+\- take in the trees, use our `navigate/1` function to split into the 4 directions
+
+\- map each direction, and then each line in each direction, over the `analyze_visibility` function
+
+\- realign the directions back together again
+
+\- combine them, with our combiner function being something that does an '`and`' between the two values
+this means if something says something isn't visible, and something says it is, it will be assumed to be
+visible, but if both things agree on it not being visible, it will stay not visible
+
+then, draw the grid for fun
+
+```
+_____
+___X_
+__X__
+_X_X_
+_____
+```
+
+yay!
+
+```elixir
+count_of_not_hidden =
+  visibility
+  |> List.flatten()
+  |> Enum.count(&(!&1)) # -> 21
+```
+
+count the not hidden values, basically everything that is not a `x` in the above drawing
+
+### part 2
+
+```elixir
+scenic_scores =
+  trees
+  |> Quadcopter.navigate()
+  |> Enum.map(fn direction -> Enum.map(direction, &Quadcopter.analyze_scenic_score/1) end)
+  |> Quadcopter.realign()
+  |> Quadcopter.combine_results(&(&1 * &2))
+
+scenic_scores
+|> List.flatten()
+|> Enum.max() # -> 8
+```
+
+do the same as above, except map over the `analyze_scenic_score/1` function, and use a combiner that
+multiplies the values together instead of '`and`'
+
+then, flatten the list of values, and get the `max`
+
+the full solution can be found [[here]](https://github.com/jackharrhy/advent2022/blob/main/day8.livemd)
+
+<br />
+
+</details>
+
+---
+
+### others
+
+<Other person="kent" day="8" />
+
+> nice, a part 1:
+>
+> ```py
+> import numpy as np
+>
+> score = []
+> lines      = np.array([list(x.strip()) for x in open("input.txt")], int)
+> nrow, ncol = np.shape(lines)
+> visible    = ncol * 2 + (nrow - 2) * 2
+>
+> for x in range(1, nrow - 1):
+>     for y in range(1, ncol - 1):
+>         # branches
+>         tree       = lines[x,y]
+>         tree_up    = lines[:x,y]
+>         tree_down  = lines[x + 1:, y]
+>         tree_right = lines[x, y + 1:]
+>         tree_left  = lines[x, :y]
+>
+>         if tree > max(tree_up) or tree > max(tree_down) or tree > max(tree_left) or tree > max(tree_right):
+>             visible += 1
+>
+> print("Part1", visible)
+> ```
+>
+> and part 2:
+>
+> ```python
+> trees =  [list(map(int,list(row))) for row in open("input.txt").read().split("\n")]
+> total2 = []
+>
+> for x in range(1, len(trees) - 1):
+>     for y in range(1, len(trees[0]) - 1):
+>         height, row, column = trees[x][y],trees[x],[row[y] for row in trees]
+>         paths = [row[:y][::-1],row[y+1:],column[:x][::-1],column[x+1:]]
+>         score = 1
+>         visibleDir = 0
+>         for path in paths:
+>             lookScore = 0
+>             for tree in path:
+>                 lookScore += 1
+>                 if tree >= height:
+>                     break
+>             score *= lookScore
+>         total2.append(score)
+>
+> print("Best Scenic Score is: "+ str(max(total2)))
+> ```
+>
+> decently small enough to include inline for todays problem!
+>
+> interesting to reach for `numpy` for one part but not for the other
+>
+> clean
+
+<Other person="riley" day="8" />
+
+> another nint snake lang day
+>
+> quite a bit of visually duplicated code in `get_scenic_distance`, but
+> at closer inspection each one is different
+>
+> a nice solution
+
+<Other person="hamzah" day="8" />
+
+> quite a few grids splatted around this sheet
+>
+> love the one simply called 'WTF'
+
+<Other person="ethan" day="8" />
+
+> nice solution as well, as quant as kents but no numpy for part 1
+>
+> sneaky list slice usage to look left,right,up,down
+>
+> could reuse some iteration logic between part 1 & 2 to make even smaller
+
+<Other person="sven" day="8" />
+
+> i like this go solution
+>
+> go through each point, and then figure out if its visible from the edge
+>
+> you can do visibility in one go however, so not very _performant_
+>
+> (i usually don't discuss performance, but since mine does technically
+> do it in one go using a map reduce function, today i pick on performance :P)
+>
+> i do like how the visibility function is used again in part 2 to
+> figure out the scenic score! clever
+
+<Other person="devin" day="8" />
+
+> lots of functions in this one
+>
+> _but_, each function is pretty simplistic, so that is nice
+>
+> feels similar to svens go solution above, but doesn't use tricks
+> to have only one visibility function and opts to have 4
+> different functions instead
+>
+> still, reuse of logic between part 1 and 2 is always good to see
+>
+> nice
+
+<Other person="andrewHynes" day="8" />
+
+> i like how your solutions always seem to be great at doing part 1 and 2 in one go!
+>
+> the `.>` syntax is so cool
+>
+> i like reading julia solutions
+
+<Other person="ryan" day="8" />
+
+> `(y).downto(0).each`
+>
+> ^ such a ruby looking set of expressions :D
+>
+> ```ruby
+> def edge?(x, y)
+>   x == 0 || y == 0 || x == @x_max || y == @y_max
+> end
+> ```
+>
+> also this nice little function
+>
+> i always like the _if a function ends with a `?` it'll return a boolean_
+> thing, since its also something elixir stolen from ruby (along with all of the syntax vibes)
+
+<Other person="nathan" day="8" />
+
+> almost a nathan _no_ scroll bar day, but on my monitor i have a slight vertical scroll bar
+>
+> nice function usage
+
+<Other person="marty" day="8" />
+
+> hello marty
+>
+> oh we pulling out _structs_ and _impls_ today???
+>
+> dam the only functions here are tiny, you take in the input, use the from function
+> to parse the input into a 'TreeMap', and then invoke functions on that struct
+>
+> quite a few functions here, but all pretty single-purpose / smol
+>
+> :clean:
+
+<Other person="brandon" day="8" />
+
+> nice rust solution!
+>
+> nice usage of seperate file with struct / traits for grids
+>
+> some copy pasta for navigating each axis, could probably add
+> a comment above each section to say 'x axis, left to write'
+> to give some context for readers
+>
+> i like
+
+<Other person="mohammadArafatZaman" day="8" />
+
+> typing usage is always good to see, since its used so often you could
+> probably make it just `Grid` instead of `T_GRID`
+>
+> nice transposing utils!
+>
+> as mentioned before, snake_case > camelCase for :snake:-lang
+>
+> could create a function that returns the prefixLeft/right/etc. values given
+> some function to compose each one
+>
+> again, i like
+
+<Other person="ben" day="8" />
+
+> a nice r solution, plenty of pipe usage which makes me happy :)
+>
+> `as_tibble` makes me giggle
+
+<Other person="robert" day="8" />
+
+> very nice pythono solution
+>
+> i like the inner functions used to do the navigation
+> which are used at the bottom to be either `or`'d or `and`'d together
+>
+> nice
+
+<Other person="brady" day="8" />
+
+> nice docstrings!
+>
+> also plenty of lamda usage, nice
+>
+> each method is pretty small, nice
+>
+> nice
+
+---
+
+if you want to have your repo added for me to make a note of / talk about here (or have you repo removed), reach out:
+
+email -> `me@jackharrhy.com`
+
+discord -> `<i>jack arthur null</i>#7539`

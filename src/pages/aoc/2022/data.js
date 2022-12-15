@@ -195,6 +195,14 @@ const leah = {
   days: [1],
 };
 
+const paul = {
+  display: "zapme/AoC2022",
+  link: "https://github.com/zapme/AoC2022",
+  language: "python",
+  dayLinkFunc: () => paul.link,
+  days: [1, 2, 3, 4, 5, 6, 7],
+};
+
 /* --- */
 
 const kent = {
@@ -202,7 +210,7 @@ const kent = {
   link: "https://github.com/krbarter/Advent-Of-Code-2022/",
   days: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
   dayLinkFunc: (day) =>
-    `https://github.com/krbarter/Advent-Of-Code-2022/blob/main/Day${day}/day${day}.py`,
+    `https://github.com/krbarter/Advent-Of-Code-2022/blob/main/${pad(day)}/`,
   language: "python",
 };
 
@@ -234,7 +242,7 @@ const ethan = {
   dayLinkFunc: (day) =>
     `https://github.com/TheCrypticCanadian/advent-of-code-2022/tree/main/${pad(
       day
-    )}/day${day}.ipynb`,
+    )}/day-${day}.ipynb`,
   language: "python",
 };
 
@@ -299,7 +307,7 @@ const ethanDenny = {
   language: "c++",
   dayLinkFunc: (day) =>
     `https://github.com/EthanDenny/AdventOfCode2022/tree/main/day${day}`,
-  days: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+  days: [1, 2, 3, 4, 5, 6, 7, 9, 10],
 };
 
 const marty = {
@@ -346,6 +354,47 @@ const ben = {
   days: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
 };
 
+const robert = {
+  display: "foggynight/advent-of-code",
+  link: "https://github.com/foggynight/advent-of-code/tree/master/2022",
+  dayLinkFunc: (day) =>
+    `https://github.com/foggynight/advent-of-code/tree/master/2022/${pad(day)}`,
+  language: "python",
+  days: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+};
+
+const dayToDayWord = {
+  1: "One",
+  2: "Two",
+  3: "Three",
+  4: "Four",
+  5: "Five",
+  6: "Six",
+  7: "Seven",
+  8: "Eight",
+  9: "Nine",
+  10: "Ten",
+  11: "Eleven",
+  12: "Twelve",
+  13: "Thirteen",
+  14: "Fourteen",
+  15: "Fifteen",
+  16: "Sixteen",
+  17: "Seventeen",
+  18: "Eighteen",
+  19: "Nineteen",
+  20: "Twenty",
+};
+
+const brady = {
+  display: "ThatGravyBoat/Advent-of-Code-2022",
+  link: "https://github.com/ThatGravyBoat/Advent-of-Code-2022",
+  dayLinkFunc: (day) =>
+    `https://github.com/ThatGravyBoat/Advent-of-Code-2022/blob/master/src/main/java/tech/thatgravyboat/aoc/days/${dayToDayWord[day]}.java`,
+  language: "java",
+  days: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+};
+
 export const people = {
   mudkip,
   mat,
@@ -381,4 +430,7 @@ export const people = {
   scott,
   sheldon,
   ben,
+  paul,
+  robert,
+  brady,
 };
