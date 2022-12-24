@@ -53,7 +53,7 @@ import bepisRockUrl from "@images/void/bepis-rock/bepis-rock.png";
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    gap: 1.5rem;
+    gap: 0.5rem;
   }
 
   .to {
@@ -214,23 +214,16 @@ import bepisRockUrl from "@images/void/bepis-rock/bepis-rock.png";
   }
 
   .aoc-wrap {
-    margin: 2rem 0 0rem 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    background-color: #0f0f23;
+    text-align: center;
+    padding: 0.5rem;
   }
 
-  .aoc {
-    background-color: #0f0f23;
+  .aoc-wrap a {
     color: #cccccc;
     font-family: monospace;
     text-shadow: 0 0 5px white;
-    font-size: 2.5rem;
-    padding: 1.5rem 2.5rem;
-  }
-
-  .aoc-wrap a,
-  .aoc-wrap p {
+    font-size: 1.2rem;
     margin: 0;
     text-decoration: none;
   }
@@ -241,13 +234,6 @@ import bepisRockUrl from "@images/void/bepis-rock/bepis-rock.png";
     <Myself />
   </header>
   <main>
-    <div class="aoc-wrap">
-      <a href="./aoc/2022/">
-        <div class="aoc">
-          <p>advent of code 2022</p>
-        </div>
-      </a>
-    </div>
     <div class="group">
       <div class="left">
         <div class="colleagues">
@@ -256,6 +242,9 @@ import bepisRockUrl from "@images/void/bepis-rock/bepis-rock.png";
             <p>quotes</p>
           </a>
           <EsteemedColleagues />
+          <div class="aoc-wrap">
+            <a href="./aoc/">advent of code</a>
+          </div>
           <a href="./void/" class="to to-void">
             <p>enter the void</p>
           </a>
@@ -303,7 +292,7 @@ import bepisRockUrl from "@images/void/bepis-rock/bepis-rock.png";
       <h5>
         Created: April 9th, 2019
         <br />
-        Last Modified: December 3rd, 2022
+        Last Modified: December 24th, 2022
       </h5>
       <a href="./void/bepis-rock/">
         <img src={bepisRockUrl} />
