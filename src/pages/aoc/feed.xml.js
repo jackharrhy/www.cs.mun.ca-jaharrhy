@@ -5,6 +5,6 @@ export const get = () =>
     title: "~jaharrhy - advent of code",
     description: "jack's advent of code ramblings",
     site: import.meta.env.SITE,
-    items: import.meta.glob("./**/day*.mdx"),
+    items: import.meta.glob("./**/*.mdx"),
     customData: `<language>en-us</language>`,
   });
