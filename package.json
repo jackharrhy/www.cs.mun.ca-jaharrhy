@@ -9,16 +9,16 @@
   },
   "devDependencies": {
     "@astrojs/react": "^1.2.2",
-    "astro": "^1.6.15",
+    "astro": "^1.7.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "dependencies": {
-    "@astrojs/mdx": "^0.12.2",
-    "@astrojs/rss": "^1.2.0",
-    "@react-spring/three": "^9.6.0",
+    "@astrojs/mdx": "^0.13.0",
+    "@astrojs/rss": "^1.2.1",
+    "@react-spring/three": "^9.6.1",
     "@react-three/fiber": "^8.9.1",
-    "react-spring": "^9.6.0",
-    "three": "^0.147.0"
+    "react-spring": "^9.6.1",
+    "three": "^0.148.0"
   }
 }
