@@ -11,6 +11,7 @@ import cuppaUrl from "@images/jacks-cuppa/cuppa.png";
 import muncsUrl from "@images/muncs/muncs.png";
 import bonfireUrl from "@images/depth/bonfire.gif";
 import bepisRockUrl from "@images/void/bepis-rock/bepis-rock.png";
+import Piclog from "@components/Piclog.astro";
 ---
 
 <style>
@@ -43,6 +44,7 @@ import bepisRockUrl from "@images/void/bepis-rock/bepis-rock.png";
 
   .right {
     display: flex;
+    gap: 1rem;
     flex-direction: column;
     justify-content: space-between;
   }
@@ -224,6 +226,12 @@ import bepisRockUrl from "@images/void/bepis-rock/bepis-rock.png";
     font-size: 1.2rem;
     text-decoration: none;
   }
+
+  .piclog {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 </style>
 
 <Layout title="~jaharrhy">
@@ -248,6 +256,9 @@ import bepisRockUrl from "@images/void/bepis-rock/bepis-rock.png";
       <div class="right">
         <div class="linkbox">
           <Linkbox />
+        </div>
+        <div class="piclog">
+          <Piclog />
         </div>
         <div class="links">
           <a href="./jacks-cuppa">
