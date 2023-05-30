@@ -86,6 +86,19 @@ import Piclog from "@components/Piclog.astro";
     border: 10px inset rgba(255, 255, 255, 0.75);
   }
 
+  .hiking-construction {
+    width: 50%;
+  }
+
+  .to-hiking {
+    display: flex;
+    flex-direction: column;
+    background-color: #bae6fd;
+    color: black;
+    font-family: sans-serif;
+    border: 4px outset #d7f1ff;
+  }
+
   .links {
     display: flex;
     justify-content: space-around;
@@ -250,6 +263,13 @@ import Piclog from "@components/Piclog.astro";
           <a href="./aoc/" class="aoc">advent of code</a>
           <a href="./void/" class="to to-void">
             <p>enter the void</p>
+          </a>
+          <a href="./hikes/2023/oops" class="to to-hiking">
+            <img
+              class="hiking-construction"
+              src="http://textfiles.com/underconstruction/survivorjourneyconstruction_bar_rotate_md_wht.gif"
+            />
+            <p>hikes - 2023 - oops</p>
           </a>
         </div>
       </div>

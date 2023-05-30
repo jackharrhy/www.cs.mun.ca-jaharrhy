@@ -1,0 +1,69 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Back from "@components/Back.astro";
+---
+
+<style>
+  @font-face {
+    font-family: "TimesNewBastard";
+    src: url("/~jaharrhy/fonts/TimesNewBastard-RegularWeb.woff") format("woff");
+  }
+  :root {
+    --color-bg: #bae6fd;
+    --color-text: #1a202c;
+  }
+  body {
+    margin: 0;
+    font-family: sans-serif;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: "TimesNewBastard", serif;
+    font-feature-settings: "kern" on, "liga" on;
+    text-rendering: optimizeLegibility;
+  }
+  h1 {
+    margin: 0;
+    text-align: center;
+    font-size: 3rem;
+  }
+  h2 {
+    padding: 0 10rem;
+    text-align: center;
+  }
+
+  .map-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    width: 100vw;
+    height: 100vh;
+  }
+
+  #map {
+    width: 100%;
+    height: 100%;
+  }
+</style>
+
+<link
+  href="https://unpkg.com/maplibre-gl@3.0.0/dist/maplibre-gl.css"
+  rel="stylesheet"
+/>
+
+<Layout title="hikes - 2023 - oops">
+  <Back />
+  <main>
+    <h1>hikes - 2023 - oops</h1>
+    <h2>
+      i had started working on this page but then didn't finish it but didn't
+      want to not commit it so enjoy a page with a full map in the background
+      and no other context here until i come back to finish it
+    </h2>
+    <div class="map-container">
+      <div id="map"></div>
+    </div>
+  </main>
+</Layout>
+
+<script src="./hikes.ts"></script>
