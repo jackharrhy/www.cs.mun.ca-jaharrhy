@@ -1,9 +1,10 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import Back from "@components/Back.astro";
+import Hikes from "@components/hikes/Hikes";
 ---
 
-<style>
+<style is:global>
   @font-face {
     font-family: "TimesNewBastard";
     src: url("/~jaharrhy/fonts/TimesNewBastard-RegularWeb.woff") format("woff");
@@ -40,16 +41,11 @@ import Back from "@components/Back.astro";
     height: 100vh;
   }
 
-  #map {
+  .maplibre-container {
     width: 100%;
     height: 100%;
   }
 </style>
-
-<link
-  href="https://unpkg.com/maplibre-gl@3.0.0/dist/maplibre-gl.css"
-  rel="stylesheet"
-/>
 
 <Layout title="hikes - 2023 - oops">
   <Back />
@@ -61,9 +57,7 @@ import Back from "@components/Back.astro";
       and no other context here until i come back to finish it
     </h2>
     <div class="map-container">
-      <div id="map"></div>
+      <Hikes client:only="solid" />
     </div>
   </main>
 </Layout>
-
-<script src="./hikes.ts"></script>

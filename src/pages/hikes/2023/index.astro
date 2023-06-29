@@ -1,0 +1,26 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Back from "@components/Back.astro";
+---
+
+<style>
+    body {
+        background-color: black;
+    }
+
+    main {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+
+<Layout title="hikes - 2023">
+    <Back />
+    <main>
+        <img
+            class="hiking-construction"
+            src="http://textfiles.com/underconstruction/survivorjourneyconstruction_bar_rotate_md_wht.gif"
+        />
+    </main>
+</Layout>
