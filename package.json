@@ -5,11 +5,13 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "ncu": "ncu -u"
   },
   "devDependencies": {
     "@astrojs/react": "^2.2.1",
-    "astro": "^2.8.0",
+    "astro": "^2.9.0",
+    "npm-check-updates": "^16.10.16",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -18,10 +20,10 @@
     "@astrojs/rss": "^2.4.3",
     "@astrojs/solid-js": "^2.2.0",
     "@react-spring/three": "^9.7.3",
-    "@react-three/fiber": "^8.13.4",
-    "maplibre-gl": "^3.1.0",
+    "@react-three/fiber": "^8.13.5",
+    "maplibre-gl": "^3.2.0",
     "react-spring": "^9.7.2",
-    "solid-js": "^1.7.7",
+    "solid-js": "^1.7.8",
     "three": "^0.154.0"
   }
 }
