@@ -1,6 +1,6 @@
 push-to-garfield:
   npm run build
-  rsync dist/* jaharrhy@garfield.cs.mun.ca:~/.www/ -r
+  rsync --progress dist/* jaharrhy@garfield.cs.mun.ca:~/.www/ -r
 
 push-most-to-garfield:
   npm run build
