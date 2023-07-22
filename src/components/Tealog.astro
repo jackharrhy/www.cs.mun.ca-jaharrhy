@@ -1,0 +1,62 @@
+---
+import { parse } from "rss-to-json";
+const rss = await parse("https://jackharrhy.neocities.org/tea-log/rss.xml");
+---
+
+<style>
+  div {
+    margin: 0.5rem 0;
+    font-family: monospace;
+    background-color: #ffadbc;
+    color: rgb(36, 36, 36);
+    border: 2px inset indigo;
+    padding: 1rem;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  h1,
+  h2,
+  p,
+  li,
+  ul {
+    margin: 0;
+    font-size: 1rem;
+  }
+
+  li {
+    text-decoration: underline;
+  }
+  li:hover {
+    text-decoration: indigo underline;
+  }
+
+  h1 {
+    font-size: 1.2rem;
+  }
+
+  h2 {
+    margin: 0.4rem 0;
+    font-size: 0.8rem;
+    font-weight: normal;
+  }
+</style>
+
+<div id="tealog-root">
+  <a href="https://jackharrhy.neocities.org/tea-log/">
+    <h1>tea log</h1>
+    <h2>{rss.description}</h2>
+  </a>
+  <ul>
+    {
+      rss.items.map((item) => (
+        <a href={item.link}>
+          <li>{item.title}</li>
+        </a>
+      ))
+    }
+  </ul>
+</div>
