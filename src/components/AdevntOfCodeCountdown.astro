@@ -31,7 +31,9 @@
     text = "now!";
   } else if (beforeAocStart) {
     // days until aoc
-    const daysUntilAoc = Math.ceil((aocStart - now) / (1000 * 60 * 60 * 24));
+    const daysUntilAoc = Math.ceil(
+      ((aocStart as any) - (now as any)) / (1000 * 60 * 60 * 24)
+    );
     text = `in ${daysUntilAoc} days!`;
   } else if (afterAocEnd) {
     text = "again near year!";

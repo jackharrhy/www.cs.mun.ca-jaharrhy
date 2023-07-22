@@ -1,0 +1,67 @@
+* {
+  box-sizing: border-box;
+  font-family: Hack, monospace;
+}
+
+:root {
+  --bg: #0f0f23;
+  --text: #cccccc;
+  --terminal: #009900;
+  --terminal-hover: #99ff99;
+  font-size: 19px;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+strong {
+  text-shadow: 0 0 5px white;
+}
+
+strong {
+  font-weight: 500;
+}
+
+h1 {
+  font-size: 1.3rem;
+}
+
+header {
+  text-align: center;
+  margin: 2rem 0;
+}
+
+a {
+  text-decoration: none;
+  color: var(--terminal);
+}
+a:hover,
+a:focus {
+  color: var(--terminal-hover);
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+main {
+  margin: 0 auto;
+  max-width: 40rem;
+  padding-bottom: 2rem;
+}
+
+div {
+  display: flex;
+  gap: 2rem;
+}
+
+div a {
+  width: 4rem;
+}
+
+div p {
+  margin: 0.4rem 0;
+}

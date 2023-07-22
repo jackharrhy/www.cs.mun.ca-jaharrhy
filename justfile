@@ -5,6 +5,7 @@ push-to-garfield:
 push-most-to-garfield:
   npm run build
   rsync \
+    --progress \
     --exclude "*" \
     --include '*/' \
     --include "*.html" \
