@@ -14,6 +14,13 @@ import bepisRockUrl from "@images/void/bepis-rock/bepis-rock.png";
 import Piclog from "@components/Piclog.astro";
 import Strava from "@components/Strava.astro";
 import Tealog from "@components/Tealog.astro";
+import AdevntOfCodeCountdown from "@components/AdevntOfCodeCountdown.astro";
+
+const lastModified = new Intl.DateTimeFormat("en-US", {
+  month: "long",
+  day: "numeric",
+  year: "numeric",
+}).format(new Date());
 ---
 
 <style>
@@ -211,7 +218,7 @@ import Tealog from "@components/Tealog.astro";
     color: whitesmoke;
     font-family: monospace;
     background-color: rgba(0, 0, 0, 0.5);
-    padding: 6rem;
+    padding: 3rem;
     text-shadow: 2px 2px 0px slateblue;
     font-size: 8rem;
   }
@@ -283,6 +290,9 @@ import Tealog from "@components/Tealog.astro";
         <div class="piclog">
           <Piclog />
         </div>
+        <div class="aoc aoc-countdown">
+          <AdevntOfCodeCountdown />
+        </div>
         <div class="strava">
           <Strava />
         </div>
@@ -313,18 +323,12 @@ import Tealog from "@components/Tealog.astro";
     <div class="knowledge">
       <Knowledge />
     </div>
-    <div class="despacito">
-      <img
-        src="https://www.roblox.com/headshot-thumbnail/image?userId=8644178&width=60&height=60&format=png"
-      />
-      <p>despacito</p>
-    </div>
     <img class="construction" src={underConstructionUrl} />
     <div class="created-modified">
       <h5>
         Created: April 9th, 2019
         <br />
-        Last Modified: December 24th, 2022
+        Last Modified: {lastModified}
       </h5>
       <a href="./void/bepis-rock/">
         <img src={bepisRockUrl} />
@@ -339,6 +343,6 @@ import Tealog from "@components/Tealog.astro";
     </div>
   </div>
   <div class="depths">
-    <p>i am error</p>
+    <p>im watching live train youtube rn</p>
   </div>
 </Layout>

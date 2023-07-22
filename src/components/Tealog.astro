@@ -1,6 +1,10 @@
 ---
-import { parse } from "rss-to-json";
-const rss = await parse("https://jackharrhy.neocities.org/tea-log/rss.xml");
+import { parseFeed } from "htmlparser2";
+
+const TEALOG_RSS_FEED = "https://jackharrhy.neocities.org/tea-log/rss.xml";
+
+const rssFeedXml = await (await fetch(TEALOG_RSS_FEED)).text();
+const rss = parseFeed(rssFeedXml);
 ---
 
 <style>
