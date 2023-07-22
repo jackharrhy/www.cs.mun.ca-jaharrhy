@@ -9,7 +9,7 @@
       <title>
         RSS Feed | <xsl:value-of select="/rss/channel/title"/>
       </title>
-      <link rel="stylesheet" href="/~jaharrhy/public/rss/styles/aoc.css"/>
+      <link rel="stylesheet" href="/~jaharrhy/rss/styles/aoc.css"/>
     </head>
     <body>
       <main>
