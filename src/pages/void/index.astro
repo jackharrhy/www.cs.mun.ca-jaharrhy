@@ -44,6 +44,15 @@ import Layout from "@layouts/Layout.astro";
     display: flex;
     flex-direction: column;
   }
+
+  .focus-only {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .focus-only:focus {
+    opacity: 1;
+  }
 </style>
 
 <Layout title="void">
@@ -62,6 +71,7 @@ import Layout from "@layouts/Layout.astro";
       <a href="./punch-the-keys/">punch the keys</a>
       <a href="./collarbone-softtissue/">collarbone softtissue</a>
       <HardWorker />
+      <a href="./code-night/" class="focus-only">CODE NIGHT</a>
     </main>
   </div>
 </Layout>
