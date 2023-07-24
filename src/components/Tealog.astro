@@ -1,10 +1,35 @@
 ---
-import { parseFeed } from "htmlparser2";
+import { DOMParser } from "@xmldom/xmldom";
+import { select, select1 } from "xpath";
 
 const TEALOG_RSS_FEED = "https://jackharrhy.neocities.org/tea-log/rss.xml";
 
 const rssFeedXml = await (await fetch(TEALOG_RSS_FEED)).text();
-const rss = parseFeed(rssFeedXml);
+const rssFeed = new DOMParser().parseFromString(rssFeedXml, "text/xml");
+
+const description = select(
+  "/rss/channel/description/text()",
+  rssFeed
+).toString();
+
+const rawItems = select("/rss/channel/item", rssFeed);
+
+if (!Array.isArray(rawItems)) {
+  throw new Error("Expected items to be an array");
+}
+
+const items = rawItems.map((item) => {
+  const title = select1("title/text()", item).toString();
+  const link = select1("link/text()", item).toString();
+  // @ts-ignore-next-line
+  const previewGif = select1("enclosure/@url", item).value;
+
+  return {
+    title,
+    link,
+    previewGif,
+  };
+});
 ---
 
 <style>
@@ -27,12 +52,21 @@ const rss = parseFeed(rssFeedXml);
   p,
   li,
   ul {
+    padding: 0;
     margin: 0;
     font-size: 1rem;
   }
 
   li {
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
     text-decoration: underline;
+    height: 1rem;
+  }
+  li img {
+    height: 1em;
+    margin-right: 0.25rem;
   }
   li:hover {
     text-decoration: indigo underline;
@@ -52,13 +86,16 @@ const rss = parseFeed(rssFeedXml);
 <div id="tealog-root">
   <a href="https://jackharrhy.neocities.org/tea-log/">
     <h1>tea log</h1>
-    <h2>{rss.description}</h2>
+    <h2>{description}</h2>
   </a>
   <ul>
     {
-      rss.items.map((item) => (
+      items.map((item) => (
         <a href={item.link}>
-          <li>{item.title}</li>
+          <li>
+            <img src={item.previewGif} />
+            {item.title}
+          </li>
         </a>
       ))
     }

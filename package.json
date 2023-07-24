@@ -21,10 +21,12 @@
     "@astrojs/solid-js": "^2.2.0",
     "@react-spring/three": "^9.7.3",
     "@react-three/fiber": "^8.13.5",
+    "@xmldom/xmldom": "^0.8.10",
     "htmlparser2": "^9.0.0",
     "maplibre-gl": "^3.2.1",
     "react-spring": "^9.7.2",
     "solid-js": "^1.7.8",
-    "three": "^0.154.0"
+    "three": "^0.154.0",
+    "xpath": "^0.0.33"
   }
 }
