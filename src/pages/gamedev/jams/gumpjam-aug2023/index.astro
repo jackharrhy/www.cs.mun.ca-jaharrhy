@@ -1,8 +1,6 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import Back from "@components/Back.astro";
-
-import earthgroundBgGifUrl from "@images/gamedev/jams/gumpjam/earthground-bg.gif";
 ---
 
 <style>
@@ -47,6 +45,7 @@ import earthgroundBgGifUrl from "@images/gamedev/jams/gumpjam/earthground-bg.gif
     background-color: var(--background);
     font-family: "TT2020Style-B";
     padding: 2rem 2rem;
+    border: 2px inset var(--background);
   }
 
   h1 {
@@ -89,9 +88,18 @@ import earthgroundBgGifUrl from "@images/gamedev/jams/gumpjam/earthground-bg.gif
     bottom: 0;
     border-top: 2px solid var(--acent);
   }
+
+  .back-contaienr {
+    position: absolute;
+    top: 0;
+    z-index: 1;
+  }
 </style>
 
 <Layout title="gumpjam august 2023">
+  <div class="back-contaienr">
+    <Back />
+  </div>
   <div class="earthground top"></div>
   <header>
     <h1>gumpjam</h1>

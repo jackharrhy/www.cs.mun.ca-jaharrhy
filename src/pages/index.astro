@@ -24,6 +24,11 @@ const lastModified = new Intl.DateTimeFormat("en-US", {
 ---
 
 <style>
+  @font-face {
+    font-family: "TT2020Style-B";
+    src: url("/~jaharrhy/fonts/TT2020StyleB-Regular.woff2") format("woff2");
+  }
+
   body {
     margin: 0;
     display: flex;
@@ -254,6 +259,21 @@ const lastModified = new Intl.DateTimeFormat("en-US", {
     align-items: center;
     justify-content: center;
   }
+
+  .gamedev {
+    background-color: #cdc49a;
+    font-family: "TT2020Style-B";
+    border: 2px inset #cdc49a;
+    font-size: 1.5rem;
+    padding: 0.5rem;
+  }
+  .gamedev:hover {
+    border: 2px outset #cdc49a;
+  }
+  .gamedev-link {
+    color: black;
+    text-decoration: none;
+  }
 </style>
 
 <Layout title="~jaharrhy">
@@ -287,6 +307,11 @@ const lastModified = new Intl.DateTimeFormat("en-US", {
         <div class="linkbox">
           <Linkbox />
         </div>
+        <a href="./gamedev/jams/gumpjam-aug2023/" class="gamedev-link">
+          <div class="gamedev">
+            gamedev - jams - gumpjam august 2023
+          </div>
+        </a>
         <div class="piclog">
           <Piclog />
         </div>
@@ -297,7 +322,7 @@ const lastModified = new Intl.DateTimeFormat("en-US", {
           <Strava />
         </div>
         <div class="links">
-          <a href="./jacks-cuppa">
+          <a href="./jacks-cuppa/">
             <div class="link to-cuppa">
               <img src={cuppaUrl} />
               <p>jacks cuppa</p>
