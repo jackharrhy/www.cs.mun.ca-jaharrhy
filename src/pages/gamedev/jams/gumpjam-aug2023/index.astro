@@ -1,0 +1,103 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Back from "@components/Back.astro";
+
+import earthgroundBgGifUrl from "@images/gamedev/jams/gumpjam/earthground-bg.gif";
+---
+
+<style>
+  :root {
+    --background: #cdc49a;
+    --acent: rgb(190, 80, 253);
+  }
+
+  @font-face {
+    font-family: "Doom";
+    src: url("/~jaharrhy/fonts/RVn_Font_of_Doom_1.woff2") format("woff2");
+  }
+
+  @font-face {
+    font-family: "TT2020Style-B";
+    src: url("/~jaharrhy/fonts/TT2020StyleB-Regular.woff2") format("woff2");
+  }
+
+  .dirt {
+    font-family: "Doom";
+    color: var(--acent);
+    font-weight: 900;
+    text-shadow: 0 0 0.2rem var(--acent);
+  }
+
+  html {
+    height: 100%;
+  }
+
+  body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  header {
+    margin: 0 auto;
+    width: 100%;
+    max-width: 53rem;
+    background-color: var(--background);
+    font-family: "TT2020Style-B";
+    padding: 2rem 2rem;
+  }
+
+  h1 {
+    font-size: 3rem;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+    margin: 0.5rem 0;
+  }
+
+  p {
+    font-size: 2rem;
+    margin: 0.5rem 0;
+  }
+
+  p:last-child {
+    margin-bottom: 0rem;
+  }
+
+  body {
+    background-color: black;
+  }
+
+  .earthground {
+    width: 100%;
+    height: 10rem;
+    background-image: url("../../../../images/gamedev/jams/gumpjam/earthground-bg.gif");
+    position: absolute;
+  }
+
+  .top {
+    top: 0;
+    border-bottom: 2px solid var(--acent);
+  }
+
+  .bottom {
+    bottom: 0;
+    border-top: 2px solid var(--acent);
+  }
+</style>
+
+<Layout title="gumpjam august 2023">
+  <div class="earthground top"></div>
+  <header>
+    <h1>gumpjam</h1>
+    <h2>friday august 4th, to saturday august 12th</h2>
+    <p>theme: <span class="dirt">rat sanitation</span></p>
+  </header>
+  <main></main>
+  <div class="earthground bottom"></div>
+</Layout>
