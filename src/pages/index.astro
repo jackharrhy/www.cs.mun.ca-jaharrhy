@@ -15,6 +15,7 @@ import Piclog from "@components/Piclog.astro";
 import Strava from "@components/Strava.astro";
 import Tealog from "@components/Tealog.astro";
 import AdevntOfCodeCountdown from "@components/AdevntOfCodeCountdown.astro";
+import TamaNOTChi from "@components/TamaNOTChi.astro";
 
 const lastModified = new Intl.DateTimeFormat("en-US", {
   month: "long",
@@ -274,6 +275,19 @@ const lastModified = new Intl.DateTimeFormat("en-US", {
     color: black;
     text-decoration: none;
   }
+
+  .tamanotchi {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: lighter;
+  }
+
+  .tamanotchi p {
+    margin: 0.75rem 0 0 0;
+  }
 </style>
 
 <Layout title="~jaharrhy">
@@ -312,13 +326,15 @@ const lastModified = new Intl.DateTimeFormat("en-US", {
         </div>
       </div>
       <div class="right">
+        <div class="tamanotchi">
+          <TamaNOTChi />
+          <p>this is egg, please feed him</p>
+        </div>
         <div class="linkbox">
           <Linkbox />
         </div>
         <a href="./gamedev/jams/gumpjam-aug2023/" class="gamedev-link">
-          <div class="gamedev">
-            gamedev - jams - gumpjam august 2023
-          </div>
+          <div class="gamedev">gamedev - jams - gumpjam august 2023</div>
         </a>
         <div class="piclog">
           <Piclog />
