@@ -1,6 +1,7 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import Back from "@components/Back.astro";
+import GumpJamVideoEmbed from "@components/GumpJamVideoEmbed.astro";
 ---
 
 <style>
@@ -33,35 +34,52 @@ import Back from "@components/Back.astro";
   body {
     height: 100%;
     margin: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    font-family: "TT2020Style-B";
   }
 
-  header {
-    margin: 0 auto;
+  header,
+  main {
+    margin: 2rem auto;
     width: 100%;
-    max-width: 53rem;
     background-color: var(--background);
-    font-family: "TT2020Style-B";
-    padding: 2rem 2rem;
     border: 2px inset var(--background);
   }
 
-  h1 {
+  header {
+    padding: 2rem;
+    max-width: 53rem;
+  }
+
+  header h1 {
     font-size: 3rem;
     margin-top: 0;
     margin-bottom: 1.5rem;
   }
 
-  h2 {
+  header h2 {
     font-size: 2rem;
     margin: 0.5rem 0;
   }
 
-  p {
+  header p {
     font-size: 2rem;
     margin: 0.5rem 0;
+  }
+
+  main {
+    margin: 0 auto;
+    max-width: 60rem;
+    padding: 3rem;
+    font-size: 1.5rem;
+  }
+
+  ul {
+    margin-top: 0.5rem;
+    font-size: 2rem;
+  }
+
+  main h2 {
+    margin: 0;
   }
 
   p:last-child {
@@ -76,23 +94,18 @@ import Back from "@components/Back.astro";
     width: 100%;
     height: 10rem;
     background-image: url("../../../../images/gamedev/jams/gumpjam/earthground-bg.gif");
-    position: absolute;
   }
 
   .top {
-    top: 0;
+    opacity: 0.3;
+    border-top: 2px solid var(--acent);
     border-bottom: 2px solid var(--acent);
   }
 
   .bottom {
-    bottom: 0;
+    margin-top: 2rem;
+    opacity: 0.3;
     border-top: 2px solid var(--acent);
-  }
-
-  .back-contaienr {
-    position: absolute;
-    top: 0;
-    z-index: 1;
   }
 </style>
 
@@ -106,6 +119,53 @@ import Back from "@components/Back.astro";
     <h2>friday august 4th, to saturday august 12th</h2>
     <p>theme: <span class="dirt">rat sanitation</span></p>
   </header>
-  <main></main>
+  <main>
+    <h2>contributions from:</h2>
+    <ul>
+      <li>
+        <a href="https://github.com/mynameisgump">ethan</a> - <a
+          href="../../../downloads/gumpjam/Gumpjam-s2023-Ethans-Entry.zip"
+          >download</a
+        >
+      </li>
+      <li>
+        <a href="https://jackharrhy.dev/">jack</a> - <a
+          href="https://jackharrhy.github.io/gumpjam-entry/"
+          >jackharrhy.github.io/gumpjam-entry</a
+        >
+      </li>
+      <li>
+        <a href="https://danielpower.ca/">dan</a> - <a
+          href="https://rat.danielpower.ca/">rat.danielpower.ca</a
+        >
+      </li>
+      <li>
+        <a href="https://mitchellhynes.com/">mitch</a> - <i
+          >no download available yet</i
+        >
+      </li>
+      <li>
+        <a href="https://rileyflynn.me/">riley</a> - <a
+          href="https://nint8835.github.io/gumpjam/"
+          >nint8835.github.io/gumpjam</a
+        >
+      </li>
+    </ul>
+    <h2>videos</h2>
+    <h3>dancam</h3>
+    <p>continuous recording of everything from a static phone camera</p>
+    <GumpJamVideoEmbed key="Q2UzClrtf4U" width="100%" height="512" />
+    <h3>jackcam</h3>
+    <p>random recordings from jacks phone camera</p>
+    <p>dan:</p>
+    <GumpJamVideoEmbed key="ogcgE3aug5Y" width="100%" height="512" />
+    <p>riley:</p>
+    <GumpJamVideoEmbed key="QPm5oFEpZE8" width="100%" height="512" />
+    <p>ethan:</p>
+    <GumpJamVideoEmbed key="6Ugw2F_cGCQ" width="100%" height="512" />
+    <h3>mitch screen recording</h3>
+    <p>mitch game compile machine broke, mitch record screen:</p>
+    <GumpJamVideoEmbed key="J1i_C84Ztgs" width="100%" height="512" />
+  </main>
   <div class="earthground bottom"></div>
 </Layout>

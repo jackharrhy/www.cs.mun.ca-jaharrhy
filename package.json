@@ -9,23 +9,23 @@
     "ncu": "ncu -u"
   },
   "devDependencies": {
-    "@astrojs/react": "^2.2.1",
-    "astro": "^2.9.6",
-    "npm-check-updates": "^16.10.17",
+    "@astrojs/react": "^2.3.2",
+    "astro": "^2.10.12",
+    "npm-check-updates": "^16.12.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "dependencies": {
     "@astrojs/mdx": "^0.19.7",
-    "@astrojs/rss": "^2.4.3",
-    "@astrojs/solid-js": "^2.2.0",
+    "@astrojs/rss": "^2.4.4",
+    "@astrojs/solid-js": "^2.2.1",
     "@react-spring/three": "^9.7.3",
-    "@react-three/fiber": "^8.13.6",
+    "@react-three/fiber": "^8.13.7",
     "@xmldom/xmldom": "^0.8.10",
     "htmlparser2": "^9.0.0",
-    "maplibre-gl": "^3.2.1",
+    "maplibre-gl": "^3.3.0",
     "react-spring": "^9.7.2",
-    "solid-js": "^1.7.8",
+    "solid-js": "^1.7.11",
     "three": "^0.155.0",
     "xpath": "^0.0.33"
   }
