@@ -1,6 +1,5 @@
 ---
 import headshotUrl from "@images/dither-me.png";
-import Status from "./Status.astro";
 ---
 
 <style>
@@ -11,23 +10,65 @@ import Status from "./Status.astro";
     font-size: 0.8rem;
   }
 
+  h1 {
+    margin-top: 0;
+  }
+
   img {
     height: 180px;
     border: 2px dashed blue;
   }
+
+  .where {
+    font-size: 0.7rem;
+  }
+
+  .where p {
+    margin: 0.5rem 0;
+  }
+
+  .loc {
+    opacity: 0.8;
+    font-style: italic;
+  }
 </style>
 
-<div class="container">
+<div class="container h-card">
   <div>
-    <img src={headshotUrl} alt="me" />
+    <img
+      src={headshotUrl}
+      alt="headshot of myself, with long curly hair, dithered in such a way that it looks like an image from the old internet"
+      class="u-logo"
+    />
   </div>
   <div class="text">
-    <h1>Jack Arthur Harrhy</h1>
+    <h1 class="p-name">
+      <span class="p-given-name">Jack</span>
+      <span class="p-additional-name">Arthur</span>
+      <span class="p-family-name">Harrhy</span>
+    </h1>
     <b>Student</b>
     <p>
       <a href="https://www.mun.ca/computerscience/"
-        >Department of Computer Science</a>
+        >Department of Computer Science</a
+      >
     </p>
-    <p>E-mail Address: <a href="mailto:jaharrhy@mun.ca">jaharrhy@mun.ca</a></p>
+    <p>
+      E-mail Address: <a href="mailto:jaharrhy@mun.ca">jaharrhy@mun.ca</a>
+    </p>
+    <span class="where">
+      <p>
+        🗺️ <span class="p-locality">St. John's</span>, <span class="p-region"
+          >Newfoundland</span
+        >, <span class="p-country-name">Canada</span>
+      </p>
+      <p>
+        <span class="loc"
+          >📍 <span class="p-latitude">47.574</span>~, <span class="p-longitude"
+            >-52.735</span
+          >~</span
+        >
+      </p>
+    </span>
   </div>
 </div>
