@@ -1,0 +1,20 @@
+---
+const { until } = Astro.props;
+---
+
+<p data-until={until} id="until"></p>
+
+<script>
+  const until = document.getElementById("until").getAttribute("data-until");
+
+  console.log({ until });
+
+  const date = new Date(until);
+  const now = new Date();
+
+  const diff = date - now;
+
+  const days = Math.round(diff / (1000 * 60 * 60 * 24));
+
+  document.getElementById("until").innerHTML = `~${days} days away`;
+</script>

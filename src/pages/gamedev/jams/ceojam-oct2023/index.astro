@@ -1,0 +1,67 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Back from "@components/Back.astro";
+import CountDown from "@components/CountDown.astro";
+---
+
+<style>
+  :root {
+    --main-50: #fafaf9;
+    --main-100: #f5f5f4;
+    --main-200: #e7e5e4;
+    --main-300: #d6d3d1;
+    --main-400: #a8a29e;
+    --main-500: #78716c;
+    --main-600: #57534e;
+    --main-700: #44403c;
+    --main-800: #292524;
+    --main-900: #1c1917;
+    --main-950: #0c0a09;
+  }
+
+  @font-face {
+    font-family: "QuickMoney";
+    src: url("/~jaharrhy/fonts/QuickMoney.woff2") format("woff2");
+  }
+
+  html {
+    height: 100%;
+    background-color: var(--main-400);
+    color: var(--main-900);
+    font-family: sans-serif;
+  }
+
+  body {
+    height: 100%;
+    margin: 0;
+  }
+
+  header {
+    text-align: center;
+  }
+
+  .theme {
+    font-family: "QuickMoney";
+    font-size: 5rem;
+    letter-spacing: 0.24ch;
+  }
+
+  h1 {
+    font-family: "QuickMoney";
+    font-size: 10rem;
+    margin: 0;
+    font-weight: 100;
+  }
+</style>
+
+<Layout title="ceojam october 2023">
+  <div class="back-contaienr">
+    <Back />
+  </div>
+  <header>
+    <h1>ceojam</h1>
+    <h2>friday october 13th, to sunday oct 22nd</h2>
+    <CountDown until="2023-10-13T00:00:00.000Z" />
+    <p>theme: <span class="theme">ceo mindset</span></p>
+  </header>
+</Layout>

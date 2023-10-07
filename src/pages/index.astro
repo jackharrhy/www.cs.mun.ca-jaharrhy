@@ -262,18 +262,34 @@ const lastModified = new Intl.DateTimeFormat("en-US", {
   }
 
   .gamedev {
-    background-color: #cdc49a;
-    font-family: "TT2020Style-B";
-    border: 2px inset #cdc49a;
+    display: flex;
+    flex-direction: column;
     font-size: 1.5rem;
     padding: 0.5rem;
   }
-  .gamedev:hover {
-    border: 2px outset #cdc49a;
+
+  .gamedev-header {
+    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+      "Lucida Sans", Arial, sans-serif;
+    margin: 0;
   }
+
+  .gamedev:hover {
+  }
+
   .gamedev-link {
     color: black;
     text-decoration: none;
+  }
+
+  .gamejam-gumpjam {
+    background-color: #cdc49a;
+    font-family: "TT2020Style-B";
+    border: 2px inset #cdc49a;
+  }
+
+  .gamejam-gumpjam:hover {
+    border: 2px outset #cdc49a;
   }
 
   .tamanotchi {
@@ -333,9 +349,21 @@ const lastModified = new Intl.DateTimeFormat("en-US", {
         <div class="linkbox">
           <Linkbox />
         </div>
-        <a href="./gamedev/jams/gumpjam-aug2023/" class="gamedev-link">
-          <div class="gamedev">gamedev - jams - gumpjam august 2023</div>
-        </a>
+        <div class="gamedev">
+          <p class="gamedev-header">gamedev - jams</p>
+          <a
+            href="./gamedev/jams/ceojam-oct2023/"
+            class="gamedev-link gamejam-ceojam"
+          >
+            <div class="gamedev">ceojam october 2023</div>
+          </a>
+          <a
+            href="./gamedev/jams/gumpjam-aug2023/"
+            class="gamedev-link gamejam-gumpjam"
+          >
+            <div class="gamedev">gumpjam august 2023</div>
+          </a>
+        </div>
         <div class="piclog">
           <Piclog />
         </div>
