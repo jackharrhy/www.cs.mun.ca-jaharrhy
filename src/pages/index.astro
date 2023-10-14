@@ -334,7 +334,7 @@ const lastModified = new Intl.DateTimeFormat("en-US", {
           <div class="links">
             <a href="https://muncompsci.ca/">
               <div class="link to-muncs">
-                <img src={muncsUrl} />
+                <img src={muncsUrl.src} />
                 <p>muncs</p>
               </div>
             </a>
@@ -376,7 +376,7 @@ const lastModified = new Intl.DateTimeFormat("en-US", {
         <div class="links">
           <a href="./jacks-cuppa/">
             <div class="link to-cuppa">
-              <img src={cuppaUrl} />
+              <img src={cuppaUrl.src} />
               <p>jacks cuppa</p>
             </div>
           </a>
@@ -394,21 +394,21 @@ const lastModified = new Intl.DateTimeFormat("en-US", {
     <div class="knowledge">
       <Knowledge />
     </div>
-    <img class="construction" src={underConstructionUrl} />
+    <img class="construction" src={underConstructionUrl.src} />
     <div class="created-modified">
       <h5>
         Created: April 9th, 2019
         <br />
-        Last Modified: {lastModified}
+         Last Modified: {lastModified}
       </h5>
       <a href="./void/bepis-rock/">
-        <img src={bepisRockUrl} />
+        <img src={bepisRockUrl.src} />
       </a>
     </div>
   </main>
   <div class="depths-spacer">
     <div class="bonfire">
-      <img src={bonfireUrl} />
+      <img src={bonfireUrl.src} />
       <p>hello travler, it seems you have been scrolling some time</p>
       <p>please take a rest to heal</p>
     </div>
