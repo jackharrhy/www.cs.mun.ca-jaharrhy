@@ -1,6 +1,9 @@
 ---
 import AdventOfCodeLayout from "@layouts/AdventOfCodeLayout.astro";
-const { content } = Astro.props;
+const { content, frontmatter } = Astro.props;
+
+const date = new Date(frontmatter.pubDate);
+const year = date.getFullYear();
 ---
 
 <style is:global>
@@ -35,7 +38,7 @@ const { content } = Astro.props;
   }
 </style>
 
-<AdventOfCodeLayout year={2022} title={`2022 ${content.title}`}>
+<AdventOfCodeLayout year={year} title={`${year} ${content.title}`}>
   <h2>{content.title}</h2>
   <slot />
 </AdventOfCodeLayout>

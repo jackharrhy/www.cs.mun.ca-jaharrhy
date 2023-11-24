@@ -44,6 +44,8 @@ import CountDown from "@components/CountDown.astro";
     font-family: "QuickMoney";
     font-size: 5rem;
     letter-spacing: 0.24ch;
+    margin: 0;
+    margin-top: -1.25rem;
   }
 
   h1 {
@@ -51,6 +53,13 @@ import CountDown from "@components/CountDown.astro";
     font-size: 10rem;
     margin: 0;
     font-weight: 100;
+  }
+
+  .theme-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
   }
 </style>
 
@@ -60,8 +69,10 @@ import CountDown from "@components/CountDown.astro";
   </div>
   <header>
     <h1>ceojam</h1>
-    <h2>friday october 13th, to sunday oct 22nd</h2>
-    <CountDown until="2023-10-13T00:00:00.000Z" />
-    <p>theme: <span class="theme">ceo mindset</span></p>
+    <h2>friday october 13th '23, to sunday oct 22nd '23</h2>
+    <div class="theme-container">
+      <p>theme:</p>
+      <p class="theme">ceo mindset</p>
+    </div>
   </header>
 </Layout>

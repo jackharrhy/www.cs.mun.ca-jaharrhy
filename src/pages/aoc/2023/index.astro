@@ -1,0 +1,50 @@
+---
+import AdventOfCodeLayout from "@layouts/AdventOfCodeLayout.astro";
+
+const days = Object.keys(import.meta.glob("./day*.mdx")).map((fileName) =>
+  Number(fileName.split(".")[1].slice(4))
+);
+---
+
+<style>
+  h2 {
+    font-size: 2rem;
+    text-align: center;
+  }
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
+  .tips {
+    margin-top: 2rem;
+  }
+
+  .jack-utils {
+    margin-top: 2rem;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .jack-utils:focus {
+    opacity: 1;
+  }
+</style>
+
+<AdventOfCodeLayout year={2023} title="advent of code 2023">
+  <ul>
+    {
+      days.map((day) => (
+        <a href={`./day${day}/`}>
+          <li>[day {day}]</li>
+        </a>
+      ))
+    }
+    <a href={`./prelude/`}>
+      <li>[prelude]</li>
+    </a>
+  </ul>
+</AdventOfCodeLayout>
