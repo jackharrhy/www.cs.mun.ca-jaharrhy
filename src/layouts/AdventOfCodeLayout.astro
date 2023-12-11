@@ -64,8 +64,17 @@ title = `jacks aoc ramble ${title ? `- ${title}` : ""}`;
   }
 
   ul {
-    list-style: none;
+    list-style-type: "- ";
+    list-style-position: inside;
     padding: 0;
+  }
+
+  li {
+    margin: 0.2rem 0;
+  }
+
+  li > ul {
+    padding: 0 0 0 1rem;
   }
 
   main {
@@ -77,6 +86,10 @@ title = `jacks aoc ramble ${title ? `- ${title}` : ""}`;
   .back {
     background-color: rgba(0, 0, 0, 0.3);
     border: 3px inset var(--terminal);
+  }
+
+  code {
+    background-color: #24292e;
   }
 </style>
 

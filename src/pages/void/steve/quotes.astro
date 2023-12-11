@@ -1,0 +1,27 @@
+---
+import Layout from "@layouts/Layout.astro";
+import { SteveQuotes } from "@components/react/SteveQuotes";
+import Back from "@components/Back.astro";
+---
+
+<style is:global>
+  main {
+    padding: 0 3rem;
+    margin: 0 auto;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 900;
+    max-width: 40rem;
+  }
+
+  h1 {
+    text-align: center;
+  }
+</style>
+
+<Layout title="Dewan Mukto - Heli Heli Copter Copter">
+  <Back />
+
+  <main>
+    <SteveQuotes client:only="react" />
+  </main>
+</Layout>

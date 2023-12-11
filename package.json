@@ -9,24 +9,24 @@
     "ncu": "ncu -u"
   },
   "devDependencies": {
-    "@astrojs/react": "^3.0.6",
-    "astro": "^3.6.0",
-    "npm-check-updates": "^16.14.11",
+    "@astrojs/react": "^3.0.9",
+    "astro": "^4.1.0",
+    "npm-check-updates": "^16.14.12",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "dependencies": {
-    "@astrojs/mdx": "^1.1.5",
-    "@astrojs/rss": "^3.0.0",
-    "@astrojs/solid-js": "^3.0.2",
+    "@astrojs/mdx": "^2.0.3",
+    "@astrojs/rss": "^4.0.1",
+    "@astrojs/solid-js": "^4.0.0",
     "@react-spring/three": "^9.7.3",
-    "@react-three/fiber": "^8.15.11",
+    "@react-three/fiber": "^8.15.13",
     "@xmldom/xmldom": "^0.8.10",
     "htmlparser2": "^9.0.0",
     "maplibre-gl": "^3.6.2",
     "react-spring": "^9.7.3",
-    "solid-js": "^1.8.6",
-    "three": "^0.158.0",
-    "xpath": "^0.0.33"
+    "solid-js": "^1.8.8",
+    "three": "^0.160.0",
+    "xpath": "^0.0.34"
   }
 }

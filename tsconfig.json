@@ -23,7 +23,6 @@
         "src/sounds/*"
       ]
     },
-    "jsx": "preserve",
-    "jsxImportSource": "solid-js"
+    "jsx": "preserve"
   }
 }

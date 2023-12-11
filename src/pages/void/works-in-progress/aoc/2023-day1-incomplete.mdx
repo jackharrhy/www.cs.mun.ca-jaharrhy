@@ -1,0 +1,418 @@
+---
+layout: "@layouts/AdventOfCodeLayoutDay.astro"
+title: day 1
+pubDate: 2023-12-11
+---
+
+import Other from "@components/aoc/Other.astro";
+import Letterbird from "@components/Letterbird.astro";
+
+🥱, hello everyone, its advent of code time
+
+similar to [[what i did last year]](../../2022/), i am going to
+be doing these here _rambles_, in which i talk about both my
+solution for a certain days problem, and also give a look around
+at the way other people solve it as well
+
+---
+
+**\- excuse time -**
+
+you might notice that this is being posted on the 11th, which is
+ten days after the day that it is covering
+
+you are indeed true, and i am quite late this year, but alas, i am
+here and ready to go
+
+i initially had big ideas and plans for this year, but things got
+out of hand before the month of december even started
+
+i had a chance to give a talk at [[DevFest St.John's 2023]](https://gdg.community.dev/events/details/google-gdg-st-johns-presents-devfest-st-johns-2023/) (again,
+same time last year-ish, also mentioned in last years rambles),
+and low and behold i procrastinated even worse this year, working on
+my slides until 30 minutes before i was supposed to give my talk
+
+thankfully, it was still a great talk, [[which you can view the slides / recording fo here]](https://github.com/jackharrhy/beyond-the-browser/),
+but doing this def. took a lot of the wanting-to-do-stuff-outside-of-work
+mental energy away from me, and i also caught a nasty old headcold that
+drained every bit of physical energy out of me, so the combo meant i did
+much more [[gaming]](https://www.backloggd.com/u/jackharrhy/) the last bit
+rather than advent-of-code-ing (also doesn't help my steamdeck oled came in
+at the same time as well...)
+
+**\- end excuse time -**
+
+---
+
+so, my last few years of advent of code have followed a pattern:
+
+- 2019, crystal
+- 2020, crystal
+- 2021, elixir
+- 2022, elixir
+
+i have always done two years a row in the same language, before moving
+onto another
+
+my intent this year was to use another language, and after breily
+consdering ocaml, i ended up initially picking rust, since:
+
+- i like rust
+- rust is fast, previous years elixir has held me back (it seems)
+  on problems that can be brute forced with a more performant
+  programming language (this is likely just a _skill issue_ on my
+  own part)
+- it means that i will have changed up the language once more,
+  continuing the trend
+
+so when day 1 came, picked up rust, [[this did not last that long]](https://github.com/jackharrhy/advent2023/commit/4918a37e2ba6f6b6157e4c1245ae2fdff5226063)
+
+---
+
+<details>
+<summary>click to view my _attempt_ at writing a solution in rust</summary>
+
+<br />
+
+i looked at the problem, thought that pulling out a [[regular expression]](https://en.wikipedia.org/wiki/Regular_expression)
+was the play to do this but _easy_, had a working piece of code written
+in rust using everything standard library (only nonstandard thing was [[cargo aoc]](https://github.com/gobanos/cargo-aoc), used for a nice cli wrapper / input data fetcher)
+
+but it didn't work
+
+this felt quite frustrating to run into on the first part of the first day,
+until i saw a post on reddit outlining a special case that my code failed on
+
+```
+eighthree
+```
+
+here, i would use a regex, consume the `eight` into a match group, and then
+basically disregard the three, which is important since if you parse
+from the left instead of the right, this would indeed resolve to a
+three rather than a eight
+
+so, a little bit of googling made me realize that what i wanted here
+were [[lookahead assertions]](https://en.wikipedia.org/wiki/Regular_expression#Assertions)
+to ensure i could basically parse a group, and then still use pieces
+of that group in future matches
+
+sadly, no dice for this being something built into the crate i reached
+for initiall, [[regex]](https://docs.rs/regex/latest/regex/), and while
+did find [[fancy_regex]](https://docs.rs/fancy-regex/latest/fancy_regex/)
+(built by the same guy who made [[ripgrep]](https://github.com/BurntSushi/ripgrep)),
+i couldn't figure out how to get the library to do what i wanted
+
+what i am describing, i know, is a skill issue, but for the things
+that my brain is reaching for to solve problems to be giving me this
+much issue out of the gate, makes me think i am not going to perist
+very far into advent of code like this
+
+i love rust, i want to write more rust, but i think it is better suited
+(at least for me) for programs that _matter_ more, like cross platform clis,
+or high performance web apis, and other pieces of software that live longer
+and will be used by more / be at the core of something, not really the
+type of language to write one of solutions to problems in which once you have
+the input, you are done
+
+for those of you writing rust, power to you, you have less of a skill
+issue with rust than i do, but i myself and going back to my cozy
+dynamic programming land for advent of code
+
+and so, i decided to end my streak of new lang every two years,
+and i am going back to the interesting choice in 2021, the cozy choice in
+2022, and now the fallback super cozy choice of 2023
+
+i don't really have any other reason to write elixir at the moment,
+therefore here is one, and here i go again!
+
+</details>
+
+---
+
+tl;dr, i am back on the [[elixir]](https://elixir-lang.org/) train once again
+
+<details>
+<summary>click to view my _actual_ solution, in elixir</summary>
+
+<br />
+
+given the sample input:
+
+```
+two1nine
+eightwothree
+abcone2threexyz
+xtwone3four
+4nineeightseven2
+zoneight234
+7pqrstsixteen
+```
+
+assuming `input` is the above as one big string,
+
+```elixir
+input =
+  input
+  |> Kino.Input.read()
+  |> String.split("\n")
+  |> Enum.map(fn line ->
+    line
+    |> String.codepoints()
+    |> Enum.map(fn codepoint ->
+      case Integer.parse(codepoint) do
+        {x, _} -> x
+        :error -> codepoint
+      end
+    end)
+  end)
+```
+
+read in this input, split on each newline, which
+will return a list of strings, each string being a single line
+
+then, map over each of these lines, break them into individual [[codepoints]](https://en.wikipedia.org/wiki/Code_point),
+and map each codepoint which a function that attempts to parse the codepoint
+into an integer, and if fails, will just return the codepoint as-is
+
+```elixir
+[
+  ["t", "w", "o", 1, "n", "i", "n", "e"],
+  ["e", "i", "g", "h", "t", "w", "o", "t", "h", "r", "e", "e"],
+  ["a", "b", "c", "o", "n", "e", 2, "t", "h", "r", "e", "e", "x", "y", "z"],
+  ["x", "t", "w", "o", "n", "e", 3, "f", "o", "u", "r"],
+  [4, "n", "i", "n", "e", "e", "i", "g", "h", "t", "s", "e", "v", "e", "n", 2],
+  ["z", "o", "n", "e", "i", "g", "h", "t", 2, 3, 4],
+  [7, "p", "q", "r", "s", "t", "s", "i", "x", "t", "e", "e", "n"]
+]
+```
+
+We then end up with this nice list of lists,
+the contents of the lists are either single strings/codepoints, or single digit numbers
+
+### part 1
+
+my approach of part 1 / 2, is inspired from when i peaked at [[EthanDenny's day 1 solution]](https://github.com/EthanDenny/advent-of-code-2023/blob/main/src/day1.rs)
+while i was still tackling this in rust
+
+```elixir
+input
+|> Enum.map(fn line ->
+  first = Enum.find(line, &is_number(&1))
+  last = Enum.find(Enum.reverse(line), &is_number(&1))
+
+  if is_nil(first) do
+    0
+  else
+    first * 10 + last
+  end
+end)
+|> Enum.sum()
+```
+
+take our formatted input, and iterate over each line
+
+```elixir
+  first = Enum.find(line, &is_number(&1))
+```
+
+first, find the first thing in the list that is a number, using
+the aptly named and very handy [[`is_number/1`]](https://hexdocs.pm/elixir/1.15.7/Kernel.html#is_number/1)
+to check, if it is, a _number_
+
+this gets us the first number in the list
+
+```elixir
+  last = Enum.find(Enum.reverse(line), &is_number(&1))
+```
+
+and then, for last, just reverse the list around, and do the same thing again,
+but since we reversed the list, it will be the last number in the list!
+
+```elixir
+  if is_nil(first) do
+    0
+  else
+    first * 10 + last
+  end
+```
+
+then, once we have both, simply do `first * 10` to ensure the first single digit becomes a two digit number
+(i.e. 2 -> 20, 6 -> 60), and then add the second value to get the reconstructed
+number for that row
+
+(this if check, is that on using the second example input, some rows do not have any numbers in them, this
+makes sure the code does not crash when it does not find a number)
+
+```elixir
+|> Enum.sum()
+```
+
+then, just sum the rows into one big number, and boom, the answer!
+
+(curious what this funky `|>` operator is? [[learn more here about the pipe operator]](https://elixirschool.com/en/lessons/basics/pipe_operator))
+
+### part 2
+
+part 2 is going to be conceptually similar to part 1, but since we have to match
+on enter lists of words, things must be a bit busier
+
+```elixir
+number_words = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"]
+
+number_words_reversed =
+  number_words |> Enum.map(&String.reverse(&1))
+
+all_words =
+  (number_words ++ number_words_reversed)
+  |> Enum.map(&String.codepoints(&1))
+```
+
+the idea i'm going with for this problem, is starting
+off with a list of numbers 1-9, spelt out (as you can see, above that is `number_words`)
+
+and then, reverse each one
+
+then, combine them back together
+
+```elixir
+[
+  ["o", "n", "e"],
+  ["t", "w", "o"],
+  ["t", "h", "r", "e", "e"],
+  # ...
+  ["n", "e", "v", "e", "s"],
+  ["t", "h", "g", "i", "e"],
+  ["e", "n", "i", "n"]
+]
+```
+
+this gives us a list of 9 + 9 = 18 lists of strings, that we can use to [[pattern match]](https://joyofelixir.com/6-pattern-matching)
+each line of input as we scan through it
+
+the full solution can be found [[here]](https://github.com/jackharrhy/advent2023/blob/main/day1.livemd)
+
+```elixir
+defmodule Trebuchet do
+  def calibrate([], _words), do: nil
+
+  def calibrate([num | _rest], _words) when is_number(num) do
+    num
+  end
+
+  def calibrate(line, words) do
+    num =
+      words
+      |> Enum.find(fn word ->
+        List.starts_with?(line, word)
+      end)
+
+    if is_nil(num) do
+      Trebuchet.calibrate(tl(line), words)
+    else
+      Trebuchet.understand_handwriting(num, words)
+    end
+  end
+
+  def understand_handwriting(word, words) do
+    index = Enum.find_index(words, fn w -> w == word end)
+    value = if index >= 9, do: index - 8, else: index + 1
+    value
+  end
+end
+```
+
+for this, i break out my first module, since we are reaching for [[tail recursion]](https://en.wikipedia.org/wiki/Tail_call)
+for this problem
+
+before i explain the above `Trebuchet` module, let me first show its usage:
+
+```elixir
+input
+|> Enum.map(fn line ->
+  first = Trebuchet.calibrate(line, all_words)
+  last = Trebuchet.calibrate(Enum.reverse(line), all_words)
+
+  first * 10 + last
+end)
+|> Enum.sum()
+```
+
+this is basically the exact same code as before, except the first and last are fetched from calling the `callibrate/2`
+function from module
+
+```elixir
+  def calibrate([], _words), do: nil
+
+  def calibrate([num | _rest], _words) when is_number(num) do
+    num
+  end
+
+  def calibrate(line, words) do
+    num =
+      words
+      |> Enum.find(fn word ->
+        List.starts_with?(line, word)
+      end)
+
+    if is_nil(num) do
+      Trebuchet.calibrate(tl(line), words)
+    else
+      Trebuchet.understand_handwriting(num, words)
+    end
+  end
+```
+
+`calibrate/2` has three definitions
+
+- when the line passed to the function is an empty list, return nil, this will break later bits of the program but i
+added it for completeness
+- calibrate with a list that the head is a number, just take the number as-is
+- the third and final case, the most generic case (where the list is neither empty, nor has a number as the head), will
+then be checked to see if the list starts with each word in the word list
+  - if it does not, go another layer deep but this time with the tail of the list, i.e. the rest of it
+  - if it does, use a little handy function to go from `["o", "n", "e"]` -> `1`
+
+```elixir
+  def understand_handwriting(word, words) do
+    index = Enum.find_index(words, fn w -> w == word end)
+    value = if index >= 9, do: index - 8, else: index + 1
+    value
+  end
+```
+
+said handy function is the above code which finds the index in the big list of words, if its 1-9, just go from index to
+number, if not, then do index - 8 since its of of the backwards numbers that start from 1 starting at 9
+
+```elixir
+|> Enum.sum()
+```
+
+then, again, sum the rows into one big number, and boom, the part 2 answer!
+
+again, thanks to ethan for indirectly helping me come up with the approach to this one
+
+the full solution can be found [[here]](https://github.com/jackharrhy/advent2023/blob/main/day1.livemd)
+
+<br />
+
+</details>
+
+---
+
+this year, i am also including this little [[letterbird.co]](https://letterbird.co) contact form,
+so if you have anything to say, you now have a box on this page you can write into and i can reply
+back using snail e-mail 🐌!
+
+<Letterbird />
+
+feel free to use this to ask to be includeed in rambles / discuss the rambles themselves / critique the rambles / tell
+me about your day and such
+
+---
+
+### others
+
+TODO
+
+<Other person="mudkip" day="1" />
