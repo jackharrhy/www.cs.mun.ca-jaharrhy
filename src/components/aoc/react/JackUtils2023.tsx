@@ -1,7 +1,8 @@
 import { useMemo } from "react";
 import { useState } from "react";
-import { people } from "../../pages/aoc/2022/data";
-import { dayTemplate } from "../../pages/aoc/2022/day-template";
+
+import { people } from "../../../pages/aoc/2023/data";
+import { dayTemplate } from "../../../pages/aoc/2023/day-template";
 
 const personTemplate = (personKey, day) =>
   `
@@ -36,7 +37,7 @@ const ShowPeople = ({ day }) =>
     </div>
   ));
 
-export default function JackUtils() {
+export function JackUtils() {
   const [day, setDay] = useState(new Date().getDate());
 
   const allPeopleTemplate = useMemo(
@@ -74,7 +75,11 @@ export default function JackUtils() {
         ))}
       </ul>
       <br />
-      <ShowPeople day={day} />
+      <ShowPeople people={people} day={day} />
     </>
   );
+}
+
+export function JackUtils2023() {
+  return <div>pog</div>;
 }

@@ -1,7 +1,7 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import Back from "@components/Back.astro";
-import Hikes from "@components/hikes/Hikes";
+import Hikes from "@components/hikes/solid/Hikes";
 ---
 
 <style is:global>
@@ -19,7 +19,9 @@ import Hikes from "@components/hikes/Hikes";
     background-color: var(--color-bg);
     color: var(--color-text);
     font-family: "TimesNewBastard", serif;
-    font-feature-settings: "kern" on, "liga" on;
+    font-feature-settings:
+      "kern" on,
+      "liga" on;
     text-rendering: optimizeLegibility;
   }
   h1 {
