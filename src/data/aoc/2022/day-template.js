@@ -6,7 +6,7 @@ title: day ${day}
 pubDate: 2022-12-${pad(day)}
 ---
 
-import Other from "@components/aoc/Other.astro";
+import Other from "@components/aoc/2023/Other.astro";
 
 TODO PREAMBLE
 

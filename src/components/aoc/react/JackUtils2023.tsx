@@ -1,8 +1,8 @@
 import { useMemo } from "react";
 import { useState } from "react";
 
-import { people } from "../../../pages/aoc/2023/data";
-import { dayTemplate } from "../../../pages/aoc/2023/day-template";
+import { people } from "@data/aoc/2023/data";
+import { dayTemplate } from "@data/aoc/2023/day-template";
 
 const personTemplate = (personKey, day) =>
   `
