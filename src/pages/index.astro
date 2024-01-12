@@ -16,6 +16,7 @@ import Strava from "@components/Strava.astro";
 import Tealog from "@components/Tealog.astro";
 import AdevntOfCodeCountdown from "@components/AdevntOfCodeCountdown.astro";
 import TamaNOTChi from "@components/TamaNOTChi.astro";
+import Tomato from "@components/Tomato.svelte";
 
 const lastModified = new Intl.DateTimeFormat("en-US", {
   month: "long",
@@ -304,6 +305,12 @@ const lastModified = new Intl.DateTimeFormat("en-US", {
   .tamanotchi p {
     margin: 0.75rem 0 0 0;
   }
+
+  .tomato {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 </style>
 
 <Layout title="~jaharrhy">
@@ -384,6 +391,9 @@ const lastModified = new Intl.DateTimeFormat("en-US", {
         <div class="projects">
           <Projects />
         </div>
+        <div class="tomato">
+          <Tomato />
+        </div>
       </div>
     </div>
     <a href="./how-to-make-mun-page/">
@@ -399,7 +409,7 @@ const lastModified = new Intl.DateTimeFormat("en-US", {
       <h5>
         Created: April 9th, 2019
         <br />
-         Last Modified: {lastModified}
+        Last Modified: {lastModified}
       </h5>
       <a href="./void/bepis-rock/">
         <img src={bepisRockUrl.src} />

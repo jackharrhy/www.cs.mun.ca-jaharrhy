@@ -19,6 +19,7 @@
     "@astrojs/mdx": "^2.0.3",
     "@astrojs/rss": "^4.0.1",
     "@astrojs/solid-js": "^4.0.0",
+    "@astrojs/svelte": "^5.0.3",
     "@react-spring/three": "^9.7.3",
     "@react-three/fiber": "^8.15.13",
     "@xmldom/xmldom": "^0.8.10",
@@ -26,6 +27,7 @@
     "maplibre-gl": "^3.6.2",
     "react-spring": "^9.7.3",
     "solid-js": "^1.8.8",
+    "svelte": "^4.2.8",
     "three": "^0.160.0",
     "xpath": "^0.0.34"
   }
