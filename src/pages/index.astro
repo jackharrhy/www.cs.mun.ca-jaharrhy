@@ -311,6 +311,12 @@ const lastModified = new Intl.DateTimeFormat("en-US", {
     justify-content: center;
     align-items: center;
   }
+
+  .under-construction {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
 </style>
 
 <Layout title="~jaharrhy">
@@ -404,7 +410,10 @@ const lastModified = new Intl.DateTimeFormat("en-US", {
     <div class="knowledge">
       <Knowledge />
     </div>
-    <img class="construction" src={underConstructionUrl.src} />
+    <div class="under-construction">
+      <img class="construction" src={underConstructionUrl.src} />
+      <a href="./babble-bin/">🗑️</a>
+    </div>
     <div class="created-modified">
       <h5>
         Created: April 9th, 2019

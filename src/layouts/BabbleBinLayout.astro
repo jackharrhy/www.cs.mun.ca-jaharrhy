@@ -1,0 +1,58 @@
+---
+import Layout, { Props as LayoutProps } from "@layouts/Layout.astro";
+
+export interface Props extends LayoutProps {}
+
+const { title } = Astro.props as Props;
+---
+
+<style is:global>
+  :root {
+    font-size: 22px;
+  }
+
+  header a {
+    color: black;
+  }
+
+  body {
+    padding: 0 1rem 2rem 1rem;
+  }
+
+  header,
+  main {
+    margin: 0 auto;
+    max-width: 50ch;
+  }
+
+  * {
+    font-family:
+      Iowan Old Style,
+      Apple Garamond,
+      Baskerville,
+      Times New Roman,
+      Droid Serif,
+      Times,
+      Source Serif Pro,
+      serif,
+      Apple Color Emoji,
+      Segoe UI Emoji,
+      Segoe UI Symbol;
+  }
+</style>
+
+<Layout title={title}>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+    slot="head"
+  />
+  <header>
+    <a href={`${Astro.site}babble-bin`}>
+      <h1>babble bin</h1>
+    </a>
+  </header>
+  <main>
+    <slot />
+  </main>
+</Layout>

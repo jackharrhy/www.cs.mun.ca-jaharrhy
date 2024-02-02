@@ -1,0 +1,21 @@
+---
+import BabbleBinLayout from "@layouts/BabbleBinLayout.astro";
+
+import { getCollection } from "astro:content";
+
+const babbles = await getCollection("babble-bin");
+---
+
+<style></style>
+
+<BabbleBinLayout title="babble bin">
+  <ul>
+    {
+      babbles.map(({ data: { title }, slug }) => (
+        <a href={`./${slug}`}>
+          <li>{title}</li>
+        </a>
+      ))
+    }
+  </ul>
+</BabbleBinLayout>
