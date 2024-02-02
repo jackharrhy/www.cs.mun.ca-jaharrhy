@@ -10,25 +10,25 @@
   },
   "devDependencies": {
     "@astrojs/react": "^3.0.9",
-    "astro": "^4.1.0",
-    "npm-check-updates": "^16.14.12",
+    "astro": "^4.3.1",
+    "npm-check-updates": "^16.14.14",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "dependencies": {
-    "@astrojs/mdx": "^2.0.3",
-    "@astrojs/rss": "^4.0.1",
-    "@astrojs/solid-js": "^4.0.0",
+    "@astrojs/mdx": "^2.1.1",
+    "@astrojs/rss": "^4.0.4",
+    "@astrojs/solid-js": "^4.0.1",
     "@astrojs/svelte": "^5.0.3",
     "@react-spring/three": "^9.7.3",
-    "@react-three/fiber": "^8.15.13",
+    "@react-three/fiber": "^8.15.16",
     "@xmldom/xmldom": "^0.8.10",
-    "htmlparser2": "^9.0.0",
-    "maplibre-gl": "^3.6.2",
+    "htmlparser2": "^9.1.0",
+    "maplibre-gl": "^4.0.0",
     "react-spring": "^9.7.3",
-    "solid-js": "^1.8.8",
-    "svelte": "^4.2.8",
-    "three": "^0.160.0",
+    "solid-js": "^1.8.12",
+    "svelte": "^4.2.9",
+    "three": "^0.161.0",
     "xpath": "^0.0.34"
   }
 }
