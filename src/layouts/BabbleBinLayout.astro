@@ -1,4 +1,5 @@
 ---
+import Feed from "@components/Feed.astro";
 import Layout, { Props as LayoutProps } from "@layouts/Layout.astro";
 
 export interface Props extends LayoutProps {}
@@ -18,6 +19,21 @@ const { title } = Astro.props as Props;
 
   body {
     padding: 0 1rem 2rem 1rem;
+  }
+
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  header img {
+    filter: grayscale(0.9);
+    transition: filter 0.2s;
+  }
+
+  header img:hover {
+    filter: grayscale(0.4);
   }
 
   header,
@@ -64,6 +80,9 @@ const { title } = Astro.props as Props;
   <header>
     <a href={`${Astro.site}babble-bin`}>
       <h1>babble bin</h1>
+    </a>
+    <a href={`${Astro.site}babble-bin/rss.xml`}>
+      <Feed />
     </a>
   </header>
   <main>
