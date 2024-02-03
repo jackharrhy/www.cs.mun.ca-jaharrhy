@@ -120,26 +120,12 @@ const lastModified = new Intl.DateTimeFormat("en-US", {
     border: 4px outset #d7f1ff;
   }
 
-  .links {
-    display: flex;
-    justify-content: space-around;
-    height: 7rem;
-    padding: 0.25rem;
+  .muncs-link {
+    height: 8rem;
+    margin: 0 auto;
   }
 
-  .links a {
-    display: contents;
-    color: black;
-  }
-
-  .link {
-    display: flex;
-    max-width: 12rem;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .links img {
+  .muncs-link img {
     height: 100%;
   }
 
@@ -341,6 +327,28 @@ const lastModified = new Intl.DateTimeFormat("en-US", {
     align-items: center;
     gap: 0.75rem;
   }
+
+  .csclub {
+    margin: 0 auto;
+    text-align: center;
+    background-color: white;
+    border: 1px solid black;
+    color: black;
+    font-size: 1.5rem;
+    padding: 1rem;
+    max-width: 10ch;
+  }
+
+  .jacks-cuppa a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 6rem;
+    gap: 1rem;
+  }
+  .jacks-cuppa img {
+    height: 100%;
+  }
 </style>
 
 <Layout title="~jaharrhy">
@@ -368,12 +376,14 @@ const lastModified = new Intl.DateTimeFormat("en-US", {
             />
             <p>hikes - 2023 - oops</p>
           </a>
-          <div class="links">
+          <div class="muncs-link">
             <a href="https://muncompsci.ca/">
-              <div class="link to-muncs">
-                <img src={muncsUrl.src} />
-                <p>muncs</p>
-              </div>
+              <img src={muncsUrl.src} />
+            </a>
+          </div>
+          <div class="csclub">
+            <a href="https://www.cs.mun.ca/~csclub/">
+              <code>~csclub</code>
             </a>
           </div>
         </div>
@@ -410,18 +420,13 @@ const lastModified = new Intl.DateTimeFormat("en-US", {
         <div class="piclog">
           <Piclog />
         </div>
-        <div class="aoc aoc-countdown">
-          <AdevntOfCodeCountdown />
-        </div>
         <div class="strava">
           <Strava />
         </div>
-        <div class="links">
+        <div class="jacks-cuppa">
           <a href="./jacks-cuppa/">
-            <div class="link to-cuppa">
-              <img src={cuppaUrl.src} />
-              <p>jacks cuppa</p>
-            </div>
+            <img src={cuppaUrl.src} />
+            <p>jacks cuppa</p>
           </a>
         </div>
         <div class="projects">
@@ -429,6 +434,9 @@ const lastModified = new Intl.DateTimeFormat("en-US", {
         </div>
         <div class="tomato">
           <Tomato />
+        </div>
+        <div class="aoc aoc-countdown">
+          <AdevntOfCodeCountdown />
         </div>
       </div>
     </div>
