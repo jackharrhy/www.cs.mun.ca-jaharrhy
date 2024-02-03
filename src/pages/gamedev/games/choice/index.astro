@@ -1,0 +1,123 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Back from "@components/Back.astro";
+---
+
+<style>
+  :root {
+    font-family:
+      -apple-system,
+      BlinkMacSystemFont,
+      avenir next,
+      avenir,
+      segoe ui,
+      helvetica neue,
+      helvetica,
+      Cantarell,
+      Ubuntu,
+      roboto,
+      noto,
+      arial,
+      sans-serif;
+  }
+
+  html {
+    background-color: #c9f6ff;
+  }
+
+  header,
+  main {
+    max-width: 90vw;
+    width: 40rem;
+    margin: 0 auto;
+    font-weight: bold;
+  }
+
+  header {
+    text-align: center;
+  }
+
+  h1 {
+    font-size: 6rem;
+    margin: 0;
+  }
+
+  h2 {
+    margin: 0;
+    font-size: 1.1rem;
+  }
+
+  .model {
+    margin: 2rem 0;
+  }
+
+  .model model-viewer {
+    width: 100%;
+  }
+
+  #world {
+    height: 22.5rem;
+  }
+
+  #keybox {
+    height: 15rem;
+  }
+
+  .model p {
+    text-align: center;
+    font-size: 1.1rem;
+  }
+
+  #download {
+    margin: 2rem 0;
+    text-align: center;
+    font-size: 1.5rem;
+  }
+  #download a,
+  #download p {
+    margin: 0.25rem 0;
+  }
+</style>
+
+<Layout title="gamedev - choice">
+  <script
+    slot="head"
+    type="module"
+    src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"
+  ></script>
+  <Back />
+  <header>
+    <h1>choice</h1>
+    <h2>a 'game' made in december of 2015</h2>
+  </header>
+  <main>
+    <div id="download">
+      <a href="/~jaharrhy/downloads/choice/choice-v1.zip"
+        >download for windows</a
+      >
+      <p>(works great in wine)</p>
+    </div>
+    <div class="model">
+      <p>'world'</p>
+      <model-viewer
+        id="world"
+        alt="todo"
+        src="/~jaharrhy/3d/gamedev/choice/world.glb"
+        touch-action="none"
+        shadow-intensity="1"
+        camera-orbit="140deg 40deg"
+        camera-controls></model-viewer>
+    </div>
+    <div class="model">
+      <p>'keybox'</p>
+      <model-viewer
+        id="keybox"
+        alt="todo"
+        src="/~jaharrhy/3d/gamedev/choice/keybox.glb"
+        touch-action="none"
+        shadow-intensity="1"
+        camera-orbit="90deg 90deg 10m"
+        camera-controls></model-viewer>
+    </div>
+  </main>
+</Layout>

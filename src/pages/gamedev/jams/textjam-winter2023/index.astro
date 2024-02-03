@@ -1,0 +1,31 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Back from "@components/Back.astro";
+---
+
+<style>
+  body {
+    background-color: black;
+    color: white;
+  }
+
+  main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+</style>
+
+<Layout title="gamedev - jams">
+  <Back />
+  <main>
+    <img
+      src="http://textfiles.com/underconstruction/totomwp4underconstruction.gif"
+    />
+    <h1>textjam winter 2023</h1>
+    <img
+      src="http://textfiles.com/underconstruction/totomwp4underconstruction.gif"
+    />
+  </main>
+</Layout>
