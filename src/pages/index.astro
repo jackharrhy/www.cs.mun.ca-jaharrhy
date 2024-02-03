@@ -31,6 +31,11 @@ const lastModified = new Intl.DateTimeFormat("en-US", {
     src: url("/~jaharrhy/fonts/TT2020StyleB-Regular.woff2") format("woff2");
   }
 
+  @font-face {
+    font-family: "QuickMoney";
+    src: url("/~jaharrhy/fonts/QuickMoney.woff2") format("woff2");
+  }
+
   body {
     margin: 0;
     display: flex;
@@ -257,6 +262,7 @@ const lastModified = new Intl.DateTimeFormat("en-US", {
   }
 
   .piclog {
+    margin: 1rem 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -265,22 +271,40 @@ const lastModified = new Intl.DateTimeFormat("en-US", {
   .gamedev {
     display: flex;
     flex-direction: column;
+    gap: 0.5rem;
     font-size: 1.5rem;
-    padding: 0.5rem;
+    max-width: 20rem;
+    margin: 0 auto;
   }
 
   .gamedev-header {
-    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-      "Lucida Sans", Arial, sans-serif;
+    font-family: cursive;
+    font-weight: bold;
+    font-size: 2.5rem;
     margin: 0;
-  }
-
-  .gamedev:hover {
+    text-align: center;
   }
 
   .gamedev-link {
     color: black;
     text-decoration: none;
+    padding: 0.5rem;
+    text-align: center;
+  }
+
+  .gamejam-squidjam {
+    background-color: #dbb989;
+    border: 2px inset #aa8a5b;
+    font-size: 1.25rem;
+    font-weight: bold;
+  }
+
+  .gamejam-ceojam {
+    font-family: "QuickMoney";
+    background-color: #a8a29e;
+    color: #1c1917;
+    border: 2px outset #44403c11;
+    line-height: 50%;
   }
 
   .gamejam-gumpjam {
@@ -363,18 +387,24 @@ const lastModified = new Intl.DateTimeFormat("en-US", {
           <Linkbox />
         </div>
         <div class="gamedev">
-          <p class="gamedev-header">gamedev - jams</p>
+          <p class="gamedev-header">gamejams</p>
+          <a
+            href="./gamedev/jams/squidjam-jan2024/"
+            class="gamedev-link gamejam-squidjam"
+          >
+            squidjam january 2024
+          </a>
           <a
             href="./gamedev/jams/ceojam-oct2023/"
             class="gamedev-link gamejam-ceojam"
           >
-            <div class="gamedev">ceojam october 2023</div>
+            ceojam october 2023
           </a>
           <a
             href="./gamedev/jams/gumpjam-aug2023/"
             class="gamedev-link gamejam-gumpjam"
           >
-            <div class="gamedev">gumpjam august 2023</div>
+            gumpjam august 2023
           </a>
         </div>
         <div class="piclog">

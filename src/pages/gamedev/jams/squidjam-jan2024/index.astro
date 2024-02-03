@@ -1,0 +1,52 @@
+---
+import { Image } from "astro:assets";
+import squidJamCard from "@images/gamedev/jams/squidjam/squidjam-card.png";
+
+import Layout from "@layouts/Layout.astro";
+import Back from "@components/Back.astro";
+---
+
+<style>
+  html {
+    background-image: url("../../../../images/gamedev/jams/squidjam/table.jpg");
+  }
+
+  @font-face {
+    font-family: "foo";
+    src: url("/~jaharrhy/fonts/foo.woff2") format("woff2");
+  }
+
+  header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .card {
+    margin: 5rem;
+    height: 30rem;
+    width: auto;
+    animation: float 10s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0% {
+      transform: translatey(-15px) rotate(-5deg);
+    }
+    50% {
+      transform: translatey(15px) rotate(5deg);
+    }
+    100% {
+      transform: translatey(-15px) rotate(-5deg);
+    }
+  }
+</style>
+
+<Layout title="squidjam june 2024">
+  <div class="back-contaienr">
+    <Back />
+  </div>
+  <header>
+    <Image class="card" src={squidJamCard} alt="squidjam card" />
+  </header>
+</Layout>
