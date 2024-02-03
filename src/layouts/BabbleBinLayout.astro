@@ -9,6 +9,7 @@ const { title } = Astro.props as Props;
 <style is:global>
   :root {
     font-size: 22px;
+    color-scheme: only light;
   }
 
   header a {
@@ -23,6 +24,19 @@ const { title } = Astro.props as Props;
   main {
     margin: 0 auto;
     max-width: 50ch;
+  }
+
+  ul,
+  ol {
+    padding-left: 0;
+  }
+
+  blockquote {
+    margin: 0;
+    padding: 0;
+    padding-left: 0.75rem;
+    font-style: italic;
+    border-left: 0.25rem solid #ccc;
   }
 
   * {
