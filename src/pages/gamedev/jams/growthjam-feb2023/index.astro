@@ -1,0 +1,131 @@
+---
+import { Image } from "astro:assets";
+
+import Layout from "@layouts/Layout.astro";
+import Back from "@components/Back.astro";
+
+import danGame from "@images/gamedev/jams/growthjam/dan-game.jpg";
+import jackGame from "@images/gamedev/jams/growthjam/jack-game.jpg";
+import joshGame from "@images/gamedev/jams/growthjam/josh-game.jpg";
+import keenanGame from "@images/gamedev/jams/growthjam/keenan-game.jpg";
+import rileyGame from "@images/gamedev/jams/growthjam/riley-game.jpg";
+
+import ethanGame from "@images/gamedev/jams/growthjam/ethan-game.mp4";
+import stackGame from "@images/gamedev/jams/growthjam/stack-game.mp4";
+import mitchGame from "@images/gamedev/jams/growthjam/mitch-game.mp4";
+---
+
+<style>
+  :root {
+    --plant: #2db83d;
+    --light: #d4ffb2;
+    color: var(--plant);
+    text-shadow: 5px 5px 5px var(--light);
+    font-size: 20px;
+  }
+
+  a {
+    color: var(--plant);
+    margin-bottom: 1rem;
+  }
+
+  header {
+    padding: 1rem 0;
+    font-weight: bold;
+    font-size: 2rem;
+    text-align: center;
+  }
+  h1,
+  h3 {
+    margin: 0.3rem 0;
+  }
+  h3 {
+    font-size: 1.35rem;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  main {
+    margin: 0 auto;
+    max-width: 90vw;
+    width: 40rem;
+  }
+
+  img,
+  video {
+    max-width: 100%;
+    padding: 0.5rem 2rem;
+    height: auto;
+  }
+
+  h4 {
+    font-size: 2rem;
+    margin: 1rem 0;
+    text-align: center;
+  }
+
+  li {
+    padding: 2rem 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+</style>
+
+<Layout title="growthjam feb 2023">
+  <div class="back-contaienr">
+    <Back />
+  </div>
+  <header>
+    <h1>growthjam</h1>
+    <h3>feb 17th 2023 to feb 26th 2023</h3>
+  </header>
+  <main>
+    <ul>
+      <li>
+        <h4>ethan game</h4>
+        <video src={ethanGame} controls></video>
+      </li>
+      <li>
+        <h4>dan game</h4>
+        <a href="https://github.com/DanielPower/Love2DJam2023">source</a>
+        <Image src={danGame} alt="Daniel showing off his game to the others" />
+      </li>
+      <li>
+        <h4>jack game</h4>
+        <a href="../../../downloads/plant/plant-linux.zip">download</a>
+        <a href="https://github.com/jackharrhy/plant">source</a>
+        <Image src={jackGame} alt="Jack showing off his game to the others" />
+      </li>
+      <li>
+        <h4>josh game</h4>
+        <Image src={joshGame} alt="Josh showing off his game to the others" />
+      </li>
+      <li>
+        <h4>mitch game</h4>
+        <video src={mitchGame} controls></video>
+      </li>
+      <li>
+        <h4>keenan game</h4>
+        <a href="https://github.com/Keenan-Nicholson/Game-Jam-2023">source</a>
+        <Image
+          src={keenanGame}
+          alt="Keenan showing off his game to the others"
+        />
+      </li>
+      <li>
+        <h4>riley game</h4>
+        <Image src={rileyGame} alt="Riley showing off his game to the others" />
+      </li>
+      <li>
+        <h4>stack game</h4>
+        <a href="../../../downloads/grackjump/grackjump.zip">download</a>
+        <video src={stackGame} controls></video>
+      </li>
+    </ul>
+  </main>
+</Layout>

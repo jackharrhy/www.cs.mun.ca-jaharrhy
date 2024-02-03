@@ -18,6 +18,11 @@ import AdevntOfCodeCountdown from "@components/AdevntOfCodeCountdown.astro";
 import TamaNOTChi from "@components/TamaNOTChi.astro";
 import Tomato from "@components/Tomato.svelte";
 
+import GrowthjamLink from "@components/jams/GrowthjamLink.astro";
+import GumpjamLink from "@components/jams/GumpjamLink.astro";
+import CeojamLink from "@components/jams/CeojamLink.astro";
+import SquidjamLink from "@components/jams/SquidjamLink.astro";
+
 const lastModified = new Intl.DateTimeFormat("en-US", {
   month: "long",
   day: "numeric",
@@ -26,16 +31,6 @@ const lastModified = new Intl.DateTimeFormat("en-US", {
 ---
 
 <style>
-  @font-face {
-    font-family: "TT2020Style-B";
-    src: url("/~jaharrhy/fonts/TT2020StyleB-Regular.woff2") format("woff2");
-  }
-
-  @font-face {
-    font-family: "QuickMoney";
-    src: url("/~jaharrhy/fonts/QuickMoney.woff2") format("woff2");
-  }
-
   body {
     margin: 0;
     display: flex;
@@ -271,38 +266,6 @@ const lastModified = new Intl.DateTimeFormat("en-US", {
     text-align: center;
   }
 
-  .gamedev-link {
-    color: black;
-    text-decoration: none;
-    padding: 0.5rem;
-    text-align: center;
-  }
-
-  .gamejam-squidjam {
-    background-color: #dbb989;
-    border: 2px inset #aa8a5b;
-    font-size: 1.25rem;
-    font-weight: bold;
-  }
-
-  .gamejam-ceojam {
-    font-family: "QuickMoney";
-    background-color: #a8a29e;
-    color: #1c1917;
-    border: 2px outset #44403c11;
-    line-height: 50%;
-  }
-
-  .gamejam-gumpjam {
-    background-color: #cdc49a;
-    font-family: "TT2020Style-B";
-    border: 2px inset #cdc49a;
-  }
-
-  .gamejam-gumpjam:hover {
-    border: 2px outset #cdc49a;
-  }
-
   .tamanotchi {
     display: flex;
     justify-content: center;
@@ -398,24 +361,10 @@ const lastModified = new Intl.DateTimeFormat("en-US", {
         </div>
         <div class="gamedev">
           <p class="gamedev-header">gamejams</p>
-          <a
-            href="./gamedev/jams/squidjam-jan2024/"
-            class="gamedev-link gamejam-squidjam"
-          >
-            squidjam january 2024
-          </a>
-          <a
-            href="./gamedev/jams/ceojam-oct2023/"
-            class="gamedev-link gamejam-ceojam"
-          >
-            ceojam october 2023
-          </a>
-          <a
-            href="./gamedev/jams/gumpjam-aug2023/"
-            class="gamedev-link gamejam-gumpjam"
-          >
-            gumpjam august 2023
-          </a>
+          <SquidjamLink />
+          <CeojamLink />
+          <GumpjamLink />
+          <GrowthjamLink />
         </div>
         <div class="piclog">
           <Piclog />
