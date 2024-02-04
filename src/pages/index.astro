@@ -22,6 +22,7 @@ import GrowthjamLink from "@components/jams/GrowthjamLink.astro";
 import GumpjamLink from "@components/jams/GumpjamLink.astro";
 import CeojamLink from "@components/jams/CeojamLink.astro";
 import SquidjamLink from "@components/jams/SquidjamLink.astro";
+import ChoiceLink from "@components/games/ChoiceLink.astro";
 
 const lastModified = new Intl.DateTimeFormat("en-US", {
   month: "long",
@@ -365,6 +366,8 @@ const lastModified = new Intl.DateTimeFormat("en-US", {
           <CeojamLink />
           <GumpjamLink />
           <GrowthjamLink />
+          <p class="gamedev-header">games</p>
+          <ChoiceLink />
         </div>
         <div class="piclog">
           <Piclog />
