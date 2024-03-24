@@ -4,7 +4,7 @@ const babbleBinCollection = defineCollection({
   type: "content",
   schema: z.object({
     title: z.string(),
-    pubDate: z.date(),
+    pubDate: z.date().nullable(),
   }),
 });
 

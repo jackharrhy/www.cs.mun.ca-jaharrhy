@@ -143,6 +143,13 @@ declare module 'astro:content' {
   collection: "babble-bin";
   data: InferEntrySchema<"babble-bin">
 } & { render(): Render[".mdx"] };
+"quake-engine-adventures-1.mdx": {
+	id: "quake-engine-adventures-1.mdx";
+  slug: "quake-engine-adventures-1";
+  body: string;
+  collection: "babble-bin";
+  data: InferEntrySchema<"babble-bin">
+} & { render(): Render[".mdx"] };
 "what-is-this.mdx": {
 	id: "what-is-this.mdx";
   slug: "what-is-this";

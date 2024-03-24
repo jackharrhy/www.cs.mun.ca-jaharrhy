@@ -4,6 +4,7 @@ import BabbleBinLayout from "@layouts/BabbleBinLayout.astro";
 import { getCollection } from "astro:content";
 export async function getStaticPaths() {
   const babbles = await getCollection("babble-bin");
+
   return babbles.map((entry) => ({
     params: { slug: entry.slug },
     props: { entry },
@@ -17,3 +18,10 @@ const { Content } = await entry.render();
   <p>{entry.data.title}</p>
   <Content />
 </BabbleBinLayout>
+
+<style>
+  p {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+</style>

@@ -2,7 +2,9 @@ import rss from "@astrojs/rss";
 import { getCollection } from "astro:content";
 
 export async function GET(context) {
-  const babbles = await getCollection("babble-bin");
+  const babbles = (await getCollection("babble-bin")).filter(
+    (entry) => entry.data.pubDate !== null
+  );
   return rss({
     title: "babble bin",
     description: "a bin full of babbles",

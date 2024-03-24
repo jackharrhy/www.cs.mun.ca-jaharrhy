@@ -3,7 +3,9 @@ import BabbleBinLayout from "@layouts/BabbleBinLayout.astro";
 
 import { getCollection } from "astro:content";
 
-const babbles = await getCollection("babble-bin");
+const babbles = (await getCollection("babble-bin"))
+  .filter((entry) => entry.data.pubDate !== null)
+  .sort((a, b) => Number(b.data.pubDate) - Number(a.data.pubDate));
 ---
 
 <style></style>
