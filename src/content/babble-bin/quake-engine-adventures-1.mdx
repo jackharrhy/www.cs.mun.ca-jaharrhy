@@ -1,0 +1,166 @@
+---
+title: "quake engine adventures 1"
+pubDate: null
+---
+
+import BabbleImage from "@components/babble/BabbleImage.astro";
+import BabbleBideo from "@components/babble/BabbleBideo.astro";
+
+TODOS: MAKE IMAGE RESPONSIVE
+
+i want to build something using the quake engine that doesn't feel like it was made using the quake engine
+
+during the process of looking into ways this can be done, i have found many options and routes towards this goal
+
+this is a recap of my _(incomplete)_ journey so far
+
+<br />
+
+first, the initial inspiration that sparked this interest
+
+some time ago, during when it was likely popular on youtube back in the day, i
+played [Thirty Flights of Loving](https://en.wikipedia.org/wiki/Thirty_Flights_of_Loving),
+a 2012 game by [Brendon Chung / Blendo Games](https://en.wikipedia.org/wiki/Blendo_Games)
+
+<BabbleImage
+    src="https://upload.wikimedia.org/wikipedia/commons/6/60/Thirty_flights_of_loving_screenshot.jpg"
+    width="1600px"
+    height="900px"
+    caption="screenshot from the intro sequence of thirty flights"
+    credits="Wikimedia Commons"
+    creditsUrl="https://en.wikipedia.org/wiki/Thirty_Flights_of_Loving#/media/File:Thirty_flights_of_loving_screenshot.jpg"
+/>
+
+i won't dig too much into the games mentioned here, you should
+go experience them for yourself instead!
+
+import peelJpg from "@images/babble-bin/quake-engine-adventures-1/peel.jpg";
+
+<BabbleImage
+    src={peelJpg}
+    caption="orange being peeled and recklessly tossed"
+    credits="me"
+    creditsUrl="https://steamcommunity.com/sharedfiles/filedetails/?id=3198254916"
+/>
+
+thirty flights is probably better known than its prequel, [Gravity Bone](https://en.wikipedia.org/wiki/Gravity_Bone),
+but of the two i have a softer spot for it
+
+here is some random gravity bone gameplay i recorded:
+
+import gravityBoneWebm from "@images/babble-bin/quake-engine-adventures-1/gravity-bone.webm";
+
+<BabbleBideo
+    src={gravityBoneWebm}
+    caption="running around gravity bones first level, showing its quake bones"
+/>
+
+both games utilize the quake ii engine, but:
+
+- are not first person shooters,
+- have high resolution (albiet still minimal) textures
+- thematically very different from quake look & feel wise
+- short (~15 minute) story-filled experiences rather than long games with many levels
+
+you can still sense that the games themselves were built using
+brush based level editor tooling if you're used to spotting that
+sort of thing, and of course the movement and overall game feel
+is very much quake, but these are hardly considerable as quake
+source ports / derivatives, they are their own standalone games
+simply using [idtech](https://en.wikipedia.org/wiki/Id_Tech) software
+
+<br />
+
+some time has passed since i first knew about these games, probably 10+ years
+ago, and i thankfully know a _bit_ more about software and programming these days
+
+so when these games popped back into my head a few weeks ago, i realized
+i had much more of a background to dig into the innards of these games and
+similar projects, potentially making a similar project of my own
+
+<br />
+
+i have been doing game jams with some friends the past year and so,
+and have used a selection of frameworks / tools, such as [Godot](https://godotengine.org/),
+[Kaboom.js](https://kaboomjs.com/), [Ambient](https://ambient.run/),
+and [LiveView](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html)
+
+i intend to spend more time with godot for future jams, since it would be
+nice to pick one tool to master, rather than just jumping around to a bunch
+of different tools every time i start a new project
+
+in a future post i intend to go into previous jam entires some more
+
+but _this_ post is about me going down yet another tangent, mostly unrelated
+to any incoming jams (although we are planning on doing a quake mapping jam,
+so some overlap incoming!)
+
+this endeavour is an endeavour that might only result in the creation of this
+post and no more (which would still be seen as a success in my eyes), but
+if it does flourish into something you can actually download in the future,
+it will be a project made using tooling that i, in every sense of the phrase,
+_vibe_ with
+
+tooling that _slaps_, _feels nice_, produces _gnarly_ feelin' games
+
+give me them sweet brushes, triggers, and freeing rigidity
+
+i spent way too much time on tf2/garry's mod/csgo during the days
+i played too much games after getting home from school, so when jumping into
+`e1m1` and walking around, i immediately feel at home, almost moreso that
+things are stripped down to a more primitive feel
+
+getting my hands dirty this many years later with the tools, just seems _fun_
+
+this is not the first time i have looked into this, i did muck around with
+source mapping around 2012...
+
+import gmTwoRoom from "@images/babble-bin/quake-engine-adventures-1/gm_tworoom.jpg";
+
+<BabbleImage
+    src={gmTwoRoom}
+    caption="gm_tworoom, december 2012"
+    credits="me"
+    creditsUrl="https://steamcommunity.com/sharedfiles/filedetails/?id=116618468"
+/>
+
+... however as you can see i did not reach a very high skill level
+
+even getting hammer configured to spit out maps garry's mod would understand felt like
+a feat. at the time in of itself
+
+there is something just satisfying about most games in the [quake family tree](https://en.m.wikipedia.org/wiki/File:Quake_-_family_tree.svg) that don't
+stray too far away from the tooling and feel
+
+> To make all of these games, Coda is using an engine called Source.
+> Like all engines, Source has certain things that it does well and
+> it has certain things it does poorly. One of the things that it
+> does very well is boxy, linear corridors. That is why so many of
+> Coda's games are set in these large flat empty rooms, is just
+> because he's working with what the engine does well.
+>
+> \- Narrator, [The Beginner's Guide](https://en.wikipedia.org/wiki/The_Beginner%27s_Guide)
+
+<br />
+
+enough indulging, let's get back on track
+
+so i want to create something similar to gravity bone / thirty flights, and thankfully, _these two games are (partially)
+open source_
+
+gravity bone can be found [here](https://github.com/blendogames/gravitybone/), and thirty flights can be found [here](https://github.com/blendogames/thirtyflightsofloving).
+
+both games are heavily modified versions of [KMQuake II](http://www.markshan.com/knightmare/), itself which
+is a [source port](https://en.wikipedia.org/wiki/Source_port) of quake 2's [2001 source code release](https://en.wikipedia.org/wiki/Quake_II#Development)
+
+---
+
+<br />
+
+any thoughts about any of the above?
+
+reach out:
+
+import Letterbird from "@components/Letterbird.astro";
+
+<Letterbird />
