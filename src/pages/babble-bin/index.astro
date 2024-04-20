@@ -8,8 +8,6 @@ const babbles = (await getCollection("babble-bin"))
   .sort((a, b) => Number(b.data.pubDate) - Number(a.data.pubDate));
 ---
 
-<style></style>
-
 <BabbleBinLayout title="babble bin">
   <ul>
     {

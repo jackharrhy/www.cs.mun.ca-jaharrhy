@@ -13,10 +13,6 @@ const { title } = Astro.props as Props;
     color-scheme: only light;
   }
 
-  header a {
-    color: black;
-  }
-
   body {
     padding: 0 1rem 2rem 1rem;
   }
@@ -25,6 +21,14 @@ const { title } = Astro.props as Props;
     display: flex;
     align-items: center;
     justify-content: space-between;
+  }
+
+  header a {
+    color: black;
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 1rem 0;
+    text-decoration-thickness: 1px;
   }
 
   header img {
@@ -78,9 +82,7 @@ const { title } = Astro.props as Props;
     slot="head"
   />
   <header>
-    <a href={`/~jaharrhy/babble-bin/`}>
-      <h1>babble bin</h1>
-    </a>
+    <a href={`/~jaharrhy/babble-bin/`}>babble bin</a>
     <a href={`/~jaharrhy/babble-bin/rss.xml`}>
       <Feed />
     </a>
