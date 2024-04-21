@@ -1,0 +1,84 @@
+---
+import danballFontImage from "@images/gamedev/jams/conjam/danball-font.gif";
+---
+
+<style>
+  a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5rem;
+    background: #f2bd6b
+      url(data:image/png;base64,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);
+    background-size: 10%;
+  }
+
+  canvas {
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    border: 3px solid #606060;
+  }
+
+  #danball-font {
+    display: none;
+  }
+</style>
+
+<a href="./gamedev/jams/conjam-apr2024/">
+  <img
+    id="danball-font"
+    src={danballFontImage.src}
+    alt="danball font spritesheet"
+  />
+  <canvas id="canvas" height="32px"></canvas>
+</a>
+
+<script>
+  import {
+    colors,
+    setupContext,
+    setupDanballFont,
+  } from "../../scripts/danball-font";
+  const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+  const width = canvas.width;
+
+  const ctx = setupContext(canvas);
+
+  const { widthFromStringAndSize, drawString } = await setupDanballFont(
+    ctx,
+    (document.getElementById("danball-font") as HTMLImageElement).src
+  );
+
+  ctx.fillStyle = colors.grey;
+  ctx.fillRect(0, 0, width, canvas.height);
+
+  let string: string;
+  let stringWidth: number;
+  let size: number;
+  let x, y: number;
+
+  string = "CONJAM APRIL 2024";
+  size = 2;
+  stringWidth = widthFromStringAndSize(string, size);
+  x = width / size / 2 - stringWidth / size / 2;
+  y = 2;
+
+  const coolColors = [
+    colors.fire,
+    colors.powder,
+    colors.water,
+    colors.seed,
+    colors.sBall,
+    colors.fireworks,
+    colors.ant,
+    colors.acid,
+  ];
+  const randomCoolColor = () =>
+    coolColors[Math.floor(Math.random() * coolColors.length)];
+
+  drawString(string, size, x, y, randomCoolColor());
+
+  setInterval(() => {
+    drawString(string, size, x, y, randomCoolColor());
+  }, 1000);
+</script>

@@ -1,0 +1,186 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Back from "@components/Back.astro";
+
+import conjamImage from "@images/gamedev/jams/conjam/conjam.png";
+import danballFontImage from "@images/gamedev/jams/conjam/danball-font.gif";
+---
+
+<style>
+  :root {
+    --dark: #000000;
+    --grey: #404040;
+    --lightgrey: #606060;
+    --powder: #f2bd6b;
+    --water: #4040ff;
+    --fire: #ff4040;
+    --seed: #90c040;
+    --gun-powder: #b08050;
+    --fan: #8080ff;
+    --ice: #d0d0ff;
+    --s-ball: #ff40a0;
+    --clone: #907010;
+    --fireworks: #ff9966;
+    --oil: #803020;
+    --c4: #ffffcc;
+    --stone: #808080;
+    --magma: #ff6633;
+    --virus: #800080;
+    --nitro: #447700;
+    --ant: #c080c0;
+    --torch: #ffa020;
+    --gas: #cc9999;
+    --soapy: #e0e0e0;
+    --thunder: #ffff20;
+    --metal: #404040;
+    --bomb: #666600;
+    --laser: #cc0000;
+    --acid: #ccff00;
+    --vine: #00bb00;
+    --salt: #ffffff;
+    --glass: #404040;
+    --bird: #807050;
+    --mercury: #aaaaaa;
+    --spark: #ffcc33;
+    --fuse: #443322;
+    --cloud: #cccccc;
+    --pump: #003333;
+  }
+
+  html {
+    background-color: black;
+    background: #f2bd6b
+      url(data:image/png;base64,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);
+    background-size: 10%;
+  }
+
+  main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  canvas {
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+  }
+
+  #conjam,
+  #danball-font {
+    display: none;
+  }
+
+  /* POSTER-IFY
+  html,
+  body {
+    height: 100%;
+  }
+
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .back-container {
+    display: none;
+  }
+  */
+</style>
+
+<Layout title="conjam april 2024">
+  <div class="back-container">
+    <Back />
+  </div>
+  <main>
+    <img
+      id="conjam"
+      src={conjamImage.src}
+      alt="conjam logo, created itself using a falling sand game"
+    />
+    <img
+      id="danball-font"
+      src={danballFontImage.src}
+      alt="danball font spritesheet"
+    />
+    <canvas id="canvas" width="600" height="684"></canvas>
+  </main>
+</Layout>
+
+<script>
+  import {
+    colors,
+    setupContext,
+    drawDanballPlayArea,
+    drawConjamLogo,
+    setupDanballFont,
+  } from "../../../../scripts/danball-font";
+  const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+  const width = canvas.width;
+
+  const ctx = setupContext(canvas);
+
+  ctx.fillStyle = colors.grey;
+  ctx.fillRect(0, 0, width, canvas.height);
+
+  const { playAreaHeight } = drawDanballPlayArea(canvas, ctx);
+
+  await drawConjamLogo(
+    canvas,
+    ctx,
+    (document.getElementById("conjam") as HTMLImageElement).src,
+    playAreaHeight
+  );
+
+  const { widthFromStringAndSize, drawString } = await setupDanballFont(
+    ctx,
+    (document.getElementById("danball-font") as HTMLImageElement).src
+  );
+
+  let string: string;
+  let stringWidth: number;
+  let size: number;
+  let x, y: number;
+
+  string = "another COMPSCI BOI gamejam";
+  size = 2.6;
+  stringWidth = widthFromStringAndSize(string, size);
+  x = width / size / 2 - stringWidth / size / 2;
+  y = playAreaHeight / size + 6;
+  drawString(string, size, x, y, colors.fire);
+
+  string = "conway's game of life / falling sand / cellular automata like";
+  size = 1.15;
+  stringWidth = widthFromStringAndSize(string, size);
+  x = width / size / 2 - stringWidth / size / 2;
+  y = playAreaHeight / size + 50;
+  drawString(string, size, x, y, colors.acid);
+
+  string = "FROM NOW TILL APRIL 26th, FIGURE OUT YOUR TECH!";
+  size = 1.49;
+  stringWidth = widthFromStringAndSize(string, size);
+  x = width / size / 2 - stringWidth / size / 2;
+  y = playAreaHeight / size + 55;
+  drawString(string, size, x, y, colors.sBall);
+
+  string = "- making a basic demo now is encouraged -";
+  size = 1.6;
+  stringWidth = widthFromStringAndSize(string, size);
+  x = width / size / 2 - stringWidth / size / 2;
+  y = playAreaHeight / size + 70;
+  drawString(string, size, x, y, colors.fireworks);
+
+  string = "APRIL 26th -> MAY 5th, JAMMING TIME!";
+  size = 1.95;
+  stringWidth = widthFromStringAndSize(string, size);
+  x = width / size / 2 - stringWidth / size / 2;
+  y = playAreaHeight / size + 75;
+  drawString(string, size, x, y, colors.vine);
+
+  string = "may your sand fall and your cells live";
+  size = 1.4;
+  stringWidth = widthFromStringAndSize(string, size);
+  x = width / size / 2 - stringWidth / size / 2;
+  y = playAreaHeight / size + 132.5;
+  drawString(string, size, x, y, colors.ice);
+</script>
