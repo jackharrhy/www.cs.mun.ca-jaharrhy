@@ -9,6 +9,132 @@ import BabbleBideo from "@components/babble/BabbleBideo.astro";
 for [an ongoing gamejam](https://www.cs.mun.ca/~jaharrhy/gamedev/jams/conjam-apr2024/), we're building games
 with the vague relation to game of life / powder game / cellular automata
 
+> WARNING: this article is a stream of my consciousness, therefore potentially wordy, and at times maybe
+> even incorrect, do not take this as gospel!
+
+while i've been intending to move towards using godot LINK GODOT for future games (after jumping between
+technical choices the last few jams), i felt like godot would be a poor choice for this sort of jam, and
+that picking something more lower level would be both rewarding and potentially a requirement for
+performance
+
+one of my requirements as well is that it would be something that would run on the web, i like games being
+very accessible via a link rather than requiring a download, especially if they're a very short gamejam
+game
+
+i'm comfy enough with rust such that my initial choice was the [Comfy](https://comfyengine.org/) engine,
+which i had seen before but never used
+
+i've mucked around with [Bevy](https://bevyengine.org/) before, but this sort of game did not seem like
+something in which i would want a full fat ECS (ECS LINK HERE), so something with an immediate mode
+graphics approach felt sensible
+
+after spending some time with comfy, i had a working [basic game of life clone](LINK TO GITHUB BRANCH)
+
+VIDEO OF IT IN ACTION LOOKING ALL GOOD
+
+this does the thing, and was decently performant at small grid sizes
+
+MAYBE SHOW BITS OF CODE HERE AND THERE? LIKE THE BASIC RENDER LOOP, OR THE CELL ENUM, BASIC
+NEIGHBOR LOGIC AND LOGIC
+
+the next step was obviously then to from conway to sand, so i ripped out the guts of conway, made my cell
+states store either sand or air, stopped wraparound from occuring, and did the basic sand-go-down-if-there-is-air
+
+VIDEO OF THAT
+
+so... this is a biiit laggy...
+
+i'm most likely doing something stupid here that's causing this to happen, and someone with more brains than
+i currently have can probably walk into this codebase and sprinkle a few lines here and there to fix it
+
+but i just want to make sand game, and this feels like it should be performant
+
+my guess for lack of performance is that i'm having to `draw_rect` each cell every single time i want to
+draw the next step, so if i for example have a full 512x512 grid, that's potentially 262144 draw calls...
+
+while comfy does use (wgpu)[LINK] under the hood, which itself does speak to the graphics card, i don't
+believe my current code is able to make use of much of the goodies it provides out of the box
+
+after briefly looking into the posibility getting more hands on with wgpu, and/or writing a shader to
+offload some of the logic, i decided it wasn't a route worth looking into at the moment
+
+(funny sidenote, at the time of this article being written, a few days ago the creator of comfy posted a
+lengthy blog post on [leaving rust gamedev](LINK), which honestly while i don't have a ton of the skin in
+the game, i seem to agree with basically all points brought up in this article)
+
+<br />
+
+so i'm not going the above route, where else should i head?
+
+if i want lower level gpu access, and also want to have whatever i have playable on the web, the answer
+you could potentially tend towards is [WebGL](LINK), which is what another gamejam pal of mine has already
+done, and is documenting on [his own blog](LINK)
+
+i don't want to copy what dan has done, but also am curious to utilize similar tech to him, so...
+
+its webgpu time
+
+<br />
+
+a little webgpu historical explainer
+
+so graphics are hard, computers that did graphics before graphics cards had to deal with cpus, which are
+great for heavy computation, but not being given _a lot_ of even simple tasks to complete within a short
+period of time
+
+specific hardware to do graphics existed, but it was a wild world of each piece of hardware likely
+having its own approach, needing software to be written specifically for it
+
+silicon graphics was in this space, and built their own higher level immediate mode graphics rendering
+api called 'IRIS GL', which eventually was released in an open source package, known as OpenGL (TODO wikipedia style footnote link)
+
+eventually the [Khronos Group](LINK) was formed, a consortium which is the steward body behind OpenGl and
+many other graphics standards, and there has been a succession of different OpenGL flavors / releases over
+the years
+
+OpenGL is epic, and has been used by many, and influenced other specifications
+
+however... these days its a bit more on the antiquated end, not saying its invalid to be learning it still,
+since its still one of the more easier rendering libaries to learn, but, for example, apple only supports
+up to opengl 4.1, with no intent to upgrade to a more modern version (kinda anoyying tbh...)
+
+its antiquated, mostly due to a lot of the industry having moved onto more modern approaches found in
+libaries such as [Vulkan](LINK), [Direct3D 12](LINK), and [Metal](LINK).
+
+these modern libaries have a different approach allowing you to get closer to the underlying graphics
+pipeline in such a way that is also more performant
+
+WebGL started development as an experimentation around 2006, with a working group being formed under
+the Khronos Group around 2009, and hitting a stable release around 2011
+
+if you look at the postfix of WebGL, you might guess that it's related to OpenGL, and you'd be correct
+
+WebGL is based off of the OpenGL ES API (ES stands for embedded systems), and was great when it came to
+the web in a format that websites can make use of.
+
+however, similarly to how there was an appetite from folks to move away from OpenGL to other approaches to
+rendering, it also follows that WebGL will potentially need rethinking as well
+
+as you might be guessing, this is where [WebGPU](LINK) comes in
+
+WEBGPU LOGO IMAGE, GET FROM GPUWEB REPO
+
+WebGPU started as an idea from google in 2016 presented during a WebGL working group meeting as a potential
+WebGL Next, that eventually grew to be a [proposal for a new API called WebGPU](https://groups.google.com/a/chromium.org/g/blink-dev/c/dxqWTSvyhDg/m/1UDaFD17AQAJ).
+
+WebGPU targets Vulkan, Metal, and Direct3D 12, meaning great cross platform support, alongside
+being something with intent to be directly accessible via javascript in the web browser, similar
+to WebGL (however since it has its place within being used outside of the browser as well)
+
+as of the writing of this piece however, it has yet to see a proper release, and is still
+considered a W3C Working Draft
+
+RESOURCES
+
+great video https://www.youtube.com/watch?v=DdMl4E7xQEY&t=748s
+
+i want to talk about webgpu https://cohost.org/mcc/post/1406157-i-want-to-talk-about-webgpu
+
 ---
 
 <br />
