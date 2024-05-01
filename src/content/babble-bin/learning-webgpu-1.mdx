@@ -1,0 +1,306 @@
+---
+title: "learning webgpu or: How I Learned to Stop Worrying and Love the Render Pipeline"
+pubDate: 2024-04-30
+---
+
+import BabbleImage from "@components/babble/BabbleImage.astro";
+import BabbleBideo from "@components/babble/BabbleBideo.astro";
+
+> WARNING: this article is a stream of my consciousness, therefore wordy at times, and likely even incorrect, do not
+> take these words as gospel!
+
+for [an ongoing gamejam](https://www.cs.mun.ca/~jaharrhy/gamedev/jams/conjam-apr2024/), myself and other jammers are
+building games similar to conway's game of life / falling sand games / cellular automata simulations
+
+> ALSO: this jam is ongoing, and this article currently does not end with any sort of resolution, a follow up post will
+> be required to clue this up
+
+while i've been intending to move towards using [Godot](https://godotengine.org/) for future jam entries, i felt like
+it would be a poor choice for this sort of jam, and that picking something more lower level would be both fun and
+(potentially) a requirement for a performant simulation
+
+one of my own requirements as well, is to have the game easily playable via the web, hosted on a page no different
+than this one
+
+i like games being accessible via a link, rather than requiring a download, especially if they're a
+very short gamejam entry that honestly isn't worth an entire install in the first place
+
+i'm _comfy_ enough with rust such that my initial choice was to use the [Comfy](https://comfyengine.org/) engine,
+which i had seen before but never actually used
+
+previously, i've mucked around with [Bevy](https://bevyengine.org/), a very popular rust game engine, but this style
+of game did not seem like something in which i would pick a full fat [ECS](https://en.wikipedia.org/wiki/Entity_component_system) for
+
+after spending some time with comfy, i had a working [basic game of life clone](https://github.com/jackharrhy/conjam/tree/comfy-game-of-life)
+
+import comfyConwayWebm from "@images/babble-bin/learning-webgpu-1/comfy-conway.webm"
+
+<BabbleBideo src={comfyConwayWebm} />
+
+it does the thing, and was decently performant! _(at small grid sizes...)_
+
+```rust
+fn update(state: &mut GameState, _c: &mut EngineContext) {
+    let cells = &state.grid.cells;
+    let size = state.grid.size as f32;
+    draw_rect(splat(size / 2.0), splat(size), BLACK, 0);
+
+    for (index, c) in cells.iter().enumerate() {
+        if let &Cell::Alive = c {
+            let y = ((index as f32) / size).floor() + CELL_SIZE / 2.0;
+            let x = ((index as f32) % size) + CELL_SIZE / 2.0;
+
+            draw_rect(vec2(x, y), splat(CELL_SIZE), PINK, 0);
+        }
+    }
+
+    state.grid = step(&state.grid);
+}
+```
+
+here is its very simple render loop, in which i iterate over each cell stored in a flat array with some floor
+division / remainder math to give me the proper x & y, and `draw_rect` the cell
+
+the next step i took was to move from game of life to falling sand, which included:
+
+- ripping out the game of life simulation guts out
+- making my cell states either `Cell::Sand` or `Cell::Air`
+- stopped wraparound from occuring while looking up neighbors
+- and did the basic _sand-go-down-if-there-is-air-below_ logic
+
+[here's the link to this version](https://github.com/jackharrhy/conjam/tree/comfy-sand)
+
+as you can see:
+
+import comfySandWebm from "@images/babble-bin/learning-webgpu-1/comfy-sand.webm"
+
+<BabbleBideo src={comfySandWebm} />
+
+this is a biiit laggy already...
+
+i'm most likely doing something stupid here that's causing this to happen, and someone with more brains than i
+currently have in the graphics department can probably walk into this codebase and sprinkle a few lines here
+and there to make it much faster
+
+but, i just want to make sand game, and make it _quickly_
+
+running into issues like this, _this_ early, did not feel great
+
+my guess for the lack of performance, is that i'm having to `draw_rect` each cell every single time i want to
+draw the next step
+
+so for example, if i have a full 512x512 grid, that's potentially **262,144 draw calls...**
+
+while comfy does use [wgpu](https://wgpu.rs/) under the hood, which itself does speak to the graphics card,
+i don't believe my current code is able to make use of it much, and each `draw_rect` call must be processed
+on the cpu one-by-one
+
+after briefly looking into the posibility of getting more hands on with the underlying code between comfy
+and wgpu, and/or writing a shader to offload the drawing logic, i decided it wasn't a route worth looking
+into, given the timeline of the jam
+
+<br />
+
+funny sidenote, at the time of writing this article, the creator of comfy posted a lengthy blog post titiled ['Leaving Rust gamedev after 3 years'](https://loglog.games/blog/leaving-rust-gamedev/)
+, which honestly while i don't have a ton of the skin in the game, i seem to agree with
+basically all points brought up in this article, so its maybe a good thing i stepped away from rust...
+
+<br />
+
+so i'm not going the above comfy route, where else should i head?
+
+if i want lower level gpu access, and also want to have whatever i create playable on the web, a potential answer is
+[WebGL](https://en.wikipedia.org/wiki/WebGL), which is what another gamejam pal of mine dan has already done, and is documenting on [his own blog](https://danielpower.ca/blog/2024-week-17)
+
+i don't want to copy him, but also i'd like to utilize similar tech to him, so...
+
+_its webgpu time_
+
+<br />
+
+time for a _little_ webgpu historical explainer
+
+i say little, because if you'd like a longer better explainer, [read this instead](https://cohost.org/mcc/post/1406157-i-want-to-talk-about)
+
+<br />
+
+graphics are hard
+
+computers that did graphics before dedicated graphics cards, had to deal with cpus for pushing pixels to the screen
+
+cpus are _great_ for lots of things, but not built for being given _a lot_ of simple tasks to complete within a very
+short period of time
+
+the screen wants the frames to show the user **NOW**, the cpu is simply not built to deliver them if each one takes more
+than 16ms to render, and that doesn't count time spent doing non-rendering tasks!
+
+specific hardware to do graphics existed in the 80s, but it was a wild world of each device potentially having its own
+approach, needing software to be written specifically for it
+
+it was not out of the question for a game/software package either to only be playable/usable on a single device, or require
+the programmer to have design multiple backends for each device
+
+<br />
+
+silicon graphics was a company in this space, and built their own higher level immediate mode graphics rendering api called
+[IRIS GL](https://en.wikipedia.org/wiki/IRIS_GL), intended for use on their own workstations
+
+they eventually released an open source package in 1992, called [OpenGL](https://en.wikipedia.org/wiki/OpenGL), which was
+based on their previous proprietary api
+
+eventually the [Khronos Group](https://en.wikipedia.org/wiki/Khronos_Group) was formed in 2000, a consortium which became the
+steward body behind opengl, and the breeding ground of many other graphics standards
+
+there has been a succession of different opengl flavors / releases over the years, adding new functionality and attempeting
+to keep it relevant
+
+opengl is _epic_, and has been used by many programmers over the years, and influenced other modern specifications
+
+however... these days its considered _a bit_ antiquated
+
+i'm not saying its invalid to be learning / using it these days, since its still one of the more easier libaries in the space
+to learn, but:
+
+- expectations of what role a graphics library plays within a program are much different than during opengls inception
+- a lot of the industry have spent time rethinking how a library should expose interfaces to graphics cards
+- apple only supports up to opengl 4.1, with no intent to upgrade to a more modern version, and started doing their
+  own thing with metal, thanks apple
+
+libaries such as [Vulkan](https://www.vulkan.org/), [Direct3D 12](https://learn.microsoft.com/en-us/windows/win32/direct3d12/what-is-directx-12-), and [Metal](https://developer.apple.com/metal/), have become very popular, with most major engines
+/ games moving towards targeting them alongside, or straight up instead of opengl
+
+they all hold your hand _a lot_ less, permitting for much greater control for what the gpu is actually doing, therefore
+greater potential for performance and fidelity
+
+<br />
+
+as mentioned before this historical overview, one of my pals is using webgl for his entry
+
+webgl started development as an experimentation around 2006, with a working group being formed under
+the khronos group in 2009, hitting a stable release in 2011
+
+if you look at the postfix of webgl, you might guess that it's related to opengl, and you'd be correct!
+
+webgl is based off of the [OpenGL ES](https://en.wikipedia.org/wiki/OpenGL_ES) api, and was exciting when it was released, since
+now browsers could speak directly to the graphics card without an intermediate high level api (html5 canvas),
+or needing an external plugin (flash/applets, _shudders_)
+
+however, similarly to how there was an appetite from folks to move away from opengl to other modern approaches,
+it also follows that webgl would need to follow suit
+
+as you might be guessing, this is where [WebGPU](https://en.wikipedia.org/wiki/WebGPU) comes in
+
+import webgpuLogo from "@images/babble-bin/learning-webgpu-1/webgpu.svg"
+
+<BabbleImage src={webgpuLogo} alt="WebGPU logo" />
+
+webgpu started as an idea from google in 2016, presented during a webgl working group meeting, as _webgl next_
+
+it eventually grew to be a [proposal for a new api called webgpu](https://groups.google.com/a/chromium.org/g/blink-dev/c/dxqWTSvyhDg/m/1UDaFD17AQAJ), since aspects of it were different enough it should distance itself by name from its predecessor
+
+webgpu targets vulkan, metal, and direct3d 12, meaning great cross platform support, alongside being directly accessible
+via javascript in the web browser, similar to webgl
+
+what's cool is that, unlike webgl, since its not just a rehash of another graphics library, its a viable choice
+as rendering backend for native applications that wish to target multiple platforms
+
+a very cool non-web example is [playbit](https://playb.it/), an operating system with webgpu as its
+[only user-space graphics api](https://twitter.com/playbit_/status/1744144127028310150/photo/1)
+
+while doing a quick search for webgpu on youtube, i ran into [this video](https://www.youtube.com/watch?v=DdMl4E7xQEY), which is also a great watch if you're interested in webgpu outside the browser
+
+<br />
+
+as of the writing of this piece, webgpu has yet to see a proper release, and is still considered a w3c working draft
+
+however, [support is increasing](https://caniuse.com/webgpu), and thankfully enough to the point that if you're using
+chrome on windows or mac, you should already be golden!
+
+firefox is lagging behind, and linux specifically is still a bit spotty, but with some flag finagling you can enable it
+(although i personally still ran into issues with firefox nightly, which forced me back to chrome on linux...)
+
+while at the moment this does mean my game might not be as accessible to folks without webgpu support... it eventually
+will be, and that's good enough for me!
+
+<br />
+
+while looking for a good webgpu tutorial, i ran across [this one from google](https://codelabs.developers.google.com/your-first-webgpu-app#0)
+
+its... a tutorial on how to build a game of life clone...
+
+this does feel like cheating a little bit, but, since i'm in super uncharted territory, and i intend to yet again rip
+out the conway bits to replace with falling sand, i proceeded
+
+<br />
+
+now, i could take chunks of the above tutorial and place an abridged version of it here, but since i don't have much to add ontop
+of what the tutorial already states, i'm just going to give my current opinion of webgpu, and outline my plan going forward for this jam
+
+<br />
+
+first, [here's what i have at the end of following tutorial](https://github.com/jackharrhy/conjam/tree/76a6c98fc2ef6c959257757d33aa848b9ba8fa6f):
+
+import webgpuConwayWebm from "@images/babble-bin/learning-webgpu-1/webgpu-conway.webm"
+
+<BabbleBideo src={webgpuConwayWebm} />
+
+its conway! its colorful, and if i crank up the grid size, its nice and snappy
+
+quite happy the tutorial ended up teaching concepts such as instancing and compute shaders, each cell is actually
+the same 9 verts / 2 tris / 1 quad moving around the screen with some vertex shader trickery
+
+```wgsl
+@group(0) @binding(0) var<uniform> grid: vec2f;
+// ...
+
+@vertex
+fn vertexMain(@location(0) pos: vec2f,
+              @builtin(instance_index) instance: u32) -> VertexOutput {
+  let i = f32(instance);
+  let cell = vec2f(i % grid.x, floor(i / grid.x));
+  // ...
+}
+```
+
+to get proper types working, i had to install a package called `@webgpu/types`, but once i had that, tsc was nice
+and quiet
+
+i picked [Solid.js](https://www.solidjs.com/) as what i have creating the canvas
+
+while this currently seems overkill, once i have some falling sand game ui elements, this should be nice :)
+
+<br />
+
+while i want to say something about webgpu and sound really clever
+
+i don't have much to say!
+
+its fun to write, for the little i have written, and i am excited to write more
+
+the idea of learning something which does not limit where i can run it, is fun
+
+and making color pixels pop up on a screen quickly is a blast
+
+<br />
+
+while this is a bit of an anticlimatic way to end this babble bin entry, i'm hopeful for using the stack
+going forward with the jam, and for using webgpu for future projects
+
+fingers crossed webgpu lands with great support across all modern browsers, and also fingers crossed i follow
+up this post showing off a great sand game
+
+only time will tell :)
+
+<br />
+
+---
+
+<br />
+
+any thoughts about any of the above?
+
+reach out:
+
+import Letterbird from "@components/Letterbird.astro";
+
+<Letterbird />
