@@ -136,6 +136,13 @@ declare module 'astro:content' {
 
 	type ContentEntryMap = {
 		"babble-bin": {
+"i-like-astro.mdx": {
+	id: "i-like-astro.mdx";
+  slug: "i-like-astro";
+  body: string;
+  collection: "babble-bin";
+  data: InferEntrySchema<"babble-bin">
+} & { render(): Render[".mdx"] };
 "learning-webgpu-1.mdx": {
 	id: "learning-webgpu-1.mdx";
   slug: "learning-webgpu-1";

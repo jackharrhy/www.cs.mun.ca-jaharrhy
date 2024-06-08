@@ -6,7 +6,7 @@ const { src, alt, caption, credits, creditsUrl, width, height } = Astro.props;
 <figure>
   <Image src={src} alt={alt ?? caption} width={width} height={height} />
   {
-    caption && (
+    (caption || (credits && creditsUrl)) && (
       <figcaption>
         {caption}
         {credits && creditsUrl && (
