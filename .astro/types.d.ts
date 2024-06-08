@@ -171,6 +171,13 @@ declare module 'astro:content' {
   collection: "babble-bin";
   data: InferEntrySchema<"babble-bin">
 } & { render(): Render[".mdx"] };
+"where-is-the-bus.mdx": {
+	id: "where-is-the-bus.mdx";
+  slug: "where-is-the-bus";
+  body: string;
+  collection: "babble-bin";
+  data: InferEntrySchema<"babble-bin">
+} & { render(): Render[".mdx"] };
 };
 
 	};

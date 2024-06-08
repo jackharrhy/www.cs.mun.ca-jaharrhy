@@ -24,6 +24,8 @@ const { src, alt, caption, credits, creditsUrl, width, height } = Astro.props;
     --extra-space: 10rem;
     margin: 2rem calc(-1 * var(--extra-space) / 2);
     width: calc(100% + var(--extra-space));
+    display: flex;
+    justify-content: center;
   }
   figcaption {
     text-align: right;
@@ -34,6 +36,9 @@ const { src, alt, caption, credits, creditsUrl, width, height } = Astro.props;
   }
   img {
     width: 100%;
+    max-width: 90vw;
+    max-height: 70vh;
+    object-fit: contain;
     height: auto;
   }
 </style>
