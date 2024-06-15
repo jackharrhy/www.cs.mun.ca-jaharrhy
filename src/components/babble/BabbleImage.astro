@@ -1,6 +1,6 @@
 ---
 import { Image } from "astro:assets";
-const { src, alt, caption, credits, creditsUrl, width, height } = Astro.props;
+const { src, alt, caption, credits, creditsUrl, width, height, containerHeight, extraSpace } = Astro.props;
 ---
 
 <figure>
@@ -19,13 +19,13 @@ const { src, alt, caption, credits, creditsUrl, width, height } = Astro.props;
   }
 </figure>
 
-<style>
+<style define:vars={{ containerHeight, extraSpace }}>
   figure {
-    --extra-space: 10rem;
-    margin: 2rem calc(-1 * var(--extra-space) / 2);
-    width: calc(100% + var(--extra-space));
+    margin: 1.5rem calc(-1 * var(--extraSpace, 10rem) / 2);
+    width: calc(100% + var(--extraSpace, 10rem));
     display: flex;
     justify-content: center;
+    height: var(--containerHeight, auto);
   }
   figcaption {
     text-align: right;

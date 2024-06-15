@@ -4,16 +4,142 @@ pubDate: null
 ---
 
 import BabbleImage from "@components/babble/BabbleImage.astro";
+import BabbleFlex from "@components/babble/BabbleFlex.astro";
 
-import metrobusMobileAppMainScreen from "@images/babble-bin/where-is-the-bus/metrobus-mobile-app-main-screen.png"
-import metrobusMobileAppTimetrackBus from "@images/babble-bin/where-is-the-bus/metrobus-mobile-app-timetrack-bus.png"
-import metrobusMobileAppTimetrackList from "@images/babble-bin/where-is-the-bus/metrobus-mobile-app-timetrack-list.png"
+import meAndCar from "@images/babble-bin/where-is-the-bus/me-and-car.jpg"
+
+i have a car now! 🎉
+
+<BabbleImage src={meAndCar} alt="TODO" containerHeight="15rem" />
+
+i live in a part of the world where having a car is basically required _(boo)_, but it took until i was
+23 to finally get my licence sorted, and then till 24 to actually get a car (not a great time to buy a
+vehicle)
+
+for the longest while i managed to get by with:
+
+- my own two legs and a good pair of shoes
+- bumming rides off of people
+- maybe a taxi or two here and there
+
+however, while there is a bus system here...
+
+...its, meh
+
+given that [st. john's is quite old](https://en.wikipedia.org/wiki/Timeline_of_St._John%27s_history), its not suprising its streets were designed way before the modern motor vehicle, hence
+a lot of the routes the bus service here runs are... interesting
+
+<br />
+
+the company / entity behind bussing here, is [Metrobus](https://www.metrobus.com/home/), and unfortunately, while you can use google maps to view routes and time tables, you _cannot_ see current bus information within the app
+
+i've been to bigger cities with this intergration, or used [transit](https://transitapp.com/), but
+alas, that is not available here...
+
+...or is it
+
+<br />
+
+it is, sort of
+
+metrobus has their own app for getting all sorts of information about bus statuses and such on the go
+
+similar to the service they provide
+
+its meh
+
 import metrobusMobileGooglePlay from "@images/babble-bin/where-is-the-bus/metrobus-mobile-google-play.png"
-import metrobusMobileLoading from "@images/babble-bin/where-is-the-bus/metrobus-mobile-loading.png"
-import metrobusMobileWebMainScreenLaptop from "@images/babble-bin/where-is-the-bus/metrobus-mobile-web-main-screen-laptop.png"
+import metrobusMobileAppMainScreen from "@images/babble-bin/where-is-the-bus/metrobus-mobile-app-main-screen.png"
+
+<BabbleFlex height="25rem">
+    <BabbleImage src={metrobusMobileGooglePlay} alt="TODO" extraSpace="0" />
+    <BabbleImage src={metrobusMobileAppMainScreen} alt="TODO" extraSpace="0" />
+</BabbleFlex>
+
+here you can see the google play store page for ['m-Mobile v2'](https://play.google.com/store/apps/details?id=hr.apps.n1005513&hl=en_CA), alongside its
+home screen
+
+behold, _truly the pinnacle of modern app design_ on display here
+
+the application has a few features, most of which are sort of useless since you can just use
+google maps to figure out what busses to take / when to take them to get wherever
+
+what it _does_ have, that google maps lacks, is _realtime bus location data_
+
+import metrobusMobileAppTimetrackList from "@images/babble-bin/where-is-the-bus/metrobus-mobile-app-timetrack-list.png"
+import metrobusMobileAppTimetrackBus from "@images/babble-bin/where-is-the-bus/metrobus-mobile-app-timetrack-bus.png"
+
+<BabbleFlex height="25rem">
+    <BabbleImage src={metrobusMobileAppTimetrackList} alt="TODO" extraSpace="0" />
+    <BabbleImage src={metrobusMobileAppTimetrackBus} alt="TODO" extraSpace="0" />
+</BabbleFlex>
+
+heading into the timetrack page, you can see a list of the busses servicing different routes
+
+the first screen tells you, for each bus:
+
+- is it late?
+- how late is it?
+- where is it currently?
+- what route is it servicing?
+
+you must then click into the list item for the specific bus you care about, to get a page that contains:
+
+- the same information as before
+- but with a map showing current bus location (with no visible information of _when_ this location was updated, it could have been 5 seconds ago, or 5 minutes ago)
+- and the route that this bus is taking (without the current location of _yourself_ visible on said map)
+
+<br />
+
+this view... gets the job done
+
+but, from a user experience perspective i've always felt like there should
+be a better way to display this information in a more concise interface
+
+i'm also a map guy: this data should be on a _map_
+
+but hold up, how does one go about fetching this data?
+
+this is a view in a mobile application, do i have to rip out [`adb`](https://developer.android.com/tools/adb) and a decompiler to find strings
+for the api that backs this page?
+
+_nope!_
+
+<br />
+
+i forget when i saw a link to [metrobusmobile.com](https://metrobusmobile.com/), i think it was on
+the metrobus website itself, but quickly, you'll find out that the app, is _just a webview_
+
 import metrobusMobileWebMainScreenPhone from "@images/babble-bin/where-is-the-bus/metrobus-mobile-web-main-screen-phone.png"
 
-<BabbleImage src={metrobusMobileGooglePlay} alt="TODO" />
+<BabbleImage src={metrobusMobileWebMainScreenPhone} alt="TODO" />
+
+so... this could just been just a [PWA](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps), but of
+course its instead an entire app you're asked to download from the app store instead
+
+but, as far as data digging goes, this means one can pop open this same tab within a desktop browser...
+
+import metrobusMobileWebMainScreenLaptop from "@images/babble-bin/where-is-the-bus/metrobus-mobile-web-main-screen-laptop.png"
+
+<BabbleImage src={metrobusMobileWebMainScreenLaptop} alt="TODO" />
+
+...and dig their dirty fingers directly into the dev tools, to hopefully see what endpoints are being reached out to populate these pages
+
+<br />
+
+now i've done some digging, it seems this is an [ASP.NET](https://en.wikipedia.org/wiki/ASP.NET) application, with some routes being rendered on the server, but other routes sprinkling in some javascript + apis, usually for pages that they want realtime functionality on
+
+thankfully, this incldues the timetrack page!
+
+import metrobusMobileWebNetworkTab from "@images/babble-bin/where-is-the-bus/metrobus-mobile-web-network-tab.png"
+
+<BabbleImage src={metrobusMobileWebNetworkTab} alt="TODO" />
+
+all one does to get a blob of json used to populate this screen, is hit this endpoint:
+
+```sh
+curl https://www.metrobus.co.ca/api/timetrack/json/
+```
 
 <br />
 
