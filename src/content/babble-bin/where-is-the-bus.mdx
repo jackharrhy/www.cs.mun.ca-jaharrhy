@@ -141,6 +141,56 @@ all one does to get a blob of json used to populate this screen, is hit this end
 curl https://www.metrobus.co.ca/api/timetrack/json/
 ```
 
+a simplified version of the json this spits out follows:
+
+```json
+[
+  {
+    "routerun": "Rt 1-1",
+    "current_route": "01-1",
+    "routenumber": 1,
+    "vehicle": "1524",
+    "time_stamp": "2:12 PM",
+    "deviation": "1 MIN BEHIND",
+    "service": "1",
+    "current_location": "Cashin Avenue civic  122",
+    "bus_lat": "47.55193",
+    "bus_lon": "-52.72940",
+    "heading": "NNW",
+    "speed": 24,
+    "position_time": "2:12 PM",
+    "position_time_seconds": 51150,
+    "departure_time_at_closest_stop": "51060"
+    ...
+  },
+  ...
+}
+```
+
+_(i removed some fields that were the same data / all the same basically null or boring value)_
+
+so cool this is the data that's used on both the timetrack list page, and the innner pages!
+
+what's nice is that we actually do get the geospatial information that the inner page uses for every bus, so we only need to make one request to get all this data
+
+<br />
+
+now that i know i can get the data... what's next?
+
+6 years ago, i asked this same question, and built [metrobus-spy](https://github.com/jackharrhy/metrobus-spy)
+
+metrobus-spy was basically just a proxy that would hit the timetrack json endpoint, clean up the data a bit to _just_ contain `latitude`, `longitude`, and the `position_time`
+
+this api, didn't really do much at all, my friend [riley](https://github.com/nint8835/) threw together a little project that fed from metrobus-spy and generated some heatmaps, can't seem to find any record / screenshots / code of that, but that was neat
+
+<br />
+
+skip ahead to september of 2022, i start a new repository, inspired by a concept i learned from [Simon Willison's Weblog](https://simonwillison.net/2020/Oct/9/git-scraping/), to hit the timetrack api _every 5 minutes_, and store the result into said repository
+
+the setup explained by simon is interesting, as in it uses a very simple [cron-scheduled github action](https://github.com/jackharrhy/metrobus-timetrack-history/blob/main/.github/workflows/scrape.yml) that performs whatever fetch you want, and then commits to the repo _if_ it has changed
+
+this means since this is a public repo, and actions are free on public repos, i don't pay any fees (the only issue is if the repo grows in size that it becomes a problem, but i'm just not going to think about that for now...)
+
 <br />
 
 ---
