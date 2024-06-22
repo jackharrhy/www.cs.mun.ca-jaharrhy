@@ -13,7 +13,7 @@ i have a car now! 🎉
 <BabbleImage src={meAndCar} alt="TODO" containerHeight="15rem" />
 
 i live somewhere in which having a car is basically required _(boo)_, but it took until i was
-23 to finally get my licence sorted, and then till 24 to actually get a car
+23 to finally get my license sorted, and then till 24 to actually get a car
 
 for the longest while i managed to get by with:
 
@@ -27,19 +27,21 @@ however, while there is a bus system here...
 
 meh
 
-given that [st. john's is quite old](https://en.wikipedia.org/wiki/Timeline_of_St._John%27s_history), its not suprising its streets were designed way before the modern motor vehicle, hence
-a lot of the bus routes here runs are... interesting
+given that [st. john's is quite old](https://en.wikipedia.org/wiki/Timeline_of_St._John%27s_history), its not
+surprising its streets were designed way before the modern motor vehicle, hence a lot of the bus routes here
+runs are... interesting
 
 <br />
 
-but, the routes exist, you can make your way from point a `->` b in the city and (some of) the surronding areas
+but, the routes exist, you can make your way from point a `->` b in the city and (some of) the surrounding areas
 
 and thankfully _the modern ability to use technology to navigate the bus service_ does indeed exist!
 
-unfortunately, while you can use apps like google maps to view routes and time tables for busses, **you _cannot_ see realtime bus information within said map apps**
+unfortunately, while you can use apps like google maps to view routes and time tables for busses, **you _cannot_
+see realtime bus information within said map apps**
 
-
-i've been to bigger cities with this sort of intergration, or used [transit](https://transitapp.com/) that had it, but alas, that is not available here...
+i've been to bigger cities with this sort of integration, or used [transit](https://transitapp.com/) that had it,
+but alas, that is not available here...
 
 ...or is it
 
@@ -47,7 +49,8 @@ i've been to bigger cities with this sort of intergration, or used [transit](htt
 
 it is!, sort of
 
-the company behind bussing here, is [Metrobus](https://www.metrobus.com/home/), and they have their own app for getting all sorts of information about bus statuses and such on the go
+the company behind bussing here, is [Metrobus](https://www.metrobus.com/home/), and they have their own app for
+getting all sorts of information about bus statuses and such on the go
 
 similar to the service they provide however
 
@@ -61,12 +64,13 @@ import metrobusMobileAppMainScreen from "@images/babble-bin/where-is-the-bus/met
     <BabbleImage src={metrobusMobileAppMainScreen} alt="TODO" extraSpace="0" />
 </BabbleFlex>
 
-here you can see the google play store page for ['m-Mobile v2'](https://play.google.com/store/apps/details?id=hr.apps.n1005513&hl=en_CA), alongside its
-home screen
+here you can see the google play store page for ['m-Mobile v2'](https://play.google.com/store/apps/details?id=hr.apps.n1005513&hl=en_CA),
+alongside its home screen
 
 behold, _truly the pinnacle of modern app design_
 
-the application has a few features, most of which are useless if you're using a map app already (i think some of the features here just use google maps under the hood)
+the application has a few features, most of which are useless if you're using a map app already (i think some of
+the features here just use google maps under the hood)
 
 what it _does_ have, that map apps lacks, is **_realtime bus location data_**
 
@@ -90,7 +94,8 @@ the first screen tells you, for each bus:
 you must then click into the list item for the specific bus you care about, to get a page that contains:
 
 - the same information as before
-- but with a map showing current bus location (with no visible information of _when_ this location was updated, it could have been 5 seconds ago, or 5 minutes ago)
+- but with a map showing current bus location (with no visible information of _when_ this location was updated, it
+could have been 5 seconds ago, or 5 minutes ago)
 - and the route that this bus is taking (without the current location of _yourself_ visible on said map)
 
 <br />
@@ -104,8 +109,8 @@ i'm also a map guy: this data should _all_ be on a _map_
 
 but hold up, how does one go about fetching this data?
 
-this is a view in a mobile application, do i have to rip out [`adb`](https://developer.android.com/tools/adb) and a decompiler to find strings
-for the api that backs this page?
+this is a view in a mobile application, do i have to rip out [`adb`](https://developer.android.com/tools/adb) and
+a decompiler to find strings for the api that backs this page?
 
 _nope!_
 
@@ -127,13 +132,16 @@ import metrobusMobileWebMainScreenLaptop from "@images/babble-bin/where-is-the-b
 
 <BabbleImage src={metrobusMobileWebMainScreenLaptop} alt="TODO" />
 
-...and dig their dirty fingers directly into the dev tools, to hopefully see what endpoints are being reached out to populate these pages
+...and dig their dirty fingers directly into the dev tools, to hopefully see what endpoints are being reached out to
+populate these pages
 
 <br />
 
-now i've done some digging, and it seems this is an [ASP.NET](https://en.wikipedia.org/wiki/ASP.NET) application, with some routes being rendered on the server, but other routes sprinkling in some javascript + apis, usually for pages that they want realtime functionality on
+now i've done some digging, and it seems this is an [ASP.NET](https://en.wikipedia.org/wiki/ASP.NET) application, with
+some routes being rendered on the server, but other routes sprinkling in some javascript + apis, usually for pages that
+they want realtime functionality on
 
-thankfully, this incldues the timetrack page!
+thankfully, this includes the timetrack page!
 
 import metrobusMobileWebNetworkTab from "@images/babble-bin/where-is-the-bus/metrobus-mobile-web-network-tab.png"
 
@@ -173,9 +181,10 @@ a simplified version of the json this spits out follows:
 
 _(i removed some fields that were the same data / all the same basically null or boring value)_
 
-so cool, this is the data that's used on both the timetrack list page, and the innner pages!
+so cool, this is the data that's used on both the timetrack list page, and the inner pages!
 
-what's nice is that we actually do get the geospatial information that the inner page uses for every bus, so we only need to make one request to get all this data
+what's nice is that we actually do get the geospatial information that the inner page uses for every bus, so we only
+need to make one request to get all this data
 
 now that i know i can get the data... _what's next?_
 
@@ -183,39 +192,56 @@ now that i know i can get the data... _what's next?_
 
 6 years ago, i asked this same question, and built [metrobus-spy](https://github.com/jackharrhy/metrobus-spy)
 
-metrobus-spy was basically just a proxy that would hit the timetrack json endpoint, clean up the data a bit to _just_ contain `latitude`, `longitude`, and the `position_time` values
+metrobus-spy was basically just a proxy that would hit the timetrack json endpoint, clean up the data a bit to _just_
+contain `latitude`, `longitude`, and the `position_time` values
 
-this api, didn't really do much at all, my friend [riley](https://github.com/nint8835/) threw together a little project that fed from metrobus-spy and generated some heatmaps, can't seem to find any record / screenshots / code of that, but that was neat
+this api, didn't really do much at all, my friend [riley](https://github.com/nint8835/) threw together a little project
+that fed from metrobus-spy and generated some heatmaps, can't seem to find any record / screenshots / code of that,
+but that was neat
 
 <br />
 
-skip ahead to september of 2022, i start a [new repository](https://github.com/jackharrhy/metrobus-timetrack-history), inspired by a concept i learned from [Simon Willison's Weblog](https://simonwillison.net/2020/Oct/9/git-scraping/), to hit the timetrack api _every 5 minutes_, and store the result into said repository
+skip ahead to september of 2022, i start a [new repository](https://github.com/jackharrhy/metrobus-timetrack-history),
+inspired by a concept i learned from [Simon Willison's Weblog](https://simonwillison.net/2020/Oct/9/git-scraping/),
+to hit the timetrack api _every 5 minutes_, and store the result into said repository
 
-the setup explained by simon is interesting, it uses a very simple [cron-scheduled github action](https://github.com/jackharrhy/metrobus-timetrack-history/blob/main/.github/workflows/scrape.yml) that performs whatever fetch you want, and then commits to the repo _if_ the data returned from that endpoint has changed
+the setup explained by simon is interesting, it uses a very simple [cron-scheduled github action](https://github.com/jackharrhy/metrobus-timetrack-history/blob/main/.github/workflows/scrape.yml)
+that performs whatever fetch you want, and then commits to the repo _if_ the data returned from that endpoint
+has changed
 
-this means since this is a public repo, and actions are free on public repos, i don't pay any fees! (the only issue is if the repo grows in size that it becomes a problem, but i'm just not going to think about that for now...)
+this means since this is a public repo, and actions are free on public repos, i don't pay any fees! (the only issue
+is if the repo grows in size that it becomes a problem, but i'm just not going to think about that for now...)
 
-i have figured out ways to turn this data into a sqlite database, and then a [Parquet](https://parquet.apache.org) file via [DuckDB](https://duckdb.org/), but done no future science with the data so far
+i have figured out ways to turn this data into a sqlite database, and then a [Parquet](https://parquet.apache.org)
+file via [DuckDB](https://duckdb.org/), but done no future science with the data so far
 
 if this tickles your fancy / you want to use this data for your own project, go right ahead!
 
 <br />
 
-this year, i did end up taking a stab at building my 'envisioned' version of the user interface, very much not exactly to the point i'd expect it to for others to actually use it, but very much a proof of concept of how the data can be layed out:
+this year, i did end up taking a stab at building my 'envisioned' version of the user interface, very much not
+exactly to the point i'd expect it to for others to actually use it, but very much a proof of concept of how the
+data can be layed out:
 
 import busBuddySrc from "@images/babble-bin/where-is-the-bus/bus-buddy.png"
 
 <BabbleImage src={busBuddySrc} alt="TODO" />
 
-during a weekend, some people i teamed up with during a [local hackathon](https://ecumene.github.io/dontoverthinkit/) (organized by [mitch](https://mitchellhynes.com/) ❤️) built  together a [remix](https://remix.run/) application that used [mapbox gl js](https://docs.mapbox.com/mapbox-gl-js/) to plot all the busses
+during a weekend, some people i teamed up with during a [local hackathon](https://ecumene.github.io/dontoverthinkit/)
+(organized by [mitch](https://mitchellhynes.com/) ❤️) built  together a [remix](https://remix.run/) application that
+used [mapbox gl js](https://docs.mapbox.com/mapbox-gl-js/) to plot all the busses
 
-clicking on the busses showed their route, and the map _centers itself on where you are_ not where the bus is, which even though this application is super bare bones, it honestly feels in many ways an instant improvement over the timetrack page
+clicking on the busses showed their route, and the map _centers itself on where you are_ not where the bus is,
+which even though this application is super bare bones, it honestly feels in many ways an instant improvement
+over the timetrack page
 
-more work would have to go into this to make it better, maybe someday i'll get back to it, but if this project seems like something you'd like to dig into: [prs welcome](https://github.com/jackharrhy/busbuddy)
+more work would have to go into this to make it better, maybe someday i'll get back to it, but if this project
+seems like something you'd like to dig into: [prs welcome](https://github.com/jackharrhy/busbuddy)
 
 <br />
 
-all in all, i figured out some time ago how to answer the question _"where are the busses?"_ with code, and threw a few projects together
+all in all, i figured out some time ago how to answer the question _"where are the busses?"_ with code, and
+threw a few projects together
 
 <br />
 
