@@ -19,9 +19,12 @@ const { Content } = await entry.render();
   <Content />
 </BabbleBinLayout>
 
-<style>
+<style is:global>
   h1 {
     text-align: center;
     margin-bottom: 2rem;
+  }
+  code {
+    tab-size: 4ch;
   }
 </style>

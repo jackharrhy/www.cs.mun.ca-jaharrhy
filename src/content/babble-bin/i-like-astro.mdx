@@ -7,7 +7,7 @@ import BabbleImage from "@components/babble/BabbleImage.astro";
 
 i don't like meta blog posts
 
-as in, posts _about_ the technical choices of the surronding site itself
+as in, posts _about_ the technical choices of the surrounding site itself
 
 i've seen some blogs that end up _just_ containing meta blog posts, with no actual follow up of real
 content, before the author moves onto yet another choice of framework, and therefore nukes the
@@ -17,7 +17,7 @@ _but,_
 
 [astro](https://astro.build/), is **cool**
 
-i've used it for a _lot_, and would like to chronical where i've used it before, since often when the
+i've used it for a _lot_, and would like to chronicle where i've used it before, since often when the
 topic of astro comes up, all i can really do i post
 
 > i've used astro to build site-a.com / site-b.dev / cool-tilde-site.sh/~site
@@ -28,7 +28,7 @@ up somewhere on the internet and linked this article, hello! 👋
 <br />
 
 its funny writing this post, since this `.mdx` file i have open in vim will potentially outlive the
-current technical choice i'm making to use astro for this site, but i've used it too extensievly at
+current technical choice i'm making to use astro for this site, but i've used it too extensively at
 this point across _many_ websites _not_ to talk about it
 
 i'm sure future me will denote something at the top of this post pointing out if i've moved on from
@@ -40,7 +40,7 @@ but i'm writing in the _now_, so no more about future me, sorry!
 
 before i get into astro, i'd like to quickly discuss what i've used before
 
-my main website, [jackharrhy.com](https://jackharrhy.com), was originally created as a plain html/css/js
+my main website, [jackharrhy.com](https://jackharrhy.com), was originally created as a plain html/css
 site back in 2014, hosted on a cpanel instance by [lotosus](https://www.lotosus.com/)
 
 import jackharrhyCom2014 from "@images/babble-bin/i-like-astro/jackharrhy-com-2014.png"
@@ -56,17 +56,17 @@ i had no idea for the longest time why i chose lotosus over basically any other 
 online for this article, i ran across [this reddit post from 2015](https://old.reddit.com/r/dogecoin/comments/1wq56g/today_my_comapny_switched_webhosting_to/) mentoining
 they accepted dogecoin as payment, at a time i was quite into dogecoin, so that was _probably_ why i picked them
 
-digging deeper into the wayback machine / my sites repository to find each major revision of my site is something
-i'd like to get into someday, but the abridged summary, is that after moving on from pure html/css/js, i think i had
-versions that where
+digging deeper into the wayback machine / my personal sites repository to find each major revision is something
+i'd like to get into much more detail someday, but the abridged summary, is that after moving on from original version, i think i had
+versions that were
 
 - a [webpack](https://webpack.js.org/) build with little fluff
 - using [parcel](https://parceljs.org/) at one point?
 - probably back to a plain html/css/js site at some point
-- it had a backend written in express for dynamic blog posts, which as most blogs that aren't static and hand
-  rolled do, is no longer a thing
+- one had a backend written in express for dynamic blog posts, which as most blogs that aren't static and hand
+  rolled do, is lost to time in `.git`
 - a version written in [crystal](https://crystal-lang.org/) that did some trickery with docker to show the containers running
-  on my VPS the site is hosted on, while that one was a backend which i usually avoid for a personal site, that one was _cool_
+  on my VPS the site was hosted on, while that one was a backend which i usually avoid for a personal site, it was _cool_
 - and then, an astro site!
 
 the astro version of jackharrhy.com, was however, not my first astro endeavour...
@@ -76,7 +76,7 @@ the astro version of jackharrhy.com, was however, not my first astro endeavour..
 ## [muncompsci.ca](https://muncompsci.ca)
 
 the website for my computer science student society at my university, [MUN](https://mun.cs), was by the time
-that i was involved with it, originally a [lektor](https://www.getlektor.com/) website
+that i was involved with it around 2017, a [lektor](https://www.getlektor.com/) website
 
 import muncompsciCaLektor from "@images/babble-bin/i-like-astro/muncompsci-ca-lektor.png"
 
@@ -97,15 +97,15 @@ achieve what we wanted
 
 i knew around 2020 i wanted to do a rewrite, and the _hot_ choice at the time was to use [gatsby](https://www.gatsbyjs.com/)
 
-i don't like disliking frameworks, but i tried to, but _failed_ to 'jive' with gatsby, it felt like i
-was needing to bend myself backwards to even get the most basic of structure setup, with oodles of
-packages to install after installing gatsby to get basic things like mdx working, or needing to write
+i don't like disliking frameworks, but i tried to and _failed_ to 'jive' with gatsby, it felt like i
+was required to bend myself backwards to get even the most basic of structure setup, with oodles of
+plugins to setup after installing gatsby to get basic things like mdx working, or needing to write
 chunks of graphql here and there before i could start seeing text on the screen that wasn't just slapped
 directly into components
 
 i see why gatsby was popular, especially if you were working a lot with external cms systems that could
 expose themselves as graphql, but if you were like myself and just intending to serve static files in the
-same repo alongside the layout files and such, quite a lot of glue was required
+same repo alongside the layout files and such, quite a lot of glue was required regardless
 
 i don't know if it has gotten better, i hope it has, but i abandoned my attempt at making muncompsci.ca
 a gatsby site once i realized how much work was required to even get a basic site running, and i didn't
@@ -113,7 +113,7 @@ feel it was the most maintainable thing for future contributors to the website
 
 <br />
 
-time passed after the gatsby attempt, and since i am usually on the browl on the [orange site](https://news.ycombinator.com/item?id=27440553) /
+time passed after the gatsby attempt, and since i am usually on the prowl on the [orange site](https://news.ycombinator.com/item?id=27440553) /
 watching [fireship videos](https://www.youtube.com/watch?v=dsTXcSeAZq8) / overall consuming a lot of webdev blog content, astro popped up on
 my radar
 
@@ -131,7 +131,7 @@ i liked the idea it was bringing to the table, and didn't jump into it right awa
 [astro 0.19.0](https://astro.build/blog/astro-019/) hit, i gave it a go for the muncompsci.ca site
 
 i don't think it took me very long, the longest bit might have been just figuring out a rejig of the
-content / look & feel of the site
+content / look & feel of the site, i.e. _the bit i wanted to focus on the entire time_
 
 the first version looked like this:
 
@@ -145,10 +145,10 @@ import muncompsciCaAstro from "@images/babble-bin/i-like-astro/muncompsci-ca-ast
   creditsUrl="https://web.archive.org/web/20210926140621/http://muncompsci.ca/"
 />
 
-you can find the [initial commit](https://github.com/MUNComputerScienceSociety/MUNCS-Website/commit/beff440f0ed54944a4bf910aab1740352e200654) of the astro version here
+you can find the [initial commit of the astro version here](https://github.com/MUNComputerScienceSociety/MUNCS-Website/commit/beff440f0ed54944a4bf910aab1740352e200654)
 
 its cool looking at files like `index.astro` in [the old version](https://github.com/MUNComputerScienceSociety/MUNCS-Website/blob/beff440f0ed54944a4bf910aab1740352e200654/src/pages/index.astro),
-alongside [the new version](https://github.com/MUNComputerScienceSociety/MUNCS-Website/blob/main/src/pages/index.astro); the overall structure remains to this day
+alongside [the new version](https://github.com/MUNComputerScienceSociety/MUNCS-Website/blob/main/src/pages/index.astro); the overall structure remains similar to this day
 
 i remember how happy i was for a framework to get out of the way and simply _let me get things done_, especially in comparison
 to my previous attempt to use gatsby for the same website
@@ -165,6 +165,8 @@ import muncsXonotic from "@images/babble-bin/i-like-astro/muncs-xonotic.png"
   creditsUrl="https://web.archive.org/web/20240116182624/http://muncompsci.ca/events/january-2022-xonotic/"
 />
 
+the markdown that powers this page is as follows:
+
 ```mdx
 ---
 layout: ../../layouts/Markdown.astro
@@ -178,32 +180,109 @@ title: January 2022 Xonotic Night
 ![](https://www.cs.mun.ca/~csclub/assets/posters/2022/xonotic_jan_2022.jpg)
 ```
 
-TODO: ACTUALLY GO AND GET THESE SCREENSHOTS / LOOK AT THE REPO AT THIS POINT IN TIME, AND TALK MORE ABOUT
-THE EARLY IMPRESSIONS OF ASTRO
+obviously there is some magic happening with `layouts/Markdown.astro`, but thankfully even that magic is... simple:
+
+```astro
+---
+import Main from "./Main.astro";
+const { content } = Astro.props;
+---
+
+<Main title={content.title}>
+	<div class="markdown">
+		<slot />
+	</div>
+</Main>
+```
+
+but the magic must live in `Main.astro` then! where's all the busy logic?
+
+```astro
+---
+import LeftSidebar from "../components/LeftSidebar.astro";
+import "../styles/base.css";
+const { title } = Astro.props;
+---
+
+<html lang="en" class="h-full">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<title>MUNCSS | {title}</title>
+		<link rel="icon" type="image/x-icon" href="/favicon.ico" />
+	</head>
+	<body class="h-full dark:bg-background-dark">
+		<main
+			class="h-full w-11/12 md:w-3/4 xl:w-7/12 2xl:w-1/2 m-auto flex flex-col md:flex-row"
+		>
+			<LeftSidebar />
+			<div
+				class="py-5 px-4 w-full md:w-9/12 h-full overflow-y-visible md:overflow-y-auto"
+			>
+				<slot />
+			</div>
+		</main>
+	</body>
+</html>
+```
+
+here is just the shared layout all the pages use, its mostly just a blob of html, with a little bit of what looks like JSX/React with a `LeftSidebar.astro` component
+
+this is, _nice_
+
+this basically, at least to me, is simple composition with components and props, but with something that feels like plain vanilla html more than it does a bespoke javascript framework
+
+however when i do want to get my hands dirty with a super custom busy page, astro still gives me the tools required to do so within very easy reach
+
+unlike with lektor which very much required opting out of the default functionality and writing your own integration sort of, with astro, if i want complete custom control over a single page, i [just write in a `.astro` file for that page with what i need for it](https://github.com/MUNComputerScienceSociety/MUNCS-Website/blob/main/src/pages/events/fall-2022-election/candidates.astro)
+
+be that the [list of executives](https://github.com/MUNComputerScienceSociety/MUNCS-Website/blob/main/src/pages/society/executives.astro), or the [listing page for all the events](https://github.com/MUNComputerScienceSociety/MUNCS-Website/blob/main/src/pages/events.astro)
+
+astro makes adding these sorts of pages trivial with often times minimal levels of code
+
+and thankfully, as expected, contributions from others who have never used astro came in, and everyone has seemed to have a good time!
 
 <br />
 
 ## [jackharrhy.com](https://jackharrhy.com)
 
-TODO
+so, back to my personal website
+
+i enjoyed using astro for muncompsci.ca, so i knew eventually i'd convert my personal site to use it as well
+
+in april of 2022, i [did just that](https://github.com/jackharrhy/jackharrhy.com/commit/7450b1820872cef41037cf3876c0021dea590b39)
+
+import jackharrhyCom from "@images/babble-bin/i-like-astro/jackharrhy-com.png"
+
+<BabbleImage
+  src={jackharrhyCom}
+  alt="TODO"
+  caption="TODO"
+  credits="Current site"
+  creditsUrl="https://web.archive.org/web/20240116182624/http://jackharrhy.com/"
+/>
+
+import jackharrhyComProjects from "@images/babble-bin/i-like-astro/jackharrhy-com-projects.png"
+
+<BabbleImage
+  src={jackharrhyComProjects}
+  alt="TODO"
+  caption="TODO"
+  credits="Current site"
+  creditsUrl="https://web.archive.org/web/20240116182624/http://jackharrhy.com/projects/"
+/>
 
 <br />
 
 ## [www.cs.mun.ca/~jaharrhy/](https://www.cs.mun.ca/~jaharrhy/)
 
-TODO
+around july of 2022, i also switched over my [mun page](https://github.com/jackharrhy/www.cs.mun.ca-jaharrhy/tree/c2a82aa90b11725d4169dc02aed780192bd94747) to astro, the site that i currently have this blog post hosted on!
 
 <br />
 
 ## [jackharrhy.neocities.org](https://jackharrhy.neocities.org/)
 
-TODO
-
-<br />
-
-initial commit in the muncs repo https://github.com/MUNComputerScienceSociety/MUNCS-Website/commit/beff440f0ed54944a4bf910aab1740352e200654
-
-by the time i was using it, it was astro 0.19.0
+then, after all the others, in december of 2022, i moved [my neocities page over to astro](https://github.com/jackharrhy/jackharrhy.neocities.org/tree/09d6514ebd63cf2a57a23ed2b41f80c39a210011)
 
 <br />
 
