@@ -280,6 +280,23 @@ import jackharrhyComProjects from "@images/babble-bin/i-like-astro/jackharrhy-co
 
 around july of 2022, i also switched over my [mun page](https://github.com/jackharrhy/www.cs.mun.ca-jaharrhy/tree/c2a82aa90b11725d4169dc02aed780192bd94747) to astro, the site that i currently have this blog post hosted on!
 
+previous to using astro, my intent was to keep things as similar as possible to the 'old web' / geocities vibes
+
+the most important thing was making sure the look and feel felt correct, but i also thought it'd be interesting
+to avoid using any sort of build tool, and just hand-rolling the html/css/js
+
+this was fine when the site was new, but i sort of kept layering on features and buttons and subpages, therefore
+the html after a while become similar to [Fordite](https://en.wikipedia.org/wiki/Fordite), i.e. busy, large, no
+reuse
+
+the biggest issue was that it felt hard to add new features to that version of the site
+
+<br />
+
+picking astro did feel like i was going back on one of my goals of using no build system, but after i was done i
+was able to focus a lot more on the content and feel than the structure, so the version that stands today is
+thankfully very much an improved version of what stood before it, let's dig into it a bit
+
 import csMunJaharrhy from "@images/babble-bin/i-like-astro/cs-mun-jaharrhy.png"
 
 <BabbleImage
@@ -289,6 +306,25 @@ import csMunJaharrhy from "@images/babble-bin/i-like-astro/cs-mun-jaharrhy.png"
   credits="Current site, via Wayback Machine"
   creditsUrl="https://web.archive.org/web/20240622190034/https://www.cs.mun.ca/~jaharrhy/"
 />
+
+this is the homepage, where most of the content and effort has gone into this site since i started adding to it in 2019
+
+each div in this screen has its own thing going on, and that is _very_ much intentional
+
+the colors, while not as striking as the average geocities beautiful eyesore, are still a lot more complex than the simple
+'safe' color palette most websites tend to lean towards these days
+
+<br />
+
+most of the pages on this site are a bit too busy to contain within one code block, but if you check out the source for
+the root / index page [here](https://github.com/jackharrhy/www.cs.mun.ca-jaharrhy/blob/4c5fb692d8159ae6946abfb3f2e900ef81bec9bb/src/pages/index.astro),
+you'll see that i'm importing a considerable amount of components
+
+even though there is a lot of css and code required for composition, it would be much more complex if i was still limiting
+myself to just plain html
+
+(and no, i know you could probably go crazy with html `<template>` and some custom javascript, but that did not feel like
+something i wanted to spend any time considering)
 
 import csMunJaharrhyBabble from "@images/babble-bin/i-like-astro/cs-mun-jaharrhy-babble.png"
 
@@ -300,6 +336,51 @@ import csMunJaharrhyBabble from "@images/babble-bin/i-like-astro/cs-mun-jaharrhy
   creditsUrl="https://web.archive.org/web/20240622192118/https://www.cs.mun.ca/~jaharrhy/babble-bin/"
 />
 
+can't not mention the babble bin, on _the babble bin_
+
+i am using two fantastic pieces of astro here, [content collections](https://docs.astro.build/en/guides/content-collections/),
+and [`@astrojs/rss`](https://docs.astro.build/en/guides/rss/)
+
+the content collections can feed in a [directory of files, such as `.mdx` files](https://github.com/jackharrhy/www.cs.mun.ca-jaharrhy/tree/02b4a8bd18d5b0c585cf37648bb424a465f9dc18/src/content/babble-bin),
+and [given a simple schema](https://github.com/jackharrhy/www.cs.mun.ca-jaharrhy/blob/02b4a8bd18d5b0c585cf37648bb424a465f9dc18/src/content/config.ts),
+give you [type-safe utility functions for iterating through said collections](https://github.com/jackharrhy/www.cs.mun.ca-jaharrhy/blob/02b4a8bd18d5b0c585cf37648bb424a465f9dc18/src/pages/babble-bin/%5B...slug%5D.astro),
+alongside methods to render that content easily into and astro page
+
+all of the above sounds like a lot, especially if you are coming from the world of gatsby, but astro makes this sort of
+thing quite a lot easier
+
+<br />
+
+[`@astrojs/rss`](https://docs.astro.build/en/guides/rss/), is used to power the babble bin's [rss feed](https://www.cs.mun.ca/~jaharrhy/babble-bin/rss.xml), this i can include in this blog post!
+
+```tsx
+import rss from "@astrojs/rss";
+import { getCollection } from "astro:content";
+
+export async function GET(context) {
+  const babbles = (await getCollection("babble-bin")).filter(
+    (entry) => entry.data.pubDate !== null
+  );
+  return rss({
+    title: "babble bin",
+    description: "a bin full of babbles",
+    site: context.site,
+    items: babbles.map((post) => ({
+      title: post.data.title,
+      pubDate: post.data.pubDate,
+      description: "",
+      link: `./babble-bin/${post.slug}/`,
+    })),
+    customData: `<language>en-us</language>`,
+  });
+}
+```
+
+nice and simple, this also makes use of the collections feature, basically just reshaping the data to a structure the `rss`
+function accepts, which will spit out a compliant rss feed
+
+<br />
+
 import csMunJaharrhyGamejam from "@images/babble-bin/i-like-astro/cs-mun-jaharrhy-gamejam.png"
 
 <BabbleImage
@@ -309,6 +390,13 @@ import csMunJaharrhyGamejam from "@images/babble-bin/i-like-astro/cs-mun-jaharrh
   credits="Current site, via Wayback Machine"
   creditsUrl="https://web.archive.org/web/20240622192409/https://www.cs.mun.ca/~jaharrhy/gamedev/jams/growthjam-feb2023/"
 />
+
+the structure of my mun site is great, as in its almost complete lack of structure in some ways, but also a structure
+that is welcoming to any content that wishes to call it home
+
+one such piece of recurring content is game jam entries, above being [the entry for growthjam](https://www.cs.mun.ca/~jaharrhy/gamedev/jams/growthjam-feb2023/)
+
+you'll find pages like these strewn across my mun site, [with nice and tidy `.astro` files implementing them](https://github.com/jackharrhy/www.cs.mun.ca-jaharrhy/blob/36920e6bf4b7063fddb8788b991512ae6cc1132b/src/pages/gamedev/jams/growthjam-feb2023/index.astro)
 
 import csMunJaharrhyGump from "@images/babble-bin/i-like-astro/cs-mun-jaharrhy-gump.png"
 
@@ -320,6 +408,8 @@ import csMunJaharrhyGump from "@images/babble-bin/i-like-astro/cs-mun-jaharrhy-g
   creditsUrl="https://web.archive.org/web/20240622192315/https://www.cs.mun.ca/~jaharrhy/void/pit-of-ethan/"
 />
 
+can't not mention the [pit of ethan](https://www.cs.mun.ca/~jaharrhy/void/pit-of-ethan/) while i'm at it
+
 import csMunJaharrhyHike from "@images/babble-bin/i-like-astro/cs-mun-jaharrhy-hike.png"
 
 <BabbleImage
@@ -329,6 +419,15 @@ import csMunJaharrhyHike from "@images/babble-bin/i-like-astro/cs-mun-jaharrhy-h
   credits="Current site, via Wayback Machine"
   creditsUrl="https://web.archive.org/web/20240622192410/https://www.cs.mun.ca/~jaharrhy/hikes/2023/oops/"
 />
+
+and lastly, one of my only uses of an interesting feature of astro: [a page] written using [SolidJS](https://www.solidjs.com/)
+
+astro lets you mix and match different frameworks of your choosing, even on the same page, with ['islands'](https://docs.astro.build/en/concepts/islands/)
+
+for this page, i wanted to use [MapLibre](https://maplibre.org/), and they actually had an example of using maplibre with solid, and since solid is a library
+without a virtual dom that feels like react from a syntax perspective, it made sense to reach for it, since astro made integrating it trivial
+
+there's no actual content here though, i got the basemap working in full screen, and _shipped it_ ⛴️
 
 <br />
 
