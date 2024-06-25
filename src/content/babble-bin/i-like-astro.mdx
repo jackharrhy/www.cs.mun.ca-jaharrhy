@@ -129,10 +129,12 @@ import astro2021 from "@images/babble-bin/i-like-astro/astro-2021.png"
   creditsUrl="https://web.archive.org/web/20210426210422/https://astro.build/"
 />
 
-i liked the idea it was bringing to the table, and didn't jump into it right away, but by the time
-[astro 0.19.0](https://astro.build/blog/astro-019/) hit, i gave it a go for the muncompsci.ca site
+i liked the ideas it was bringing to the table, with seemingly quite a bit of simplicity
 
-i don't think it took me very long, the longest bit might have been just figuring out a rejig of the
+i didn't jump into using it right away, but by the time [astro 0.19.0](https://astro.build/blog/astro-019/) hit,
+i gave it a go for another shot at rewriting the muncompsci.ca site
+
+it did not take me very long!, the slowest part might was just figuring out a rejig of the
 content / look & feel of the site, i.e. _the bit i wanted to focus on the entire time_
 
 the first version looked like this:
@@ -152,7 +154,7 @@ you can find the [initial commit of the astro version here](https://github.com/M
 its cool looking at files like `index.astro` in [the old version](https://github.com/MUNComputerScienceSociety/MUNCS-Website/blob/beff440f0ed54944a4bf910aab1740352e200654/src/pages/index.astro),
 alongside [the new version](https://github.com/MUNComputerScienceSociety/MUNCS-Website/blob/main/src/pages/index.astro); the overall structure remains similar to this day
 
-i remember how happy i was for a framework to get out of the way and simply _let me get things done_, especially in comparison
+i remember how happy i was for a framework to get out of the way, and simply _let me get things done_, especially in comparison
 to my previous attempt to use gatsby for the same website
 
 to give an example of a page that's very simple, lets look at [this event page](https://web.archive.org/web/20240116182624/http://muncompsci.ca/events/january-2022-xonotic/):
@@ -182,7 +184,9 @@ title: January 2022 Xonotic Night
 ![](https://www.cs.mun.ca/~csclub/assets/posters/2022/xonotic_jan_2022.jpg)
 ```
 
-obviously there is some magic happening with `layouts/Markdown.astro`, but thankfully even that magic is... simple:
+the header on the page and the image are simply markdown, cool!
+
+but, obviously there is some magic happening with `layouts/Markdown.astro`, but thankfully even that magic is... simple:
 
 ```astro
 ---
@@ -197,7 +201,9 @@ const { content } = Astro.props;
 </Main>
 ```
 
-but the magic must live in `Main.astro` then! where's all the busy logic?
+we pluck out the content from the markdown file so we can give the page a title, and use the `<slot />`(https://docs.astro.build/en/basics/astro-components/#slots) element to denote where the rendered markdown content should end up
+
+but then the magic must live in `Main.astro` then! where's all the busy logic?
 
 ```astro
 ---
@@ -228,21 +234,21 @@ const { title } = Astro.props;
 </html>
 ```
 
-here is just the shared layout all the pages use, its mostly just a blob of html, with a little bit of what looks like JSX/React with a `LeftSidebar.astro` component
+here is just the shared layout all the pages use, its mostly just a blob of html styled by tailwind, with a little bit of what looks like JSX/React with a `LeftSidebar.astro` component imported here so all the content isn't stuffed into one file
 
 this is, _nice_
 
-this basically, at least to me, is simple composition with components and props, but with something that feels like plain vanilla html more than it does a bespoke javascript framework
+to me, astro gives you simple composition tools with basic components and props, but with something that feels like writing plain vanilla html much more than it does a using bespoke javascript framework / custom dsl / etc.
 
-however when i do want to get my hands dirty with a super custom busy page, astro still gives me the tools required to do so within very easy reach
+however when you do want to get your hands dirty with a super custom _busy_ page, astro will still give you the tools required to do so, and for the most part, get out of the way
 
-unlike with lektor which very much required opting out of the default functionality and writing your own integration sort of, with astro, if i want complete custom control over a single page, i [just write in a `.astro` file for that page with what i need for it](https://github.com/MUNComputerScienceSociety/MUNCS-Website/blob/main/src/pages/events/fall-2022-election/candidates.astro)
+unlike with lektor which required opting out of the default functionality and writing your own integration sort of for non trivial features, with astro, if i want complete custom control over a single page, i [just write in a `.astro` file for that page with what i need for it](https://github.com/MUNComputerScienceSociety/MUNCS-Website/blob/main/src/pages/events/fall-2022-election/candidates.astro)
 
 be that the [list of executives](https://github.com/MUNComputerScienceSociety/MUNCS-Website/blob/main/src/pages/society/executives.astro), or the [listing page for all the events](https://github.com/MUNComputerScienceSociety/MUNCS-Website/blob/main/src/pages/events.astro)
 
-astro makes adding these sorts of pages trivial with often times minimal levels of code
+astro makes adding these sorts of pages easy, often times with minimal levels of code required
 
-and thankfully, as expected, contributions from others who have never used astro came in, and everyone has seemed to have a good time!
+and thankfully, as expected, contributions from others who have never used astro came in after i merged the refactor, and everyone has seemed to have a good time!
 
 <br />
 
@@ -264,6 +270,11 @@ import jackharrhyCom from "@images/babble-bin/i-like-astro/jackharrhy-com.png"
   creditsUrl="https://web.archive.org/web/20240116182624/http://jackharrhy.com/"
 />
 
+while this is my most 'prominent' astro website, it's the one i have the _least_ to talk about, since it has the fewest
+amount of features and pages than any other astro site of mine
+
+the [homepage is nice and basic](https://github.com/jackharrhy/jackharrhy.com/blob/955a74439912ef253777ccb2b05112f41a80b93e/src/pages/index.astro), the only interesting thing on it is probably [the mug component](https://github.com/jackharrhy/jackharrhy.com/blob/955a74439912ef253777ccb2b05112f41a80b93e/src/components/Mug.astro), which uses the [picocad-web-viewer](https://github.com/lucatronica/picocad-web-viewer/tree/main) initialized using a handy [astro `<script>`](https://docs.astro.build/en/guides/client-side-scripts/) tag within a `.astro` component to spin a 3d model of a tea cup i created using [picoCAD](https://johanpeitz.itch.io/picocad)
+
 import jackharrhyComProjects from "@images/babble-bin/i-like-astro/jackharrhy-com-projects.png"
 
 <BabbleImage
@@ -274,28 +285,65 @@ import jackharrhyComProjects from "@images/babble-bin/i-like-astro/jackharrhy-co
   creditsUrl="https://web.archive.org/web/20240116182624/http://jackharrhy.com/projects/"
 />
 
+it has a [projects page](https://github.com/jackharrhy/jackharrhy.com/blob/68db914e1cd96b721f0d530fab8b2308660116b2/src/pages/projects.astro), that has 'projects' defined like so:
+
+```astro
+<Project
+  title="~jaharrhy"
+  link="https://www.cs.mun.ca/~jaharrhy/"
+  description="my labnet garden, giving old web vibes"
+/>
+```
+
+in which `Projects.astro` is simply:
+
+```astro
+---
+const { title, link, description } = Astro.props;
+---
+
+<a href={link} target="_blank">
+	<div class="w-[10.5em]">
+		<img
+			src={`/images/projects/${title}.webp`.toLowerCase()}
+			class="w-[10.5em] h-[7.75em] object-cover border"
+		/>
+		<h3 class="mt-2 text-[0.85em]">
+			<span class="font-semibold">{title}</span>
+			{description}
+		</h3>
+	</div>
+</a>
+```
+
+_nice_
+
+<br />
+
+all i can really say here, is that it's _nice_
+
+not making use of much special features because its a pretty simple personal site as the moment
+
 <br />
 
 ## [www.cs.mun.ca/~jaharrhy/](https://www.cs.mun.ca/~jaharrhy/)
 
 around july of 2022, i also switched over my [mun page](https://github.com/jackharrhy/www.cs.mun.ca-jaharrhy/tree/c2a82aa90b11725d4169dc02aed780192bd94747) to astro, the site that i currently have this blog post hosted on!
 
-previous to using astro, my intent was to keep things as similar as possible to the 'old web' / geocities vibes
+previous to using astro, my intent was to keep things as similar as possible to the 'old web' / as a callback to geocities sites
 
 the most important thing was making sure the look and feel felt correct, but i also thought it'd be interesting
-to avoid using any sort of build tool, and just hand-rolling the html/css/js
+to avoid using any sort of build tool, and just 'hand roll' the html/css/js ([by `ssh`-ing into `garfield` and cracking open `vim`](https://www.cs.mun.ca/~jaharrhy/how-to-make-mun-page/))
 
-this was fine when the site was new, but i sort of kept layering on features and buttons and subpages, therefore
+this was fine when the site was new, but i kept layering on features and buttons and subpages, therefore
 the html after a while become similar to [Fordite](https://en.wikipedia.org/wiki/Fordite), i.e. busy, large, no
 reuse
 
 the biggest issue was that it felt hard to add new features to that version of the site
 
-<br />
-
-picking astro did feel like i was going back on one of my goals of using no build system, but after i was done i
-was able to focus a lot more on the content and feel than the structure, so the version that stands today is
-thankfully very much an improved version of what stood before it, let's dig into it a bit
+picking astro did feel like i was going back on one of my goals of not using a build system, but after i was done i
+was able to focus a lot more on the content and feel than worrying about code structure, so the version that stands today is
+a thankfully improved version of what stood before, let's dig into it a bit:
 
 import csMunJaharrhy from "@images/babble-bin/i-like-astro/cs-mun-jaharrhy.png"
 
@@ -307,21 +355,21 @@ import csMunJaharrhy from "@images/babble-bin/i-like-astro/cs-mun-jaharrhy.png"
   creditsUrl="https://web.archive.org/web/20240622190034/https://www.cs.mun.ca/~jaharrhy/"
 />
 
-this is the homepage, where most of the content and effort has gone into this site since i started adding to it in 2019
+this is the homepage, where most of my effort has been spent on since i created the site in 2019
 
-each div in this screen has its own thing going on, and that is _very_ much intentional
+each div on this page has its own thing going on, and that is _very_ much intentional
 
 the colors, while not as striking as the average geocities beautiful eyesore, are still a lot more complex than the simple
 'safe' color palette most websites tend to lean towards these days
 
 <br />
 
-most of the pages on this site are a bit too busy to contain within one code block, but if you check out the source for
+most of the pages on this site are a bit too busy to chronicle with just one code block, but if you check out the source for
 the root / index page [here](https://github.com/jackharrhy/www.cs.mun.ca-jaharrhy/blob/4c5fb692d8159ae6946abfb3f2e900ef81bec9bb/src/pages/index.astro),
 you'll see that i'm importing a considerable amount of components
 
-even though there is a lot of css and code required for composition, it would be much more complex if i was still limiting
-myself to just plain html
+even though there is a lot of css and code required for this page, it would be much more complex if i was still limiting
+myself to just plain html, astro lets me compose components together with ease
 
 (and no, i know you could probably go crazy with html `<template>` and some custom javascript, but that did not feel like
 something i wanted to spend any time considering)
@@ -435,6 +483,9 @@ there's no actual content here though, i got the basemap working in full screen,
 
 then, after all the others, in december of 2022, i moved [my neocities page over to astro](https://github.com/jackharrhy/jackharrhy.neocities.org/tree/09d6514ebd63cf2a57a23ed2b41f80c39a210011)
 
+(it was hardly a website beforehand however, i think sometime in 2020 i threw a simple 'hello world' onto the page and
+forgot about it, so maybe i can consider this my only current astro greenfield website!)
+
 import jackharrhyNeocitiesOrg from "@images/babble-bin/i-like-astro/jackharrhy-neocities-org.png"
 
 <BabbleImage
@@ -445,6 +496,8 @@ import jackharrhyNeocitiesOrg from "@images/babble-bin/i-like-astro/jackharrhy-n
   creditsUrl="https://web.archive.org/web/20240622153208/https://jackharrhy.neocities.org/"
 />
 
+the tealog is the meat of my neocities website, maybe someday there will be more, but for now, tea
+
 import jackharrhyNeocitiesOrgTealog from "@images/babble-bin/i-like-astro/jackharrhy-neocities-org-tealog.png"
 
 <BabbleImage
@@ -454,6 +507,23 @@ import jackharrhyNeocitiesOrgTealog from "@images/babble-bin/i-like-astro/jackha
   credits="Current site, via Wayback Machine"
   creditsUrl="https://web.archive.org/web/20240622161320/https://jackharrhy.neocities.org/tea-log/14-02-2024/"
 />
+
+again, we have heavy usage of content collections from astro to take a directory of `.mdx` files, this time with
+a _rating system_ in the tags
+
+the thing i'm the most happy about on this site isn't actually astro, but instead the [fish script i wrote](https://github.com/jackharrhy/jackharrhy.neocities.org/blob/main/scripts/dither-tealog.fish) to take the high definition versions of
+the tea images, and turn them into bordered and dithered thumbnails for use on its own listing page, and the rss feed
+
+similar to my mun page i wanted to make this build-less html/cs/js, but yet again since i wanted to write textual content,
+i was a much bigger fan of having the usual write markdown and build tooling approach for this site as well
+
+<br />
+
+OTHERS I HAVE INFECTED
+
+<br />
+
+TODO CLUE UP SAY COOL EPIC THINGS
 
 <br />
 
