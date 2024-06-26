@@ -1,6 +1,16 @@
 ---
 import { Image } from "astro:assets";
-const { src, alt, caption, credits, creditsUrl, width, height, containerHeight, extraSpace } = Astro.props;
+const {
+  src,
+  alt,
+  caption,
+  credits,
+  creditsUrl,
+  width,
+  height,
+  containerHeight,
+  extraSpace,
+} = Astro.props;
 ---
 
 <figure>
@@ -33,7 +43,7 @@ const { src, alt, caption, credits, creditsUrl, width, height, containerHeight, 
     font-size: 0.9rem;
   }
   a {
-    opacity: 0.7;
+    opacity: 0.85;
   }
   img {
     width: 100%;
