@@ -10,7 +10,7 @@ import meAndCar from "@images/babble-bin/where-is-the-bus/me-and-car.jpg"
 
 i have a car now! 🎉
 
-<BabbleImage src={meAndCar} alt="TODO" containerHeight="15rem" />
+<BabbleImage src={meAndCar} alt="myself wearing a green jumper, arms stretched out in front of a green Toyota Matrix, house behind myself." containerHeight="15rem" />
 
 i live somewhere in which having a car is basically required _(boo)_, but it took until i was
 23 to finally get my license sorted, and then till 24 to actually get a car
@@ -60,8 +60,8 @@ import metrobusMobileGooglePlay from "@images/babble-bin/where-is-the-bus/metrob
 import metrobusMobileAppMainScreen from "@images/babble-bin/where-is-the-bus/metrobus-mobile-app-main-screen.png"
 
 <BabbleFlex height="25rem">
-    <BabbleImage src={metrobusMobileGooglePlay} alt="TODO" extraSpace="0" />
-    <BabbleImage src={metrobusMobileAppMainScreen} alt="TODO" extraSpace="0" />
+    <BabbleImage src={metrobusMobileGooglePlay} alt="mobile app screenshot, google play store, showing 'm-Mobile v2' with multiple screenshots showing the apps dated look and feel" extraSpace="0" />
+    <BabbleImage src={metrobusMobileAppMainScreen} alt="mobile app screenshot, m-Mobile v2, home screen, multiple different squares showing different features up the app, application does not have a modern look and feel" extraSpace="0" />
 </BabbleFlex>
 
 here you can see the google play store page for ['m-Mobile v2'](https://play.google.com/store/apps/details?id=hr.apps.n1005513&hl=en_CA),
@@ -78,8 +78,8 @@ import metrobusMobileAppTimetrackList from "@images/babble-bin/where-is-the-bus/
 import metrobusMobileAppTimetrackBus from "@images/babble-bin/where-is-the-bus/metrobus-mobile-app-timetrack-bus.png"
 
 <BabbleFlex height="25rem">
-    <BabbleImage src={metrobusMobileAppTimetrackList} alt="TODO" extraSpace="0" />
-    <BabbleImage src={metrobusMobileAppTimetrackBus} alt="TODO" extraSpace="0" />
+    <BabbleImage src={metrobusMobileAppTimetrackList} alt="mobile app screenshot, m-Mobile v2, timetrack page showing list of location of busses, the first busses list item has a yellow background because it is late, it shows that is it Rt 1-1 heading from 'MUN-CNA-MI'. other list items are green because they are either slightly behind or ahead." extraSpace="0" />
+    <BabbleImage src={metrobusMobileAppTimetrackBus} alt="mobile app screenshot, m-Mobile v2, timetrack inner page showing location of bus on a map alongside the same metadata as before on that bus" extraSpace="0" />
 </BabbleFlex>
 
 heading into the timetrack page, you can see a list of the busses servicing different routes
@@ -121,7 +121,7 @@ the metrobus website itself, but quickly, you'll find out that the app, is _just
 
 import metrobusMobileWebMainScreenPhone from "@images/babble-bin/where-is-the-bus/metrobus-mobile-web-main-screen-phone.png"
 
-<BabbleImage src={metrobusMobileWebMainScreenPhone} alt="TODO" />
+<BabbleImage src={metrobusMobileWebMainScreenPhone} alt="mobile web browser screenshot of metrobusmobile.com, same home page as in the application seen previously" />
 
 so... this could have just been a [PWA](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps), but of
 course its instead an entire app you're asked to download from the app store instead
@@ -130,7 +130,7 @@ but, as far as data digging goes, this means one can pop open this same tab with
 
 import metrobusMobileWebMainScreenLaptop from "@images/babble-bin/where-is-the-bus/metrobus-mobile-web-main-screen-laptop.png"
 
-<BabbleImage src={metrobusMobileWebMainScreenLaptop} alt="TODO" />
+<BabbleImage src={metrobusMobileWebMainScreenLaptop} alt="desktop web browser screenshot of metrobusmobile.com, same home page as seen twice before, but now in landscape size in a firefox window" />
 
 ...and dig their dirty fingers directly into the dev tools, to hopefully see what endpoints are being reached out to
 populate these pages
@@ -145,7 +145,7 @@ thankfully, this includes the timetrack page!
 
 import metrobusMobileWebNetworkTab from "@images/babble-bin/where-is-the-bus/metrobus-mobile-web-network-tab.png"
 
-<BabbleImage src={metrobusMobileWebNetworkTab} alt="TODO" />
+<BabbleImage src={metrobusMobileWebNetworkTab} alt="firefox screenshot of timetrack page, dev tools open to the network tab, viewing the endpoint that powers the data of the page" />
 
 all one does to get a blob of json used to populate this screen, is hit this endpoint:
 
@@ -196,8 +196,15 @@ metrobus-spy was basically just a proxy that would hit the timetrack json endpoi
 contain `latitude`, `longitude`, and the `position_time` values
 
 this api, didn't really do much at all, my friend [riley](https://github.com/nint8835/) threw together a little project
-that fed from metrobus-spy and generated some heatmaps, can't seem to find any record / screenshots / code of that,
-but that was neat
+that fed from metrobus-spy and generated some heatmaps, as you can see here:
+
+import rileyHeatmapSrc from "@images/babble-bin/where-is-the-bus/riley-heatmap.png"
+
+<BabbleImage
+  src={rileyHeatmapSrc}
+  alt="leaflet map of the areas covered by Metrobus, heat map showing areas where busses are most often, the avalon mall and downtown areas are very red, while places like Mount Pearl are much less covered"
+  caption="more red = more busses"
+/>
 
 <br />
 
@@ -225,7 +232,7 @@ data can be layed out:
 
 import busBuddySrc from "@images/babble-bin/where-is-the-bus/bus-buddy.png"
 
-<BabbleImage src={busBuddySrc} alt="TODO" />
+<BabbleImage src={busBuddySrc} alt="firefox screenshot, full page map, header of page is green logo of a clip art bus with the text 'BusBuddy'. full screen map shows location of current user, a specific bus is clicked on therefore you can see the route" />
 
 during a weekend, some people i teamed up with during a [local hackathon](https://ecumene.github.io/dontoverthinkit/)
 (organized by [mitch](https://mitchellhynes.com/) ❤️) built  together a [remix](https://remix.run/) application that
