@@ -24,6 +24,7 @@ import CeojamLink from "@components/jams/CeojamLink.astro";
 import SquidjamLink from "@components/jams/SquidjamLink.astro";
 import ChoiceLink from "@components/games/ChoiceLink.astro";
 import ConjamLink from "@components/jams/ConjamLink.astro";
+import EggjamLink from "@components/jams/EggjamLink.astro";
 
 const lastModified = new Intl.DateTimeFormat("en-US", {
   month: "long",
@@ -363,6 +364,7 @@ const lastModified = new Intl.DateTimeFormat("en-US", {
         </div>
         <div class="gamedev">
           <p class="gamedev-header">gamejams</p>
+          <EggjamLink />
           <ConjamLink />
           <SquidjamLink />
           <CeojamLink />

@@ -1,0 +1,40 @@
+---
+import { Image } from "astro:assets";
+
+import Layout from "@layouts/Layout.astro";
+import Back from "@components/Back.astro";
+
+import "98.css";
+---
+
+<style is:global>
+  html {
+    background-color: #c0c0c0;
+  }
+</style>
+
+<style>
+  header {
+    font-size: 2em;
+    text-align: center;
+  }
+
+  header p {
+    color: transparent;
+    text-shadow: 0 0 0 black;
+  }
+
+  header p:first-child {
+    font-size: 3rem;
+  }
+</style>
+
+<Layout title="eggjam july 2024">
+  <div class="back-contaienr">
+    <Back />
+  </div>
+  <header>
+    <p>🥚 eggjam 🥚</p>
+    <p>july 2024</p>
+  </header>
+</Layout>
