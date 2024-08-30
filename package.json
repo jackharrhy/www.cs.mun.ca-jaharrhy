@@ -29,7 +29,7 @@
     "maplibre-gl": "^4.5.0",
     "react-spring": "^9.7.4",
     "solid-js": "^1.8.19",
-    "svelte": "^4.2.18",
+    "svelte": "^4.2.19",
     "three": "^0.167.0",
     "xpath": "^0.0.34"
   }
