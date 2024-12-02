@@ -1,0 +1,50 @@
+---
+import { Image } from "astro:assets";
+
+import Layout from "@layouts/Layout.astro";
+import Back from "@components/Back.astro";
+---
+
+<style is:global>
+  html {
+    background-image: url("/~jaharrhy/src/images/void/pit-of-ethan/quake-wall-1.gif");
+    background-repeat: repeat;
+    backdrop-filter: hue-rotate(45deg) brightness(1.5);
+  }
+</style>
+
+<style>
+  header,
+  main {
+    color: white;
+    font-family: "DP Quake";
+    text-shadow: 0 0 5px darkred;
+  }
+
+  header {
+    padding-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 2em;
+    text-align: center;
+  }
+
+  header p {
+    margin: 0;
+  }
+
+  header p:first-child {
+    font-size: 3rem;
+  }
+</style>
+
+<Layout title="gamblejam august 2024">
+  <div class="back-contaienr">
+    <Back />
+  </div>
+  <header>
+    <p>GAMBLEJAM</p>
+    <p>AUGUST 2024</p>
+  </header>
+</Layout>

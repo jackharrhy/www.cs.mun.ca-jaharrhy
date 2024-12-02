@@ -9,18 +9,18 @@
     "ncu": "ncu -u"
   },
   "devDependencies": {
-    "@astrojs/react": "^3.6.2",
-    "@vitejs/plugin-basic-ssl": "^1.1.0",
-    "astro": "^4.16.8",
-    "npm-check-updates": "^17.1.9",
+    "@astrojs/react": "^3.6.3",
+    "@vitejs/plugin-basic-ssl": "^1.2.0",
+    "astro": "^4.16.16",
+    "npm-check-updates": "^17.1.11",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "dependencies": {
     "@astrojs/mdx": "^3.1.9",
     "@astrojs/rss": "^4.0.9",
-    "@astrojs/solid-js": "^4.4.2",
-    "@astrojs/svelte": "^5.7.2",
+    "@astrojs/solid-js": "^4.4.4",
+    "@astrojs/svelte": "^6.0.2",
     "@react-spring/three": "^9.7.5",
     "@react-three/fiber": "^8.17.10",
     "@xmldom/xmldom": "^0.9.5",
@@ -29,8 +29,8 @@
     "maplibre-gl": "^4.7.1",
     "react-spring": "^9.7.4",
     "solid-js": "^1.9.3",
-    "svelte": "^5.1.9",
-    "three": "^0.170.0",
+    "svelte": "^5.3.1",
+    "three": "^0.171.0",
     "xpath": "^0.0.34"
   }
 }

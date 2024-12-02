@@ -10,8 +10,17 @@ import Back from "@components/Back.astro";
 
   main {
     display: flex;
+    gap: 2rem;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+  }
+
+  a {
+    font-family: monospace;
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
   }
 </style>
 
@@ -21,5 +30,6 @@ import Back from "@components/Back.astro";
     <img
       src="http://textfiles.com/underconstruction/totomwp4underconstruction.gif"
     />
+    <a href="./jams/">jams</a>
   </main>
 </Layout>

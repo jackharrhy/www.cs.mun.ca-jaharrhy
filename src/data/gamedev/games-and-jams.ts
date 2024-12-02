@@ -6,6 +6,7 @@ type Person = {
 
 type Jam = {
   name: string;
+  slug: string;
   theme: string;
   started: Date;
   finished: Date;
@@ -50,14 +51,24 @@ export const peopleByName = people.reduce(
   }
 );
 
-export const jams = [
-  {
-    name: "growthjam",
-    theme: "growth",
-    started: new Date(2023, 1, 17),
-    finished: new Date(2023, 1, 26),
-  },
-] as const satisfies Jam[];
+export const jams = (
+  [
+    {
+      name: "growthjam",
+      slug: "growthjam-feb2023",
+      theme: "growth",
+      started: new Date(2023, 1, 17),
+      finished: new Date(2023, 1, 26),
+    },
+    {
+      name: "gamblejam",
+      slug: "gamblejam-aug2024",
+      theme: "gambling",
+      started: new Date(2024, 8, 30),
+      finished: new Date(2024, 9, 8),
+    },
+  ] as const satisfies Jam[]
+).sort((a, b) => b.started.getTime() - a.started.getTime());
 
 type JamNames = (typeof jams)[number]["name"];
 
@@ -72,6 +83,7 @@ export const jamsByName = jams.reduce(
 );
 
 import growthjamJackGame from "@images/gamedev/jams/growthjam/jack-game.jpg";
+import gamblejamGumpGameTV from "@images/gamedev/jams/gamblejam/gump-game-tv.jpg";
 
 export const games = [
   {
@@ -86,4 +98,27 @@ export const games = [
       },
     ],
   },
+  {
+    name: "ETHAN GAME NAME",
+    by: [peopleByName.Ethan],
+    forJam: jamsByName.gamblejam,
+    images: [
+      {
+        type: "during-showcase",
+        alt: "Ethan showing off his game to the others",
+        meta: gamblejamGumpGameTV,
+      },
+    ],
+  },
 ] as const satisfies Game[];
+
+type GameNames = (typeof games)[number]["name"];
+
+export const gamesByJam = games.reduce((acc, game) => {
+  const jamName = game.forJam.name;
+  if (!acc[jamName]) {
+    acc[jamName] = [];
+  }
+  acc[jamName].push(game as any);
+  return acc;
+}, {} as Record<JamNames, Game[]>);

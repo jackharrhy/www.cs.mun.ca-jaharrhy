@@ -1,6 +1,7 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import Back from "@components/Back.astro";
+import { jams } from "@data/gamedev/games-and-jams";
 ---
 
 <style>
@@ -10,8 +11,19 @@ import Back from "@components/Back.astro";
 
   main {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+  }
+
+  code {
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+  }
+
+  a {
+    text-decoration: none;
   }
 </style>
 
@@ -21,5 +33,16 @@ import Back from "@components/Back.astro";
     <img
       src="http://textfiles.com/underconstruction/totomwp4underconstruction.gif"
     />
+    <ul>
+      {
+        jams.map((jam) => (
+          <a href={`./${jam.slug}/`}>
+            <code>
+              <pre>{JSON.stringify(jam, null, 2)}</pre>
+            </code>
+          </a>
+        ))
+      }
+    </ul>
   </main>
 </Layout>
