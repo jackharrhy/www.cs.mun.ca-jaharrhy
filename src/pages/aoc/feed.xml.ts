@@ -1,6 +1,6 @@
 import rss, { pagesGlobToRssItems } from "@astrojs/rss";
 
-export const get = async () => {
+export const GET = async () => {
   const items = await pagesGlobToRssItems(import.meta.glob("./**/*.mdx"));
 
   items.sort((a, b) => {

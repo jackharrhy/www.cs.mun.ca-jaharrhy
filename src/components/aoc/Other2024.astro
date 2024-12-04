@@ -1,0 +1,10 @@
+---
+import { people } from "@data/aoc/2024/data";
+
+const { person: personKey, day } = Astro.props;
+const person = people[personKey];
+const dayLink = person.dayLinkFunc(Number(day));
+---
+
+<a href={dayLink}>[{person.display}]</a>
+{person.language}

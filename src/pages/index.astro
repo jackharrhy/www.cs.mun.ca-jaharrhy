@@ -14,7 +14,7 @@ import bepisRockUrl from "@images/void/bepis-rock/bepis-rock.png";
 import Piclog from "@components/Piclog.astro";
 import Strava from "@components/Strava.astro";
 import Tealog from "@components/Tealog.astro";
-import AdevntOfCodeCountdown from "@components/AdevntOfCodeCountdown.astro";
+import AdventOfCodeCountdown from "@components/AdventOfCodeCountdown.astro";
 import TamaNOTChi from "@components/TamaNOTChi.astro";
 import Tomato from "@components/Tomato.svelte";
 
@@ -237,12 +237,13 @@ const lastModified = new Intl.DateTimeFormat("en-US", {
   .aoc {
     background-color: #0f0f23;
     color: #cccccc;
-    margin: 0;
-    padding: 0.5rem;
+    margin: 0 auto;
+    padding: 0.6rem 2rem;
+    margin-top: 1rem;
     font-family: monospace;
     text-align: center;
     text-shadow: 0 0 5px white;
-    font-size: 1.2rem;
+    font-size: 1.7rem;
     text-decoration: none;
   }
 
@@ -323,6 +324,9 @@ const lastModified = new Intl.DateTimeFormat("en-US", {
     <Myself />
   </header>
   <main>
+    <div class="aoc aoc-countdown">
+      <AdventOfCodeCountdown />
+    </div>
     <div class="group">
       <div class="left">
         <div class="colleagues">
@@ -392,9 +396,6 @@ const lastModified = new Intl.DateTimeFormat("en-US", {
         </div>
         <div class="tomato">
           <Tomato />
-        </div>
-        <div class="aoc aoc-countdown">
-          <AdevntOfCodeCountdown />
         </div>
       </div>
     </div>

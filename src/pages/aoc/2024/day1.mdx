@@ -1,0 +1,502 @@
+---
+layout: "@layouts/AdventOfCodeLayoutDay.astro"
+title: day 1
+pubDate: 2024-12-01
+---
+
+import Other from "@components/aoc/Other2024.astro";
+
+its december, so that means, **advent of code time**, **_lets go_**
+
+<br />
+
+im hyped to give another go at rambles this year, i started working on rambles in 2023,
+but didn't actually make it to publishing my work-in-progress day 1 post, oh well
+
+_for context of those that didn't see my 2022 rambles_, this is a spot where i discuss
+advent of code solutions, starting with my own (that i attempt to break down step by step),
+then digging into solutions by others, giving commentary on them, sometimes throwing in some
+suggestions
+
+<br />
+
+as expected, day 1 is cozy, and the breakdown of how to come to the final answer in the example,
+provided in the question, _sort of_ explains the steps to write the program in the language of your choice
+
+<br />
+
+---
+
+im returning to my beloved, [[elixir]](https://elixir-lang.org/), this year, and it seems
+like i'm not the only this time around!
+
+both in mine, and probably other functional language solutions, **you'll likely see the pipe operator, `|>`**,
+if you want a little elixir-focused primer on said operation, check out elixir schools [[Pipe Operator]](https://elixirschool.com/en/lessons/basics/pipe_operator) lesson
+
+not much activity on the [[proposal to add this operator to js]](https://github.com/tc39/proposal-pipeline-operator), but a man can wish...
+
+<details>
+<summary>click to view my solution</summary>
+
+<br />
+
+given the sample input:
+
+```
+3   4
+4   3
+2   5
+1   3
+3   9
+3   3
+```
+
+assuming `input` is the above as one big string, lets do some input parsing:
+
+```elixir
+{left_list, right_list} =
+  input
+  |> String.split("\n")
+  |> Enum.map(fn line ->
+    [l, r] = line
+      |> String.split("  ")
+      |> Enum.map(&(String.to_integer(String.trim(&1))))
+    {l,r}
+  end)
+  |> Enum.unzip()
+```
+
+first, split string on newline character, returns a list of lines
+
+map over each line, and then, split on that line by two spaces to break up `3 4` to `["3", "4"]`
+
+then, map over the trimmed value of each of those strings (trimmed since i think for some reason i had spaces left in my input? skill issue),
+and convert them from string into integer
+
+in this map statement, i return a tuple of the left value, and the right value
+
+this means, before the final `Enum.unzip`, the data structure looks like:
+
+```elixir
+[{3, 4}, {4, 3}, {2, 5}, {1, 3}, {3, 9}, {3, 3}]
+```
+
+since i want a list of all of the left values, and all of the right values, the structure i've created is what `Enum.zip` returns,
+
+so, `Enum.unzip`, gives me:
+
+```elixir
+{[3, 4, 2, 1, 3, 3], [4, 3, 5, 3, 9, 3]}
+```
+
+_nice_
+
+### part 1
+
+```elixir
+Enum.zip(Enum.sort(left_list), Enum.sort(right_list))
+  |> Enum.map(fn {l, r} ->
+    abs(l - r)
+  end)
+  |> Enum.sum()
+```
+
+its day 1, therefore part 1 fits into a small footprint, no need to even break it up
+into multiple explanatory chunks
+
+since the question is asking to compare smallest numbers in both right and left lists, ascending,
+sorting both lists, then re-`Enum.zip`-ing them, gives us the numbers that need to be
+compared together in tuple pairs
+
+so, map over tuple pairs, and take the absolute value of the `l - r`, to get the distances
+
+then, sum the result via `Enum.sum`, _boom_, we get the `11` total distance the example asks for, and i get a star!
+
+### part 2
+
+```elixir
+right_counts = right_list
+  |> Enum.group_by(&(&1))
+  |> Enum.map(fn {k, v} ->
+    {k, Enum.count(v)}
+  end)
+  |> Map.new()
+
+for n <- left_list do
+  n * Map.get(right_counts, n, 0)
+end
+|> Enum.sum()
+```
+
+part 2 is also nice and compact
+
+<br />
+
+first, lets discuss the creation of `right_counts`
+
+```elixir
+right_counts = right_list
+  |> Enum.group_by(&(&1))
+  |> Enum.map(fn {k, v} ->
+    {k, Enum.count(v)}
+  end)
+  |> Map.new()
+```
+
+here, i take the right list, and use `Enum.group_by` (passing in an identity anonymous function), which gives me:
+
+```elixir
+%{3 => [3, 3, 3], 4 => [4], 5 => [5], 9 => [9]}
+```
+
+i map over that to return the values of this map as the count rather than a list of each value, which gives me:
+
+```elixir
+[{3, 3}, {4, 1}, {5, 1}, {9, 1}]
+```
+
+i then pipe that to `Map.new()`, since iterating over the `Map` returned by `Enum.group_by` gets mucked up by the map, giving me the map:
+
+```elixir
+%{3 => 3, 4 => 1, 5 => 1, 9 => 1}
+```
+
+so a lookup from value `->` how many times in the right list it exists
+
+<br />
+
+paired with this list, the last section is quite easy to grok:
+
+```elixir
+for n <- left_list do
+  n * Map.get(right_counts, n, 0)
+end
+|> Enum.sum()
+```
+
+iterate over the left list, use the value in the right list (or 0 if no value) to multiply with the value in the left list we're on
+
+then, do a little bit of `Enum.sum`
+
+we get the example answer, and after running my test input, i get a second star!
+
+<br />
+
+the full solution can be found [[here]](https://github.com/jackharrhy/advent2024/blob/main/day1.livemd)
+
+</details>
+
+---
+
+<br />
+
+### others
+
+time to peep others solutions!
+
+i've dug through people who i checked out in 2022, and seen
+people post links to their advent of code solutions in the [[MUN Computer Science Society]](https://muncompsci.ca/) discord, and the [[CTSNL]](https://ctsnl.ca/) discord,
+so i've compiled a list of people to _peep_ for solutions and give some _rambles_ here
+
+if you've ended up being included and would rather _not_ be, reach out to my via the message box at the bottom of the page, sorry!
+
+likely not much to say today here since its day 1 and all, but likely the _most_ to say from a
+sheer volume perspective since day 1 means _many_ solutions!
+
+---
+
+<Other person="daniel" day="1" />
+
+> dan out here with separate rust _projects_ for part _1_ and _2_ respectively, an interesting choice that seems to permit for zero code sharing between parts other than
+> either a registry being used, or good ol' `ctrl+c` `ctrl-v` :D
+>
+> the solution is good, lots of `.unwrap().unwrap().unwrap()` but that seems kosher for advent of code rust solutions
+>
+> ```rust
+> a.sort();
+> b.sort();
+> ```
+> 
+> seems like rusts built in sort method on a `Vec` modifies in-place? probably a better representation of whats actually going on under the hood that other languages
+> hide away, but obviously from my functional-leaning-at-the-moment brain, this feels not so great
+>
+> its a good rust solution though, thank u dan
+
+<Other person="mudkip" day="1" />
+
+> mudkip out here with both a python solution (that was seemingly built quickly sometime after the problem coming out, since mudkip was high up on the leaderboard the morning i woke up on the 1st)
+> _and_ a elixir solution
+>
+> i also have context that you wouldn't get from looking at the repo, but after doing it in python, mudkip wanted to reach for something different, and originally also
+> tried rust, before giving up due to fighting with the borrow checker, which is honestly quite understandable if you're used to quick dynamic languages for quick
+> iteration
+>
+> the solution i want to talk about, is an _elixir_ solution!
+>
+> ```elixir
+> {l, r} = File.stream!("1.in")
+>   |> Enum.map(&String.trim/1)
+>   |> Enum.map(&String.split(&1, "   "))
+>   |> Enum.map(fn list ->
+>       Enum.map(list, &String.to_integer/1)
+>   end)
+>   |> Enum.map(&List.to_tuple/1)
+>   |> Enum.unzip()
+>
+> r_counts = Enum.frequencies(r)
+>
+> part1 = Enum.zip(Enum.sort(l), Enum.sort(r))
+>   |> Enum.map(fn {x, y} -> abs(x - y) end)
+>   |> Enum.sum()
+>
+> part2 = l
+>   |> Enum.map(fn x -> x * Map.get(r_counts, x, 0) end)
+>   |> Enum.sum()
+> ```
+>
+> small enough to just include inline here, this is a nice solution, similar to mine in many ways, honestly more pipeline-heavy initially, with a
+> _great_ usage of [[Enum.frequencies]](https://hexdocs.pm/elixir/Enum.html#frequencies/1) that seems to do the count logic i was calculating manually with a `group_by`, _nice_
+>
+> only tip would be for maybe using the [[& Shorthand]](https://elixirschool.com/en/lessons/basics/functions#anonymous-functions-0) for a bit more code-golfying :)
+
+<Other person="keenan" day="1" />
+
+> > _"When you have to import 14 things to write a loop"_
+> >
+> > - Mudkip
+>
+> first of go code from keenan, looking swell
+>
+> classic walrus operator error catching
+>
+> nitpick, but variables list `location_IDs_txt` could probably just be `location_ids_txt`, mid-variable capitalization does not feel like a good style
+>
+> 79 lines feels like a bit much for a day 1 solution, but it is go which is usually a super verbose lang, and it is first _keenan_ go code, so i must
+> respect jumping into the deep end and the overall _grind_
+
+<Other person="natalie" day="1" />
+
+> natalie out here, on my recommendation, also pulling out the _elixir_, **yay**
+>
+> ```elixir
+> {:ok, input} = File.read("input.txt")
+> split_ints = String.split(input) |> Enum.map(&String.to_integer/1)
+> left_array = Enum.take_every(split_ints, 2) |> Enum.sort()
+> right_array = Enum.drop_every(split_ints, 2) |> Enum.sort()
+>
+> part1 = Enum.zip(left_array, right_array) |> Enum.map(fn {x, y} -> abs(x - y) end) |> Enum.sum()
+>
+> right_number_of_occurences =
+>   Enum.reduce(right_array, %{}, fn x, accumulator ->
+>     Map.update(accumulator, x, 1, &(&1 + 1))
+>   end)
+>
+> part2 =
+>   Enum.map(left_array, fn x -> x * Map.get(right_number_of_occurences, x, 0) end)
+>   |> Enum.sum()
+> ```
+> 
+> another solution _smol_ enough i might as well include it here as-is
+>
+> i think the pipeline operators here could be newline'd, it would increase
+> amount of lines, but bring line length down to a small amount
+>
+> `take_every` / `drop_every` to split up the input, followed by a sort, very cozy
+>
+> a reducer being pulled out for day 1! doing a similar thing i was doing with group_by by hand,
+> my bet is not knowing the group_by operator exists, which is _totally_ fair for someone writing
+> elixir for the first time (but mudkip did pull out frequencies, so you have competition on who is
+> the best elixir freshie!)
+>
+> then a map sum
+>
+> good job nat
+
+<Other person="ethan" day="1" />
+
+> gump solution gump solution
+>
+> i am a [[pathlib]](https://docs.python.org/3/library/pathlib.html) stan, so whenever i see `open` code, i must say,
+> _use pathlib instead its so much cleaner with a nicer api_
+>
+> solutions starting to feel a little déjà vu-ey, feels quite similar to dans, but there is only so much room for differences this
+> early on
+>
+> argparse being used for a lil runner, _nice_
+
+<Other person="arafat" day="1" />
+
+> a more concise go solution from arafat (sorry keenan \<3)
+>
+> i like having the input parsing in its own func here
+>
+> google seems to indicate go does not have `abs`, but it looks like it was added at a later date? [[math.Abs]](https://pkg.go.dev/math#Abs) seems to be a thing
+>
+> aha! it is, just checked keenans solution, it is using `math.Abs`, maybe this keenan guy is alright after all...
+>
+> good go solution here!
+
+<Other person="sven" day="1" />
+
+> taking the lead for the least amount of line solution is stephen, coming in at 53 lines (5 less than arafat)
+>
+> this one gets the count in the right list _every time it parses a value in the left list_, which solves the problem sure,
+> but does seem like a waste of computation, but also i guess needs little memory to keep around other than the lists themselves?
+>
+> stephen also found `math.Abs`, _nice_
+>
+> _anotha_ good go solution here, even if interesting un-optimization
+
+<Other person="gravyBoat" day="1" />
+
+> gravy boat out here with a interesting repo that seems to permit for all problems to live in the same spot, just with the entrypoint
+> `main.rs` needing to be switched out to pull in the correct crate by editing source code, which honestly isn't half bad, a lot less busy
+> than pulling something in like [[cargo-aoc]](https://github.com/gobanos/cargo-aoc), that i'm not dissing in anyway, but nice to see a decently clean
+> zero dep (other than regex, at the moment) rust project!
+>
+> some unwraps, as expected
+>
+> but here we go, part one and two in different functions, using the same input parsing, good to see
+>
+> `HashMap` being used as a counter lookup here
+>
+> not much else to say, is rust, is good
+
+<Other person="hamzah" day="1" />
+
+> HAMZAH!
+>
+> back with some sheets! he pulled them out before and here he goes pulling them out again!
+>
+> love to see some sheets in action, row a and b are the input lists already cleaned up,
+>
+> - row d: `=SORT(A:A)`
+> - row e: `=SORT(B:B)`
+> - row f: `=ABS(D2-E2)`
+> - row g: `=SUM(F:F)` `->` _the madman gets part 1_
+> - row i: `=A*COUNTIF($B$2:B,A)` _the madman uses his existing part 1 sorted lists and `COUNTIF` to do some countin'_
+> - row j: `=SUM(I:I)` `->` _the madman just sums again_
+>
+> <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/a3_PPdjD6mg?si=tRPTh4i4wjmKEPHT" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+<Other person="djrideout" day="1" />
+
+> dj rust time, this time someone using an off-the-shelf runner, [[aoc-runner]](https://github.com/gobanos/cargo-aoc/), which honestly means this looks nice and _clean_
+>
+> more of the same approaches i've seen before, a little bit of sneaky pattern matching on part 2 is cool to see, but as mentioned before, early days
+> don't leave a lot of room for self expression
+>
+> this statement goes for dj, but obviously everyone here, excited for this stuff to get a bit more meaty so i can see more varied solutions!
+
+<Other person="riley" day="1" />
+
+> its riley, so you KNOW its **`f#`** _unctional_
+>
+> feels _very_ similar in vibes to my elixir solution, plenty of pipes, good usage of stdlib, _sparking joy_
+>
+> `Array.countBy` cool, and _cursed_ that `id` in f# is a builtin for the identity function...
+>
+> like as someone who has done enough category theory learning to know its an important concept in functional programming, its _interesting_ to have it
+> as a easily accessible builtin, i assume something that can be shadowed _quite_ easily as there will be many-a-cases people use `id` the _variable_ not
+> the top-level function
+>
+> excited to see more nint f#
+
+<Other person="josh" day="1" />
+
+> ranguli out here with _c++_, i'd expect to be seeing two less characters in that file extension, _but i'll accept it_
+>
+> some `std:ifstream` iteration, pipe operations galore, pretty standard c++ code (i think, i am not c++ brained)
+>
+> the type of code that i just know [[makes keith proud]](https://en.uncyclopedia.co/wiki/File:Cpp_rat_mascot_2.jpeg)
+
+<Other person="brianna" day="1" />
+
+> nice and compact part 1 & 2, after input parsing, both parts are just one-liners:
+>
+>
+> ```python
+> total_dist = sum([abs(left_num - right_num) for left_num, right_num in zip(sorted(left_list), sorted(right_list))])
+> ```
+>
+> a good part 1, cool seeing zip usage
+>
+> ```python
+> similarity_score = sum([(num * right_list.count(num)) for num in left_list])
+> ```
+>
+> a part 2 smaller than part 1! very nice, count usage sparks joy
+>
+> v-nice, could probs just have a single `day1.py` that does both things, so input parsing code could be shared
+
+<Other person="neiro" day="1" />
+
+> neiro time
+>
+> very nice and simple part 1, same as brianna with a smaller part 2!
+>
+> only tidbit would be not having variables names `LikeThis`, should always be `like_this`
+
+<Other person="alex" day="1" />
+
+> some python from alex, feeling very familiar at this point after reviewing python a few times in a row
+>
+> interesting seeing your sample input included inside the python file, i guess one less step to worry about
+> removing the need for file parsing! (should probably revert that to the smaller input shown in the example
+> rather than your puzzle input however)
+
+<Other person="zachVaters" day="1" />
+
+> the one, and _only_, swift solution, from the one, and _only_, zach
+>
+> interesting approach in part 1 of not sorting, but doing min on the two lists to find the smallest, calculating, and then removing the values from the list
+>
+> my brain says this isn't as efficient as just sorting and then calculating, but its interesting to see a very non expected approach to this question
+
+<Other person="evan" day="1" />
+
+> another go solution oh yeah, hello evan
+>
+> doing the list creation _and_ the count lookup creation in the input parsing, _nice_
+>
+> the for loop for i range to 1000 is a bit cursed, but yeah, you got the stars, you did the thing
+
+<Other person="eric" day="1" />
+
+> more go, this time from eric
+>
+> comments galore, bit more verbose than other solutions, but sparking joy and doing the stuff
+>
+> i like
+
+<Other person="shevinu" day="1" />
+
+> and last but not least, _even more go_, this time from shevinu
+>
+> nothing really to add, its more go, this one does not take cake for being smallest but does feel nice and concise
+>
+> epic
+
+<br />
+
+overall, a nice day 1, good set of people to go over solutions for this it feels as well! a _lot_ more go than expected, and
+glad to have some people alongside me for elixir :)
+
+lets see how long i can keep these rambles up for, i'm currently finishing up this post at `1:14 AM` on day 4, so i have a backlog of two more days to get to, and _then_ to do todays,
+but hopefully i get into a roll here (and people fall off so i have less to review :D)
+
+eventually the problems become meaty to the point i need more time to focus on them than i have to write about, so that will liiikely be the end
+
+but at least for the next few days, _lets do this_
+
+<br />
+
+---
+
+any thoughts about any of the above?
+
+reach out:
+
+import Letterbird from "@components/Letterbird.astro";
+
+<Letterbird />
