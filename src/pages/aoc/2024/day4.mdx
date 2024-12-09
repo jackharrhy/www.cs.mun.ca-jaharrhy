@@ -1,0 +1,566 @@
+---
+layout: "@layouts/AdventOfCodeLayoutDay.astro"
+title: day 4
+pubDate: 2024-12-04
+---
+
+import Other from "@components/aoc/Other2024.astro";
+import { Image } from 'astro:assets';
+
+it comes every year, and yet, who is ever fully prepared...
+
+(im sure some are but i always have to remember again how to do grid shenanigans)
+
+_its grid time baby_
+
+<br />
+
+many different ways to approach representing a grid, and also what operations are available on grids
+if people have busy standard libaries / reach for numpy (curious to see arafat this time around...)
+
+time to do some word searchin'
+
+---
+
+<details>
+<summary>click to view my solution</summary>
+
+<br />
+
+given the sample input:
+
+```
+MMMSXXMASM
+MSAMXMSMSA
+AMXSXMAAMM
+MSAMASMSMX
+XMASAMXAMM
+XXAMMXXAMA
+SMSMSASXSS
+SAXAMASAAA
+MAMMMXMMMM
+MXMXAXMASX
+```
+
+assuming `input` is the above as one big string,
+
+```elixir
+rows = String.split(input, "\n")
+
+row_count = length(rows)
+col_count = Enum.at(rows, 0) |> String.length()
+
+input = input
+  |> String.replace("\n", "")
+  |> String.graphemes()
+  |> Enum.map(&(String.to_atom(&1)))
+```
+
+breakup the rows, get the length, then get the column length
+
+im pretty sure the input is always a prefect `n` x `n` grid, but oh well
+
+then, replace the newlines in the input with empty string, map over the graphemes,
+which will give us each thing as a single string thats a single character, then map over the characters and
+turn them into elixir symbols
+
+```elixir
+[:M, :M, :M, :S, :X, :X, :M, :A, :S, :M, :M, ..
+```
+
+we get a _flat_ list of symbols to work with
+
+my intent is to do integer div / mod operators to go from grid position to index, and index to grid position
+
+<br />
+
+### part 1
+
+```elixir
+x_locations = input
+|> Enum.with_index()
+|> Enum.filter(fn {char, _index} -> char == :X end)
+```
+
+first, we find each x position, and use `Enum.with_index` to get its index in the list
+
+```elixir
+defmodule WordSearchV1 do
+  @next %{
+    :X => :M,
+    :M => :A,
+    :A => :S
+  }
+
+  def navigate({input, row_count, col_count} = board, {x, y}, vec, expecting) do ..
+  def find_xmases({_input, row_count, col_count} = board, start_index) do ..
+end
+```
+
+the code for this is a bit chunkier than before, for part 1 i pull out this
+module `WordSearchV1`, that has a mapping from character to the expected next character,
+
+`find_xmases/1` is the entrypoint, and `navigate/1` is the recursive function
+that will keep navigating through the grid (i call it board in the code) until it either
+
+- gets through an entire `[:X, :M, :A, :S]` section of values
+- gets through partially but then sees a value it does not expect
+- gets out of bounds
+
+```elixir
+def find_xmases({_input, row_count, col_count} = board, start_index) do
+  i_x = rem(start_index, col_count)
+  i_y = div(start_index, row_count)
+
+  for x <- -1..1 do
+    for y <- -1..1 do
+      if x == 0 && y == 0 do
+        false
+      else
+        vec = {x, y}
+        pos = {i_x + x, i_y + y}
+        navigate(board, pos, vec, :M)
+      end
+    end
+  end
+  |> List.flatten()
+  |> Enum.filter(&(&1))
+end
+```
+
+`find_xmases/1` takes in the input `:X` point, and does some `Range` magic
+to get a vector for each position around the center point, and starts
+running navigate from that position, with that movement vector, and expects the next
+value it sees to be `:M`, the value after the `:X` we know we already have
+
+we expect navigate to return a boolean depending on if it was a valid xmas or not,
+and we flatten the return value from the navigate calls, and filter out any non `true` values
+before returning it to the caller
+
+```elixir
+def navigate({input, row_count, col_count} = board, {x, y}, vec, expecting) do
+  if (x < 0 or x > row_count) or (y < 0 or y > col_count) do
+    false
+  else
+    index = row_count * y + x
+    val = Enum.at(input, index)
+
+    if val == expecting do
+      if val == :S do
+        true
+      else
+        {x_mod, y_mod} = vec
+        pos = {x + x_mod, y + y_mod}
+        navigate(board, pos, vec, Map.fetch!(@next, expecting))
+      end
+    else
+      false
+    end
+  end
+end
+```
+
+then, in navigate:
+
+- we do the out of bounds check, false if thats hit
+- then, we do the math to go from `{x, y}` vector to index in flat list, get the value, and
+  expect that value to be the next value in the map
+  - if that is the case, we go to the next position via a recursive call to navigate, using the `@next` map to get the next value that iteration should check for
+  - if not, we return false
+
+```elixir
+for {_x, x_location} <- x_locations do
+  WordSearchV1.find_xmases({input, row_count, col_count}, x_location)
+end
+|> List.flatten()
+|> Enum.count()
+```
+
+making use of `WordSearchV1`, we call it for each `x_location`, and get back all of the lists of `true`,
+we flatten that list of lists of true, and count how many `true`s we have
+
+and we get the answer!
+
+<br />
+
+### part 2
+
+```elixir
+a_locations = input
+|> Enum.with_index()
+|> Enum.filter(fn {char, _index} -> char == :A end)
+```
+
+same as `x_locations`, but this time, `a`
+
+```elixir
+defmodule WordSearchV2 do
+  def get_value_from_pos({input, row_count, col_count}, x, y) do ..
+  
+  def find_x_mases({_input, row_count, col_count} = board, center) do ..
+end
+```
+
+no need to pull our recursion this time, but we need a new `WordSearch`, so we make new `WordSearchV2` here
+
+```elixir
+def find_x_mases({_input, row_count, col_count} = board, center) do
+  c_x = rem(center, col_count)
+  c_y = div(center, row_count)
+
+  if c_x - 1 < 0 or c_x + 1 > col_count or c_y - 1 < 0 or c_y + 1 > row_count do
+    false
+  else
+    top_left = get_value_from_pos(board, c_x - 1, c_y - 1)
+    top_right = get_value_from_pos(board, c_x + 1, c_y - 1)
+    bottom_left = get_value_from_pos(board, c_x - 1, c_y + 1)
+    bottom_right = get_value_from_pos(board, c_x + 1, c_y + 1)
+
+    left_pair = case {top_left, bottom_right} do
+      {:M, :S} -> true
+      {:S, :M} -> true
+      _ -> false
+    end
+
+    right_pair = case {top_right, bottom_left} do
+      {:M, :S} -> true
+      {:S, :M} -> true
+      _ -> false
+    end
+
+    is_valid = left_pair and right_pair
+    
+    is_valid
+  end
+end
+```
+
+look at each value around the `:A`, and check to see if either the top left / bottom right, or bottom left / top right are the right tuple either forwards or backwards
+and then if both pairs are valid, we have a valid x-mas!
+
+```elixir
+def get_value_from_pos({input, row_count, col_count}, x, y) do
+  if x < 0 or x >= col_count or y < 0 or y >= row_count do
+    nil
+  else
+    index = row_count * y + x
+    Enum.at(input, index)
+  end
+end
+```
+
+just a util function to go from `{x, y}` vector to value, and if its out of bounds, just return `nil`
+
+for some questions wraparound is needed, and this method makes wraparound _easy_, but here i have to actively
+fight against wrap around with all of these bounds checks... oh well
+
+```elixir
+for {_x, a_location} <- a_locations do
+  WordSearchV2.find_x_mases({input, row_count, col_count}, a_location)
+end
+|> List.flatten()
+|> Enum.filter(&(&1))
+|> Enum.count()
+```
+
+same as before, flatten them lists of booleans, then only get `true` ones, then count 'em
+
+nice
+
+the full solution can be found [[here]](https://github.com/jackharrhy/advent2024/blob/main/day4.livemd)
+
+<br />
+
+</details>
+
+---
+
+### others
+
+<Other person="mudkip" day="4" />
+
+> similar flat list extract via some lookups solution!
+>
+> going through each position in the grid regardless of if it starts with a known valid value for both cases,
+> also making it dynamic to find any string, _nice_, truly a generic word searcher out here
+>
+> `@directions` could be calculated via `Range` :), but very easy to just write out the vectors around a point rather than do that
+>
+> woah! broke out a utility file for doing grid operations! fancy!
+>
+> no recursion in search word, just doing some cool stuff with `extract_line`, that utility seems nice
+>
+> i should get on this train, every single time i get hit with a grid question (as mentioned in the preamble), i reinvent
+> the wheel
+>
+> you're simply a better man mudkip
+
+<Other person="daniel" day="4" />
+
+> `impl Grid` time!, woah, very tidy yet again dan
+>
+> ```rust
+> struct Grid {
+>     items: Vec<char>,
+>     width: usize,
+>     height: usize,
+> }
+> 
+> impl Grid {
+>     fn from_reader<R: Read>(reader: R) -> Self { ...  }
+>     fn get(&self, x: usize, y: usize) -> Option<char> { ...  }
+>     fn rows(&self) -> impl Iterator<Item = Vec<char>> + '_ { ...  }
+>     fn cols(&self) -> impl Iterator<Item = Vec<char>> + '_ { ... }
+>     fn diags(&self) -> impl Iterator<Item = Vec<char>> + '_ { ... }
+> }
+> ```
+>
+> a really nice set of utils / data structure
+> 
+> ```rust
+> fn main() {
+>     let grid = Grid::from_reader(std::io::stdin());
+>     let mut total = 0;
+>     for chars in grid.rows().chain(grid.cols()).chain(grid.diags()) {
+>         let string = String::from_iter(chars);
+>         total += string.matches("XMAS").count() + string.matches("SAMX").count();
+>     }
+>     println!("{}", total);
+> }
+> ```
+>
+> leading to a nice and tidy `main`, that creates a `Grid` struct straight from stdin,
+>
+> iterates over the rows / cols / diags using [[`.chain`]](https://doc.rust-lang.org/nightly/std/iter/struct.Chain.html), so
+> you get one bit iterator with all of the chars in different directions,
+>
+> and then, just getting the matches of `XMAS`, or `SAMX`, in said strings representing cols / rows / diags
+>
+> its a long one, but its honestly a great one
+>
+> good job dan
+>
+> part 2 is less busy and more direct, but honestly it makes sense, no need for all the busy grid utils that time around, other than `get`
+
+<Other person="natalie" day="4" />
+
+> more natalie elixir lets go
+>
+> some tidy util functions here!
+>
+> could do with some more newlines at spots to increase readability, but overall, looking good
+>
+> ```elixir
+> def find_mas_x(map, x, y) do
+>   if map[y][x] == "A" &&
+>        ((map[y - 1][x - 1] == "S" && map[y + 1][x + 1] == "M") ||
+>           (map[y - 1][x - 1] == "M" && map[y + 1][x + 1] == "S")) &&
+>        ((map[y - 1][x + 1] == "S" && map[y + 1][x - 1] == "M") ||
+>           (map[y - 1][x + 1] == "M" && map[y + 1][x - 1] == "S")) do
+>     1
+>   else
+>     0
+>   end
+> end
+> ```
+>
+> this is some busy code, but a clever way of getting them `x_mas`es
+>
+> but your function name feels _backwards_, `mas_x`?, the question clearly states `x_mas`
+>
+> tsk tsk natalie
+
+<Other person="hamzah" day="4" />
+
+> i see a day 4 section in your sheet, and i see some work started in it
+>
+> but, if i'm not mistaken, there is no solution here...
+>
+> pour one out
+>
+> <iframe width="560" height="315" src="https://www.youtube.com/embed/kbdtBLD8Lbg?si=VAJlqX6RJMqRD54a" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+>
+> _he is no longer getting away with this_
+
+<Other person="riley" day="4" />
+
+> riley seems back at it again pulling out some f# party tricks, oh my
+>
+> ```fsharp
+> let checkRange
+>     (xCoords: int[])
+>     (yCoords: int[])
+>     (rangeSelector: int -> int -> (int * int) * (int * int))
+>     (requiredStr: string)
+>     : (int * int)[] =
+>     xCoords
+>     |> Array.map (fun x ->
+>         yCoords
+>         |> Array.filter (fun y ->
+>             let value =
+>                 inputData
+>                 |> (rangeSelector x y ||> Array2D.range)
+>                 |> String.concat ""
+> 
+>             (value = requiredStr) || (value = (String.reverse requiredStr)))
+>         |> Array.map (fun y -> (x, y)))
+>     |> Array.concat
+> ```
+>
+> so it seems your entire solution leans heavily on this busy busy busy function
+>
+> the definition syntax is weird but i assume each one of these newlines is just a named argument with a type next to it
+>
+> and basically, you're doing some nonsense
+>
+> nonsense i do not have the time to dig into, but i can tell by what you are doing with these functions, does the job
+>
+> cursed as usual, thank you riley
+ 
+<Other person="girish" day="4" />
+
+> hello girish! welcome to the rambles, glad you could join us
+>
+> here, take some tea from the teapot 🫖, make yourself comfy, stay a while...
+>
+> your part 1, is verbose, but also, it is simple
+>
+> could probably make it more generic if you looked at each conditional statement and figured out how you could express it as a function
+> and then call that function for each time you are currently breaking out into an `if` / `if`
+>
+> part 2, however, is nice and smol
+>
+> and you are here, out here, with the two stars
+>
+> hope you enjoyed the tea, until next time
+
+<Other person="alex" day="4" />
+
+> alex pulling out numpy today! nice to see
+>
+> > _d4c1: solved with numpy magic_
+>
+> great commit message
+>
+> and tidy part 2
+>
+> nice
+
+<Other person="djrideout" day="4" />
+
+> dj also out here making a grid util! cool!
+>
+> also needing to reach for `Arc` for aoc? interesting
+>
+> i thought this was similar to dans, but it doesn't seem like so!
+>
+> aspects of this feel like mine, in which you calculate all of the movement vectors from an initial position
+>
+> a bit busy in parts, i feel like maybe the `Box` / `Arc` stuff could be avoided? but maybe not due to the way things are structured
+>
+> nice
+
+<Other person="eric" day="4" />
+
+> some verbose golang, similar comment to girish on some of this could be util function'd
+>
+> but, stars 1 & 2... no need to fix it, if both stars 1 & 2!
+
+<Other person="sven" day="4" />
+
+> nice util function usage! aspects of this seem verbose, but def. much less total character count than other solutions
+>
+> good job sven
+
+<Other person="marty" day="4" />
+
+> very tidy, quite compact, lua from the good ol' mert
+>
+> `offsets` for the diags are clean, with the lil `hits_target` function
+>
+> no `goto` this time around, lets _go_
+
+<Other person="gravyBoat" day="4" />
+
+> no utils here, other rust folks went _busy_ with them, but good ol gravy out here util-less
+>
+> i have less and less to say than what has already been said, yet again!
+>
+> seems like most people have the same idea, just differences in where they start from finding specific items, approaching things from breaking them apart into diags first, or just looking aroundt he central point for the string they are looking for
+>
+> this one is tidy, not many notes
+>
+> ya
+
+<Other person="neiro" day="4" />
+
+> a basically empty file, with the commit message:
+>
+> > did not finish
+>
+> neiro out, good staying w/us this far, godspeed on becoming a CIDR block pro 🖖
+
+<Other person="shevinu" day="4" />
+
+> `copy paste the response send to eric here` :D
+>
+> part 2 is nice and compact though
+>
+> nice
+
+import ditto from "@images/aoc/2024/ditto.png";
+
+<Other person="evan" day="4" />
+
+> <Image height="150" src={ditto} alt="ditto the pokemon" />
+
+<Other person="grey" day="4" />
+
+> > _[10:41 PM] Grey: oh god i just remembered my day 4 solution_
+> >
+> > _[10:41 PM] Grey: local man asked to never code again_
+>
+> not too bad here grey! :D
+>
+> some actual util functions vs. just writing all the conditionals here is nice
+>
+> maybe don't have lines be super long, be ok with more of a line count if it means
+> your code doesn't gain a horizontal scrollbar :)
+>
+> tidy
+
+<Other person="arafat" day="4" />
+
+> and here's arafat!
+>
+> `from numpy.lib.stride_tricks import sliding_window_view`
+>
+> wha- what is this import?
+>
+> digging deep into numpy for this
+>
+> honestly with all the tricks i sortof expected this to be a few lines less, but still, very tidy
+>
+> also pulling out regex for `XMAS`, to get `re.findall`, _nice_
+
+<Other person="ethan" day="4" />
+
+> a long day 4, but it seems you weren't the only one with a long day 4
+>
+> ethan code ethan code ethan code
+
+<br />
+
+a pretty nice intro grid question, good job everyone :)
+
+<br />
+
+---
+
+any thoughts about any of the above?
+
+reach out:
+
+import Letterbird from "@components/Letterbird.astro";
+
+<Letterbird />
