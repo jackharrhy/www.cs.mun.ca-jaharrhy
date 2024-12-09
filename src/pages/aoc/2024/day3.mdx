@@ -1,0 +1,446 @@
+---
+layout: "@layouts/AdventOfCodeLayoutDay.astro"
+title: day 3
+pubDate: 2024-12-03
+---
+
+import Other from "@components/aoc/Other2024.astro";
+import DitherMert from "@components/dither/Mert.astro";
+import { Image } from 'astro:assets';
+
+pretty nice day 3 question, and especially nice to those who can wield the finite state automata, otherwise
+known to most programmers as _regular expressions_
+
+i'm curious to see regular expression usage in different languages today here, but also potentially
+some solutions that will be regular expressionless
+
+lets dive into it
+
+---
+
+<details>
+<summary>click to view my solution</summary>
+
+<br />
+
+given the sample input:
+
+```
+xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))
+```
+
+assuming `instructions` is the above as one big string,
+
+### part 1
+
+```elixir
+validate = fn instructions ->
+  Regex.scan(~r/mul\((?<a>\d*),(?<b>\d*)\)/, instructions)
+  |> Enum.map(fn [_match, a, b] ->
+    String.to_integer(a) * String.to_integer(b)
+  end)
+  |> Enum.sum()
+end
+
+validate.(instructions)
+```
+
+regular expression time, techncially i'm using named capture groups here, but the `Regex.scan` function i'm
+using from elixir doesn't really make use of them, but does still give me the capture groups seperate to the entire matched string
+
+```elixir
+~r/mul\((?<a>\d*),(?<b>\d*)\)/
+```
+
+to break down the regex though, i expect to match on some section of the string that starts with `mul`,
+then an opening parentheses (needed to escape it with `\`)
+
+then, here is where i use actual parentheses to section out any number of digits, followed by a comma, and then any number of digits, ensuring that
+it ends with an actual closing parentheses at the end
+
+<br />
+
+the output of `Regex.scan` on my input, yields:
+
+```elixir
+[
+    ["mul(2,4)", "2", "4"],
+    ["mul(5,5)", "5", "5"],
+    ["mul(11,8)", "11", "8"],
+    ["mul(8,5)", "8", "5"]
+]
+```
+
+so, mapping over that with:
+
+```elixir
+|> Enum.map(fn [_match, a, b] ->
+    String.to_integer(a) * String.to_integer(b)
+end)
+```
+
+will give:
+
+```elixir
+[8, 25, 88, 40]
+```
+
+which we simply `Enum.sum` on, to get `161`, the answer for part 1!
+
+<br />
+
+### part 2
+
+```elixir
+String.split("do()#{instructions}", "don't()")
+|> Enum.map(fn instructions ->
+  [_ignore | rest] = String.split(instructions, "do()")
+  rest |> Enum.join()
+end)
+|> Enum.join()
+|> then(fn instructions ->
+  validate.(instructions)
+end)
+```
+
+so, part 2 throws in some interesting clauses about some `do()` and `don't()`s turning off the multiplying,
+
+and i thought to myself, maybe can i just string split on the `don't()`, and then string split on the `do()`,
+and then anything that is to the _left_ of the `do()`, is valid
+
+so that is exactly what this code does, i throw in a `do()` at the start of the instruction string, as
+the question states this is the case, so my string splitting works, and then just reconstruct a string
+that is only the sections that should be turned on, and run that through the validate function from part 1
+
+curious to see if anyone else came up with this solution, or if i'm ✨ special ✨
+
+my mum calls my special so i must be
+
+<br />
+
+the full solution can be found [[here]](https://github.com/jackharrhy/advent2024/blob/main/day3.livemd)
+
+<br />
+
+</details>
+
+---
+
+### others
+
+<Other person="daniel" day="3" />
+
+> rust has no regex, so as expected, the `regex` crate makes an apperance
+>
+> part 2 is tidy! it does seem like you came back to clean this up at a later date to use named capture groups, tidy tidy!
+>
+> i see its one regular expression doing the job of finding dos, donts, and muls, and once you run into
+> a do / dont, you either enable or disable, and when running into a mul, you check the enabled state
+> to see if you should bother calculating the value and adding it to the total
+>
+> v-nice
+
+<Other person="arafat" day="3" />
+
+> no capture groups here, but a nice string split on the match, mapping to int, and adding, does the trick!
+>
+> same trick as dan had with `enabled`, while looping through matches, that you've called `include`
+>
+> tidy
+
+import gumpImage from "@images/aoc/2024/gump-hadouken.jpg";
+
+<Other person="ethan" day="3" />
+
+> hello ethan, hopefully leaving more than just spaghetti emoji for you this time around, my apologies :D
+>
+> `part1_smol`, _so compact_
+>
+> i know you have it indented this way because of the fact that its one single expression, but
+>
+> <Image height="300" src={gumpImage} alt="ethan's part1_smol function, with ryu from street fighter performing a Hadouken move, as if he is the one causing the code to be indented" />
+>
+> just had to reference indentation hadouken
+>
+> nice part 2, similar regular expression / state system to others
+>
+> good job gump
+
+<Other person="gravyBoat" day="3" />
+
+> tidy, i like that here a match is being used on the values, if its just a dont or do, do the active flip,
+> and if its not either, its the third case in which its only possibly mul
+>
+> nice
+>
+> i feel like for people who pull out regex, i have not much extra to say over what i've already said
+
+<Other person="shevinu" day="3" />
+
+> first golang solution, lets get into it
+>
+> _and it looks like i'm not special!_
+>
+> shevinu also pulling out the string split secret for part 2!
+>
+> and using part 1 as a function wholesale in part 2
+>
+> very nice
+>
+> pretty compact for go solution, looks like golang has a pretty decent expressive regular expression builtin as well
+>
+> nice
+
+import coolerElixir from "@images/aoc/2024/cooler-elixir.jpg";
+
+<Other person="mudkip" day="3" />
+
+> mudkip out here with _130 lines of elixir_
+>
+> but also, mudkip out here not touching regex!
+>
+> full on elixir state machine logic being pulled out here today, so even though this is not
+> winning for lines of code by far, its winning from a _cool_ perspective
+>
+> ```elixir
+> defmodule Switch do
+>   defstruct state: :empty, open: true, prepare: nil
+> 
+>   @state_transitions %{
+>     empty: %{entry: "d", next_state: :d},
+>     d: %{entry: "o", next_state: :o},
+>     o: %{entry: "n", next_state: :n},
+>     n: %{entry: "'", next_state: :quote},
+>     quote: %{entry: "t", next_state: :t}
+>   }
+> 
+>   def read_token(%Switch{state: state} = switch, entry: "(") when state in [:o, :t] do ..
+>
+>   def read_token(%Switch{state: :lb} = switch, entry: ")") do ..
+>
+>   def read_token(%Switch{} = switch, entry: entry) do ..
+> end
+> 
+> defmodule Multiplier do
+>   defstruct [:x, :y, state: :empty]
+> 
+>   @state_transitions %{
+>     empty: %{entry: "m", next_state: :m},
+>     m: %{entry: "u", next_state: :u},
+>     u: %{entry: "l", next_state: :l},
+>     l: %{entry: "(", next_state: :lb},
+>     x: %{entry: ",", next_state: :y}
+>   }
+> 
+>  def read_token(%Multiplier{state: state} = multiplier, entry: entry)
+>      when is_integer(entry) and state in [:lb, :x, :y] do ..
+>
+>   def read_token(%Multiplier{state: :y} = multiplier, entry: ")") do ..
+>
+>   def read_token(%Multiplier{} = multiplier, entry: entry) do ..
+> end
+> ```
+>
+> tidy bit of state logic here, its def. a bit chunky but i had to show it here
+>
+> _not half bad_ for someone who has not touched elixir outside of this years aoc!
+>
+> <Image height="250" src={coolerElixir} alt="school yearbook, two people who look the same, one with glasses and one without, one with glasses implied to be cooler, since one with glasses did a long elixir solution as a state machine, vs. non glasses just having a long elixir solution" />
+
+<Other person="marty" day="3" />
+
+> marty getting jiggy with some gsub replacements to make his later code betta
+>
+> seems like you're using _lua_ patterns here too, which look obviously very similar to regex, maybe not as full featured?
+>
+> regardless, very cute 27 lines of lua out here today, i like this one
+
+<Other person="riley" day="3" />
+
+> i see also some cleanup from riley here as well, same as dan
+>
+> (i totally wasn't sitting at a coffee table alongside both of you yesterday watching you two discuss this)
+>
+> ```fsharp
+> let instructionRegex =
+>     Regex(
+>         @"((?'instruction'mul)\((?'a'\d+),(?'b'\d+)\)|(?'instruction'do)\(\)|(?'instruction'don't)\(\))"
+>     )
+> ```
+>
+> so you have a capture group regex, cool, _what're you going to do with that riley_
+>
+> ```fsharp
+> let (|Do|Dont|Mul|) (matchVal: Match) =
+>     match matchVal.Groups["instruction"].Value with
+>     | "do" -> Do
+>     | "don't" -> Dont
+>     | _ -> Mul(int matchVal.Groups["a"].Value, int matchVal.Groups["b"].Value)
+> ```
+>
+> _what in tarnation kinda syntax you pulling out here_
+>
+> even though you explained this to me, i still have yet to fully grok what is happening here,
+> but i can show off what this lets you do to other folk:
+>
+> ```fsharp
+> let partA =
+>     inputData
+>     |> instructionRegex.Matches
+>     |> Seq.map (function
+>         | Do -> 0
+>         | Dont -> 0
+>         | Mul(a, b) -> a * b)
+>     |> Seq.sum
+> ```
+>
+> just mapping over super clean values that make it look like `Do`/`Dont`/`Mul(a, b)` have become first class
+> statements in your language, i guess its not look like, they just are??? nice
+>
+> f# is sure freaky, thank you riley
+
+<Other person="evan" day="3" />
+
+> some regular-expressionless code, nice!
+>
+> very hand rolled, expecting things at exact indexes, but honestly still pretty compact and to the point
+>
+> and always cool to see both part 1 & 2 coming together in the same block of code
+>
+> clever evan
+
+<Other person="natalie" day="3" />
+
+> natalie elixir natalie elixir
+>
+> natalie took time away from climbing the wall at the cove to write this code, i feel so blessed
+>
+> ```elixir
+> def get_mul_value(string) do
+>   Regex.scan(~r/mul\(\d+,\d+\)/, string)
+>   |> List.flatten()
+>   |> Enum.map(&Regex.scan(~r/\d+/, &1))
+>   |> List.flatten()
+>   |> Enum.map(&String.to_integer/1)
+>   |> Enum.chunk_every(2, 2, :discard)
+>   |> Enum.map(fn [a, b] -> a * b end)
+>   |> Enum.sum()
+> end
+> ```
+>
+> using regex here, but could def. use some features of regex to do the breaking apart of stuff for you
+>
+> see my code for how to do that :)
+>
+> (i'm cheeky)
+
+<Other person="djrideout" day="3" />
+
+> 24 lines of code for both part 1 and two in rust! woah
+>
+> very tidy, a function to do the calculating based off of a simple regex with captures,
+> but your part 2, you use a regular expression to do a cleanup of the input data to remove bits that are dont()!
+>
+> very clean, feels similar to mine and shevinu's string split trick, but more compact using regular expressions for said trick
+>
+> good job
+
+<Other person="grey" day="3" />
+
+> another regular-expressionless solution!
+>
+> honestly its verbose, but in a way that's quite easy to read
+>
+> having all of the variables at the top before you start iterating through the chars in the line is cool
+>
+> and the psuedo regular expression system you've come up here with the `matcher = "mul(.,.)"` system
+>
+> simple, _long_, but simple
+
+<Other person="eric" day="3" />
+
+> a golang regex solution, a bit longer that others, but looking good!
+>
+> interesting approach here to do the cleanup myself and shevinu did via a method that it seems could be done to just parse through the string
+>
+> nice regardless!
+
+<Other person="neiro" day="3" />
+
+> glad to still see neiro here with us!
+>
+> very nice and simple python solution, very to the point
+>
+> only about 25 lines of actual code with comments removed
+>
+> nice
+
+<Other person="hamzah" day="3" />
+
+> cell `B:14` is just, 'Pain'
+>
+> i'm not going to say much, other than if you're here and you are _not_ hamzah, check this sheet out
+>
+> <iframe width="100%" height="300" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1646170674&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"></iframe><div style="font-size: 10px; color: #cccccc;line-break: anywhere;word-break: normal;overflow: hidden;white-space: nowrap;text-overflow: ellipsis; font-family: Interstate,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Garuda,Verdana,Tahoma,sans-serif;font-weight: 100;"><a href="https://soundcloud.com/thatsquidboy" title="ThatSquidBoy" target="_blank" style="color: #cccccc; text-decoration: none;">ThatSquidBoy</a> · <a href="https://soundcloud.com/thatsquidboy/hecantkeepgettingawaywithit" title="HE CANT KEEP GETTING AWAY WITH THIS [FREE DL]" target="_blank" style="color: #cccccc; text-decoration: none;">HE CANT KEEP GETTING AWAY WITH THIS [FREE DL]</a></div>
+
+<Other person="josh" day="3" />
+
+> c++ solution pulling out the same steps seen before, regex, then iterator that does matching with a little state
+>
+> thanks jish
+
+<Other person="alex" day="3" />
+
+> thank you for switching your input to be in a file rather than inline! :D
+>
+> nice regex solution
+>
+> i have so little to say at this point, people see this, know to reach for regex, and all come up
+> with the same regex!
+>
+> obviously, commendation for using capture groups, makes reading the code and your inners of loops _clean_
+
+<Other person="sven" day="3" />
+
+> last, but not least, we have sven!
+>
+> with a go solution!
+>
+> that looks like other solutions!
+>
+> good job sven
+
+<br />
+
+i started this on day 8, after just finishing day 2s ramble, and now onto starting day 4!
+
+currently drinking at daniel's apt. , pumping these out as fast as i can
+
+import meAndMaria from "@images/aoc/2024/me-and-maria.jpg";
+
+<Image height="500" src={meAndMaria} alt="myself, long hair, blonde, next to dans cat maria, who is sleeping behind me on a couch" />
+
+maria just got behind me and has fallen asleep
+
+say goodnight maria
+
+<br />
+
+---
+
+
+any thoughts about any of the above?
+
+reach out:
+
+import Letterbird from "@components/Letterbird.astro";
+
+<Letterbird />
+
+<br />
+<br />
+<br />
+
+<DitherMert />
+
+wait its actually clean down here

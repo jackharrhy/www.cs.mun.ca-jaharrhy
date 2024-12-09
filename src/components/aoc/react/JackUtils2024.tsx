@@ -12,30 +12,32 @@ const personTemplate = (personKey, day) =>
 `.trim();
 
 const ShowPeople = ({ day }) =>
-  Object.entries(people).map(([key, person]) => (
-    <div key={key} className="person">
-      <p>
-        {key}:{" "}
-        <a href={person.link}>
-          [{person.display}] -&gt; {person.link}
-        </a>
-      </p>
-      <p>language: {person.language}</p>
-      <p>days:</p>
-      <ul>
-        {person.days?.map((day) => (
-          <li key={day}>
-            <a href={person.dayLinkFunc(day)}>
-              [day {day}] -&gt; {person.dayLinkFunc(day)}
-            </a>
-          </li>
-        ))}
-      </ul>
-      <div>
-        <pre>{personTemplate(key, day)}</pre>
+  Object.entries(people)
+    .sort(() => Math.random() - 0.5)
+    .map(([key, person]) => (
+      <div key={key} className="person">
+        <p>
+          {key}:{" "}
+          <a href={person.link}>
+            [{person.display}] -&gt; {person.link}
+          </a>
+        </p>
+        <p>language: {person.language}</p>
+        <p>days:</p>
+        <ul>
+          {person.days?.map((day) => (
+            <li key={day}>
+              <a href={person.dayLinkFunc(day)}>
+                [day {day}] -&gt; {person.dayLinkFunc(day)}
+              </a>
+            </li>
+          ))}
+        </ul>
+        <div>
+          <pre>{personTemplate(key, day)}</pre>
+        </div>
       </div>
-    </div>
-  ));
+    ));
 
 export function JackUtils() {
   const [day, setDay] = useState(new Date().getDate());
@@ -43,6 +45,7 @@ export function JackUtils() {
   const allPeopleTemplate = useMemo(
     () =>
       Object.entries(people)
+        .sort(() => Math.random() - 0.5)
         .filter(([_personKey, person]) => person.days.includes(day))
         .map(([personKey, _person]) => `${personTemplate(personKey, day)}\n\n`)
         .join(""),

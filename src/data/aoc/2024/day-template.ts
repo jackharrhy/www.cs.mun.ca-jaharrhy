@@ -6,7 +6,7 @@ title: day ${day}
 pubDate: 2024-12-${pad(day)}
 ---
 
-import Other from "@components/aoc/2023/Other.astro";
+import Other from "@components/aoc/Other2024.astro";
 
 TODO PREAMBLE
 
@@ -37,5 +37,11 @@ the full solution can be found [[here]](https://github.com/jackharrhy/advent2024
 
 ${others}---
 
-TODO LETTERBIRD
+any thoughts about any of the above?
+
+reach out:
+
+import Letterbird from "@components/Letterbird.astro";
+
+<Letterbird />
 `;

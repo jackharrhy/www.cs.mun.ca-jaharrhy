@@ -11,25 +11,25 @@
   "devDependencies": {
     "@astrojs/react": "^4.0.0",
     "@vitejs/plugin-basic-ssl": "^1.2.0",
-    "astro": "^5.0.2",
+    "astro": "^5.0.3",
     "npm-check-updates": "^17.1.11",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.0.1",
-    "@astrojs/rss": "^4.0.9",
+    "@astrojs/rss": "^4.0.10",
     "@astrojs/solid-js": "^5.0.0",
     "@astrojs/svelte": "^7.0.1",
     "@react-spring/three": "^9.7.5",
     "@react-three/fiber": "^8.17.10",
-    "@xmldom/xmldom": "^0.9.5",
+    "@xmldom/xmldom": "^0.9.6",
     "98.css": "^0.1.20",
     "htmlparser2": "^9.1.0",
     "maplibre-gl": "^4.7.1",
     "react-spring": "^9.7.4",
     "solid-js": "^1.9.3",
-    "svelte": "^5.5.3",
+    "svelte": "^5.9.0",
     "three": "^0.171.0",
     "xpath": "^0.0.34"
   }

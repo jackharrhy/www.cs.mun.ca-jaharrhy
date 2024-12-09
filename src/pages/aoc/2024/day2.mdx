@@ -1,0 +1,692 @@
+---
+layout: "@layouts/AdventOfCodeLayoutDay.astro"
+title: day 2
+pubDate: 2024-12-02
+---
+
+import Other from "@components/aoc/Other2024.astro";
+import DitherMert from "@components/dither/Mert.astro";
+import { Image } from 'astro:assets';
+
+welcome to day 2! _(as i'm writing this the night of day 4, hopefully getting this out before the day 5 problem is posted)_
+
+> _and as i'm finishing this up on day 8... sorry about that LOL_
+
+no need for preamble explaining what this is, day 1 explains that, time to jump into it
+
+---
+
+<details>
+<summary>click to view my solution</summary>
+
+<br />
+
+given the sample input:
+
+```
+7 6 4 2 1
+1 2 7 8 9
+9 7 6 2 1
+1 3 2 4 5
+8 6 4 4 1
+1 3 6 7 9
+```
+
+assuming `input` is the above as one big string,
+
+```elixir
+reports =
+  input
+  |> String.split("\n")
+  |> Enum.map(fn line ->
+    line
+    |> String.split(" ")
+    |> Enum.map(&String.to_integer(&1))
+  end)
+```
+
+basic input parsing here today, split into lines, take each line, split on empty string, map each thing returned to integer, so we get:
+
+```elixir
+[
+  [7, 6, 4, 2, 1],
+  [1, 2, 7, 8, 9],
+  [9, 7, 6, 2, 1],
+  [1, 3, 2, 4, 5],
+  [8, 6, 4, 4, 1],
+  [1, 3, 6, 7, 9]
+]
+```
+
+<br />
+
+### part 1
+
+```elixir
+defmodule RedNoseReports do
+  def process([a | [b | t]]) do
+    if a - b > 0 do
+      process([a | [b | t]], :up)
+    else
+      process([a | [b | t]], :down)
+    end
+  end
+  
+  def process([a | [b | t]], direction) do
+    correct_direction = case direction do
+      :up -> a - b > 0
+      :down -> a - b < 0
+    end
+  
+    diff = abs(b - a)
+    if (diff > 3 or diff == 0) or not correct_direction do
+      false
+    else
+      process([b | t], direction)
+    end
+  end
+
+  def process(report, _direction) when is_list(report) and length(report) == 1 do
+    true
+  end
+end
+```
+
+i wanted to reach for recursion in this problem, alongside [[multiple clause functions]](https://exercism.org/tracks/elixir/concepts/multiple-clause-functions),
+so pulling out a module made sense
+
+i usually _don't_ have to pull them out this early, but oh well
+
+lets break this down
+
+<br />
+
+you'll notice if i remove the function bodies, this module actually just defines the same function a bunch of different times
+
+```elixir
+defmodule RedNoseReports do
+  def process([a | [b | t]]) do ...
+  
+  def process([a | [b | t]], direction) do ...
+
+  def process(report, _direction) when is_list(report) and length(report) == 1 do ...
+end
+```
+
+the first case, is the intended _entry_ case (while i don't have the other two functions defined as `defp`, which would make them private, they could be
+since they are basically internal impl. details)
+
+the second case, is similar to the first, but includes a _direction_ the list is heading in (i.e. is it ascending or descending)
+
+and last but not least, then the `report` variable is an empty list, assume we've made it all the way through the list and made it through each value,
+so whatever list we just parsed must be correct
+
+the only other thing to note before making note of their internals, is the `[a | [b | t]]` syntax
+
+<br />
+
+in elixir, `[x | y] = list`, will set `x` equal to the _head_ of the list, and `y` will be the tail, i.e. a reference to the next node in the list,
+which itself contains a value and a tail
+
+elixirs _list_ is not an _array_, it is a proper linked list
+
+elixir has a way of working with arrays, through the fact that [[array]](https://www.erlang.org/doc/apps/stdlib/array.html) exists in erlang,
+but since linked lists are more _functional_, elixir is very focused around them, and has this dedicated syntax
+
+so, with this knowledge, look again at this:
+
+```elixir
+[a | [b | t]] = list
+```
+
+here, we would get the head of list, and put it into `a`, but also get the next node, and gets its value, and put it in `b`, then have `t` be the rest of the list
+
+and because elixir is _dope_, we can do this _in the function definition_, so we don't even have to destructure in the function body
+
+thanks elixir
+
+<br />
+
+back to actually talking about my solution
+
+take a single 'report' from the input:
+
+```elixir
+[7, 6, 4, 2, 1]
+```
+
+the intent is to send that into the module like so:
+
+```elixir
+RedNoseReports.process(report)
+```
+
+since i'm only passing in one argument, that will call `process/1` (in elixir/erlang, you can refer to a smaller subset of what functions
+will match a certain clause by putting their [[arity]](https://en.wikipedia.org/wiki/Arity) after a `/`, for example, if you have the function foo that takes in 3 arguments, its `foo/3`)
+
+in my module, i only have one definition of `process/`, and here it is:
+
+```elixir
+def process([a | [b | t]]) do
+  if a - b > 0 do
+    process([a | [b | t]], :up)
+  else
+    process([a | [b | t]], :down)
+  end
+end
+```
+
+i use the trick in the function definition to extract out the two first items in the linked list, check to see if the difference between
+the numbers is positive (we're going up) or negative (we're going down),
+
+and then, i call `process/2`, with an [[atom]](https://hexdocs.pm/elixir/basic-types.html#atoms), to indicate which direction i expect
+_all_ values to head in
+
+as mentioned earlier, there are _two_ definitions of `process/2`,
+
+```elixir
+def process([a | [b | t]], direction) do ...
+
+def process(report, _direction) when is_list(report) and length(report) == 1 do ...
+```
+
+the first is the [[recursive step]](https://en.wikipedia.org/wiki/Recursion#Formal_definitions), and the second is the [[base case]](https://en.wikipedia.org/wiki/Recursion#Formal_definitions)
+
+the recursive step is defineed as so:
+
+```elixir
+def process([a | [b | t]], direction) do
+  correct_direction = case direction do
+    :up -> a - b > 0
+    :down -> a - b < 0
+  end
+
+  diff = abs(b - a)
+  if (diff > 3 or diff == 0) or not correct_direction do
+    false
+  else
+    process([b | t], direction)
+  end
+end
+```
+
+i use `case`, which is sort of a pattern match powered _super powerful_ switch case statement, in which here i am using maybe 5% of its power
+to check if the direction is `:up` or `:down`
+
+i then get the non negative difference between the values, ensure we're heading in the right direction from the earlier calculation, and if
+any of these checks fails, we short circuit (and i guess have a sort of failure case base case), and return `false`
+
+if we do pass everything, we process the next section of the list, we don't just pass in `t`, we pass in `[b | t]`, since we want the next
+iteration to process `b` as if it was `a`, with its _own_ `b`
+
+then, for our _super busy final base case_:
+
+```elixir
+def process(report, _direction) when is_list(report) and length(report) == 1 do
+  true
+end
+```
+
+we return true!
+
+we do some guard checks here to make sure the list has been used up (we assume we're left with just a single value, since it means it
+passed the previous `a` / `b` test, and there is nothing left to validate)
+
+<br />
+
+we let the caller deal with the `true` and `false` values, so all thats left to discuss, is this:
+
+```elixir
+for report <- reports do
+  RedNoseReports.process(report)
+end
+|> Enum.count(&(&1))
+```
+
+iterate over the input reports, the big list of signal data, pass each one to our entry process function, and then take the count of each
+value returned from that with is truthy, and we can the answer of 2!
+
+<br />
+
+### part 2
+
+ill be honest, i tried to apply a more bespoke custom recursive version of this for part 2, i actually had a version that worked against
+the sample input, but failed against my real input...
+
+i parked working on this for a bit, and was curious how others were approaching this
+
+this message from riley gave me direction of to do a _little_ bit of extra work, to get the answer using my existing code!
+
+> In case it helps, my approach was just loop over each index in the report, remove it, and use the validation code from part a on it. If any of those instances are valid, the report if valid for part 2
+
+and so, i did exactly that:
+
+```elixir
+for report <- reports do
+  if RedNoseReports.process(report) do
+    true
+  else
+    for index_to_remove <- 0..length(reports) do
+      modified_report = 
+        report
+        |> Enum.with_index()
+        |> Enum.reject(fn {_value, index} -> index == index_to_remove end)
+        |> Enum.map(fn {value, _index} -> value end)
+
+      RedNoseReports.process(modified_report)
+    end
+    |> Enum.any?
+  end
+end
+|> Enum.count(&(&1))
+```
+
+this is basically the same code as before, the `if` check basically says if its already valid, then we're good with it
+
+but _now_, if its _not_ valid, iterate through each one of the possible versions of the reports, check to see if each one of them is valid,
+and if _any_ of them are valid, then we return true
+
+this is obviously super slow, i _could_ be checking the lists as i go along rather than computing _each_ version of the list and creating a huge
+list of `true` / `false` values
+
+but
+
+guess what
+
+i wrote the code, _got the star_, and **_moved on_**
+
+the full solution can be found [[here]](https://github.com/jackharrhy/advent2024/blob/main/day2.livemd)
+
+<br />
+
+</details>
+
+---
+
+### others
+
+i added some code to the stuff i use [[behind the scenes]](https://github.com/jackharrhy/www.cs.mun.ca-jaharrhy/blob/80444b8e6a665ad838d60fb9fb2c31e9fc44b072/src/data/aoc/2024/data.ts)
+to make these rambles easier, to _randomize_ the list i review submissions in
+
+ill be honest, if you're near the _end_ of my review session, i will likely have less to say since i've likely already said it about someone elses
+solution first
+
+_but_, hopefully less of that if every time i export the day template, i get a fresh ordering of others
+
+therefore, your placement is now beholden to `/dev/urandom` or something
+
+_lets get to it_
+
+<Other person="josh" day="2" />
+
+import seethingImage from "@images/aoc/2024/seething.png";
+
+> nice part 1 solution, no part 2 here though, sadness
+>
+> `isStrictlySorted` is cool, while i live in functional land sometimes i do see some code
+> that just loops over things and mutates stuff without much care in the world, and i think,
+> _wouldn't that be nice_
+>
+> but alas, i have chosen the functional path, so i must call you a heathen (while internally i'm
+> secretly malding)
+>
+> <Image height="200" src={seethingImage} alt="wojack meme, mask of ascii art happy face, with underlying face crying with anger" />
+
+<Other person="djrideout" day="2" />
+
+> clean rust solution, variable names make the logic for testing if an instance of a list makes it
+> quite easy to read
+>
+> this solution is doing the _keep removing indexes until it works_ approach, but is actually doing a `while`
+> loop to stop checking future iterations once it knows its found a valid one
+>
+> ```rust
+> while !safe && i < levels.len() {
+>     let mut levels_subset = levels.clone();
+>     levels_subset.remove(i);
+>     safe = is_safe(&mut levels_subset);
+>     i += 1;
+> }
+> ```
+>
+> tidy
+
+<Other person="daniel" day="2" />
+
+> daniel pulling out a lil' enum here
+>
+> ```rust
+> enum SafeStepResult {
+>   Safe,
+>   Unsafe(usize),
+> }
+> ```
+>
+> i was just thinking, _why enum rather than just boolean_, but _then_, i
+> see that you're encoding the _index the validation step fails on_, to use to then remove the values from
+> _three different versions of the list_, with different elements removed
+>
+> ```rust
+> levels_a.remove(i.try_into().unwrap());
+> levels_b.remove((i + 1).try_into().unwrap());
+> levels_c.remove((0).try_into().unwrap());
+> if matches!(is_safe(levels_a), SafeStepResult::Safe)
+>     || matches!(is_safe(levels_b), SafeStepResult::Safe)
+>     || matches!(is_safe(levels_c), SafeStepResult::Safe)
+> {
+>     safe += 1;
+> }
+> ```
+>
+> _tidy_, good job dan
+>
+> i was expecting similar to dj, some sort of while here, but no, _you're better than that_
+
+<Other person="alex" day="2" />
+
+> :snake:-lang solution
+>
+> i like the function named `doesProblemDampenerHelp` :D, it sounds like you're referring too a machine
+> that is sputtering, that maybe with a little bit of grease will kick into gear and start up again!
+>
+> however, while this is so minor i know, :snake:-lang, asks for [[snake_case]](https://en.wikipedia.org/wiki/Snake_case) :P
+
+<Other person="evan" day="2" />
+
+> more evan go, lets go
+>
+> as discussed yesterday, [[Math.abs]](https://pkg.go.dev/math#Abs) is a thing
+>
+> nice little `removeNthItem` utility function that does some `make`in and some `copy`in
+>
+> some 'Safe' reports, and 'Safe-ish' reports, _nice_
+
+<Other person="eric" day="2" />
+
+> very nice go solution! each thing broken out into little functions
+>
+> `bufio` scanner for going through the file, `defer` file closing
+>
+> nice part 2 `isDroppedReportSafe` function that does the return to the outer function once at least one valid version of the report is found
+>
+> very nice
+
+<Other person="shevinu" day="2" />
+
+> seems like my intended dice roll of which persons solution i go over
+> decided to put most golang solutions together!
+>
+> ill be honest this one does not visually look as nice as eric's
+>
+> i assume `check1` / `check2` are checking for something, would be nice
+> if they had more descriptive names
+>
+> also pushing 138 lines for a day 2 solution
+>
+> out here regardless, stars are stars
+
+<Other person="mudkip" day="2" />
+
+> nice and cozy elixir solution here
+>
+> no pulling out entire module here, only a nice quaint `safe_report` anon. function!
+>
+> ```elixir
+> safe_report = fn list ->
+>   chunks = Enum.chunk_every(list, 2, 1, :discard)
+> 
+>   diffs =
+>     Enum.map(chunks, fn pair ->
+>       List.first(pair) - List.last(pair)
+>     end)
+> 
+>   cond do
+>     Enum.all?(diffs, fn x -> x < 0 and x >= -3 end) -> true
+>     Enum.all?(diffs, fn x -> x > 0 and x <= 3 end) -> true
+>     true -> false
+>   end
+> end
+> ```
+>
+> take in the list, do some chunking to get pairs of two, and then
+> create a list of only the diffs
+>
+> _and then_, the clever bit that does what i was doing in the first step before,
+> but instead ensuring that all diffs are a single sign by either all going in
+> one direction with the right amount
+>
+> i think myself reaching for `abs` too quickly which removed the information about the sign
+> caused me to separate these two parts
+>
+> very clean mudkip, thank u
+
+<Other person="natalie" day="2" />
+
+> more elixir!
+>
+> this one pulls out an entire module, but could also just be anon. functions like mudkip
+>
+> my recommendation is to make the module named something funny in relation with the lore, like `ColoringBook` or `SignalFinder2000` :)
+>
+> lets look at the safe checking function here:
+>
+> ```elixir
+> def is_report_safe(array) do
+>   chunked_array = array |> Enum.chunk_every(2, 1, :discard)
+>
+>   length(chunked_array) ==
+>     abs(
+>       chunked_array
+>       |> Enum.map(fn [x, y] -> y - x end)
+>       |> Enum.filter(&(0 != &1 && abs(&1) < 4))
+>       |> Enum.map(&if &1 > 0, do: 1, else: -1)
+>       |> Enum.sum()
+>     )
+> end
+> ```
+>
+> i like the filter being used to remove too high numbers from the list, and before
+> returning from the function, check the length of the filtered list to see if any were removed
+> as the way to figure out if any values were too big :D
+
+<Other person="hamzah" day="2" />
+
+> _he's back_
+> 
+> pretty nice again this day as well, seems like a problem sell suited for the excel function _god_
+>
+> expressions def. getting a bit crazy though, the ascending check reads as so:
+>
+> `=AND(ARRAYFORMULA(IF((NOT(ISBLANK($B2:$H2)))*(NOT(ISBLANK($A2:$G2))), $B2:$H2 >= $A2:$G2, TRUE)))`
+> 
+> it looks like for part 2, you opted to do some stuff a bit more manually (or i have a skill issue in finding where you put the logic cells for columns Q and beyond, but still...
+>
+> <iframe width="560" height="315" src="https://www.youtube.com/embed/MWTbhy5BqMU?si=WhRT0hWDk3P6IJg7" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+<Other person="riley" day="2" />
+
+> nice `reportIsSafe` func
+>
+> ```fsharp
+> let reportIsSafe (report: int[]) : bool =
+>     let sortedAscending = Array.sort report
+>     let sortedDescending = Array.sortDescending report
+> 
+>     (report = sortedAscending || report = sortedDescending)
+>     && report
+>        |> Array.windowed 2
+>        |> Array.map (fun pair -> pair[0] - pair[1] |> abs)
+>        |> Array.forall (fun diff -> diff >= 1 && diff <= 3)
+> ```
+>
+> this is clever syntax for doing the same piece of work twice, looking at the report sorted in both directions
+> to see if its either always going up, or always going down
+>
+> and then some lovely windowing to iterate throught he pairs, calculating the diffs, and ensuring that every diff is within range
+>
+> tidy
+
+<Other person="arafat" day="2" />
+
+> arafat has returned to the ol' trusted python i see
+>
+> this is nice
+>
+> but
+>
+> ```py
+> def isInc(arr):
+>     ...
+> 
+> def isDec(arr):
+>     ...
+> 
+> def is_safe(arr):
+>     ...
+> ```
+>
+> stay to one casing please!
+>
+> either `live_by_the_snake` 🐍
+>
+> or `dieByTheCamel` 🐪
+>
+> but i must say, pulling out `^` for a bitwise or operator, and `np.diff` for getting a calculation of the differences between values?
+>
+> that is _**very clean**_
+>
+> your uncleanliness of casing is forgiven
+
+<Other person="marty" day="2" />
+
+> its time to review <DitherMert /> solution
+>
+> a bit verbose here marty, but it is lua which does not exactly have the most bustling of stdlibs
+>
+> also
+>
+> _TIL_
+>
+> _lua has a [[`goto`]](http://lua-users.org/wiki/GotoStatement) statement_
+>
+> ```lua
+> local function is_safe_report(report)
+>     local valid_report = false
+>     local loop = 0
+>     while loop < 2 and not valid_report do
+>         local is_increasing = loop % 2 == 0
+>         for i = 1, #report - 1 do
+>             local current = report[i]
+>             local next = report[i + 1]
+>             if not is_valid_level(current, next, is_increasing) then
+>                 goto continue
+>             end
+>         end
+>         valid_report = true
+>         ::continue::
+>         loop = loop + 1
+>     end
+>     return valid_report
+> end
+> ```
+>
+> its a _restrictive_ form of `goto`, but still...
+>
+> some guts out here pulling out a goto, but i respect it
+
+<Other person="ethan" day="2" />
+
+> 🍝
+
+<Other person="gravyBoat" day="2" />
+
+> very similar to riley, same sorted trick at the start,
+> followed by calculating a absolute value diff and checking its in-bounds
+>
+> v-nice
+
+<Other person="sven" day="2" />
+
+> pulling out some structs here, getting nice and tidy and fancy i see?
+>
+> i see the calculation on if the report is decreasing or increasing,
+> and then using a switch statement to figure out which direction it should go in
+> also just keepign a counter on which are unsafe, nice
+>
+> ah but part 2 is where some copy-pasterino comes around, but very iterative i must add,
+> so i assume _fast_
+>
+> its good to _go_ :P
+
+<Other person="brianna" day="2" />
+
+> very compact solutions, a part 2 thats 26 lines (basically 22), _nice and cozy_
+>
+> ```python
+> def get_diff(report):
+>     return [abs(report[i] - report[i - 1]) for i in range(1, len(report))]
+> 
+> def main():
+>     data = open("input.txt", "r")
+>     data = [line.strip() for line in data]
+> 
+>     safe_count = 0
+>     for report in data:
+>         levels = [int(level) for level in report.split(" ")]
+> 
+>         for i in range(len(levels)):
+>             # try removing one of the levels
+>             modified_levels = levels.copy()
+>             del modified_levels[i]
+> 
+>             diff = get_diff(modified_levels)
+>             if (modified_levels == sorted(modified_levels) or modified_levels == sorted(modified_levels, reverse=True)) and max(diff) <= 3 and min(diff) >= 1:
+>                 safe_count += 1
+>                 break
+> 
+>     print(safe_count)
+> 
+> if __name__ == "__main__":
+>     main()
+> ```
+>
+> i feel i won't be able to stuff entire solutions into here often, so here is your part 2 for others to gawk at
+>
+> nice
+
+<Other person="grey" day="2" />
+
+> its giving indent hadouken, but its also quite small, and giving _the answer_
+>
+> nice
+
+<Other person="neiro" day="2" />
+
+> only part 1 here, but a nice part 1 with some looping n breaking logic
+>
+> im gonna say it
+>
+> _nice_
+
+---
+
+i managed to finish this on the evening of day 8, since i myself was quite busy, well:
+
+- starting a new job at [[Spellbook]](https://www.spellbook.legal/)
+- un-jet-lagging myself from a trip to the uk the two weeks prior to advent of code
+- getting stuck on day 4 part 2, and then needing to play catch-up this weekend to have all of the
+  the stars, and sadly, i must get my stars before i can review other people getting their stars
+
+godspeed self, on doing more of these, if i can do more than 2022 i'd be appy :)
+
+<br />
+
+---
+
+any thoughts about any of the above?
+
+reach out:
+
+import Letterbird from "@components/Letterbird.astro";
+
+<Letterbird />
