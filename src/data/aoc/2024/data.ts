@@ -13,7 +13,7 @@ const dayToName = {
 const riley = {
   display: "nint8835/advent-of-code",
   link: "https://github.com/nint8835/advent-of-code/tree/main/2024",
-  days: [1, 2, 3, 4],
+  days: [1, 2, 3, 4, 5],
   dayLinkFunc: (day) =>
     `https://github.com/nint8835/advent-of-code/blob/main/2024/${pad(
       day
@@ -24,7 +24,7 @@ const riley = {
 const mudkip = {
   display: "Mudkip/AdventOfCode",
   link: "https://github.com/Mudkip/AdventOfCode/",
-  days: [1, 2, 3, 4],
+  days: [1, 2, 3, 4, 5],
   dayLinkFunc: (day) =>
     `https://github.com/Mudkip/AdventOfCode/blob/main/2024/day${pad(
       day
@@ -35,7 +35,7 @@ const mudkip = {
 const daniel = {
   display: "DanielPower/AdventOfCode",
   link: "https://github.com/DanielPower/AdventOfCode/2023",
-  days: [1, 2, 3, 4],
+  days: [1, 2, 3, 4, 5],
   dayLinkFunc: (day) =>
     `https://github.com/DanielPower/AdventOfCode/tree/main/2024/rust/${pad(
       day
@@ -46,7 +46,7 @@ const daniel = {
 const ethan = {
   display: "mynameisgump/advent-of-code",
   link: "https://github.com/mynameisgump/advent-of-code/tree/main/2024",
-  days: [1, 2, 3, 4],
+  days: [1, 2, 3, 4, 5],
   dayLinkFunc: (day) =>
     `https://github.com/mynameisgump/advent-of-code/tree/main/2024/${pad(day)}`,
   language: "python",
@@ -55,7 +55,7 @@ const ethan = {
 const sven = {
   display: "STollenaar/AdventOfCode",
   link: "https://github.com/STollenaar/AdventOfCode/",
-  days: [1, 2, 3, 4],
+  days: [1, 2, 3, 4, 5],
   dayLinkFunc: (day) =>
     `https://github.com/STollenaar/AdventOfCode/blob/main/2024/day${day}/main.go`,
   language: "golang",
@@ -64,7 +64,7 @@ const sven = {
 const arafat = {
   display: "M-ArafatZaman/advent-of-code-2024",
   link: "https://github.com/M-ArafatZaman/advent-of-code-2024",
-  days: [1, 2, 3, 4],
+  days: [1, 2, 3, 4, 5],
   dayLinkFunc: (day) =>
     `https://github.com/M-ArafatZaman/advent-of-code-2024/blob/main/${day}/sol.py`,
   language: "python",
@@ -73,7 +73,7 @@ const arafat = {
 const evan = {
   display: "evaan/AdventOfCode",
   link: "https://github.com/evaan/AdventOfCode/blob/main/2024/",
-  days: [1, 2, 3, 4],
+  days: [1, 2, 3, 4, 5],
   dayLinkFunc: (day) =>
     `https://github.com/evaan/AdventOfCode/blob/main/2024/${day}/main.go`,
   language: "golang",
@@ -82,7 +82,7 @@ const evan = {
 const eric = {
   display: "ericthomasca/adventofcode2024",
   link: "https://github.com/ericthomasca/adventofcode2024",
-  days: [1, 2, 3, 4],
+  days: [1, 2, 3, 4, 5],
   dayLinkFunc: (day) =>
     `https://github.com/ericthomasca/adventofcode2024/blob/main/day${pad(
       day
@@ -93,7 +93,7 @@ const eric = {
 const djrideout = {
   display: "djrideout/advent2024",
   link: "https://github.com/djrideout/advent2024",
-  days: [1, 2, 3, 4],
+  days: [1, 2, 3, 4, 5],
   dayLinkFunc: (day) =>
     `https://github.com/djrideout/advent2024/blob/main/src/day${day}.rs`,
   language: "rust",
@@ -113,7 +113,7 @@ const zachVaters = {
 const natalie = {
   display: "ncashin/aoc2024",
   link: "https://github.com/ncashin/aoc2024",
-  days: [1, 2, 3, 4],
+  days: [1, 2, 3, 4, 5],
   dayLinkFunc: (day) =>
     `https://github.com/ncashin/aoc2024/blob/main/day${day}/day${day}.exs`,
   language: "elixir",
@@ -133,7 +133,7 @@ const josh = {
 const shevinu = {
   display: "ShevinuM/Advent-of-Code-2024",
   link: "https://github.com/ShevinuM/Advent-of-Code-2024",
-  days: [1, 2, 3, 4],
+  days: [1, 2, 3, 4, 5],
   dayLinkFunc: (day) =>
     `https://github.com/ShevinuM/Advent-of-Code-2024/blob/main/Day${day}/Day${day}.go`,
   language: "golang",
@@ -162,7 +162,7 @@ const neiro = {
 const gravyBoat = {
   display: "ThatGravyBoat/Advent-of-Code-2024",
   link: "https://github.com/ThatGravyBoat/Advent-of-Code-2024",
-  days: [1, 2, 3, 4],
+  days: [1, 2, 3, 4, 5],
   dayLinkFunc: (day) =>
     `https://github.com/ThatGravyBoat/Advent-of-Code-2024/blob/main/src/days/${dayToName[day]}/mod.rs`,
   language: "rust",
@@ -198,7 +198,7 @@ const hamzah = {
 const grey = {
   display: "GreyGrisGrey",
   link: "https://github.com/GreyGrisGrey/aoc2024day2",
-  days: [2, 3, 4],
+  days: [2, 3, 4, 5],
   language: "python",
   dayLinkFunc: (day) =>
     `https://github.com/GreyGrisGrey/aoc2024day2/blob/main/day${day}.py`,
@@ -207,7 +207,7 @@ const grey = {
 const alex = {
   display: "terales/advent-of-code",
   link: "https://github.com/terales/advent-of-code/",
-  days: [1, 2, 3, 4],
+  days: [1, 2, 3, 4, 5],
   language: "python",
   dayLinkFunc: (day) =>
     `https://github.com/terales/advent-of-code/blob/main/`,

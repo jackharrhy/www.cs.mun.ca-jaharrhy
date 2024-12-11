@@ -1,0 +1,535 @@
+---
+layout: "@layouts/AdventOfCodeLayoutDay.astro"
+title: day 5
+pubDate: 2024-12-05
+---
+
+import Other from "@components/aoc/Other2024.astro";
+import Bread from "@components/Bread.tsx";
+
+day five, lets get this bread <Bread client:only="react" />
+
+---
+
+<details>
+<summary>click to view my solution</summary>
+
+<br />
+
+given the sample input:
+
+```
+47|53
+97|13
+97|61
+97|47
+75|29
+61|13
+75|53
+29|13
+97|29
+53|29
+61|53
+97|53
+61|29
+47|13
+75|47
+97|75
+47|61
+75|61
+47|29
+75|13
+53|13
+
+75,47,61,53,29
+97,61,53,29,13
+75,29,13
+75,97,47,61,53
+61,13,29
+97,13,75,29,47
+```
+
+assuming `input` is the above as one big string,
+
+```elixir
+[rules, updates] = input |> String.split("\n\n")
+```
+
+split the input into the rules as one string, and the updates as another
+
+```elixir
+rules = rules
+  |> String.split("\n")
+  |> Enum.map(fn rule ->
+    rule
+    |> String.split("|")
+    |> Enum.map(&(String.to_integer(&1)))
+  end)
+```
+
+basic newline split, map, split on `|`, then map to integer
+
+```elixir
+[
+  [47, 53],
+  [97, 13],
+  [97, 61],
+  [97, 47],
+  ..
+]
+```
+
+we get the rules
+
+```elixir
+updates = updates
+  |> String.split("\n")
+  |> Enum.map(fn update ->
+    update
+    |> String.split(",")
+    |> Enum.map(&(String.to_integer(&1)))
+  end)
+```
+
+same as above, but we split on `,`
+
+```elixir
+[
+  [75, 47, 61, 53, 29],
+  [97, 61, 53, 29, 13],
+  [75, 29, 13],
+  [75, 97, 47, 61, 53],
+  [61, 13, 29],
+  [97, 13, 75, 29, 47]
+]
+```
+
+we get the updates
+
+```elixir
+rule_lookup = rules
+  |> Enum.group_by(fn [a, _b] -> a end)
+  |> Enum.map(fn {k, v} ->
+    {k, v |> Enum.map(fn [_a, b] -> b end) |> MapSet.new()}
+  end)
+  |> Map.new()
+```
+
+lastly, i create a map to use a lookup table, from value,
+to what values should come before it
+
+```elixir
+%{
+  29 => MapSet.new([13]),
+  47 => MapSet.new([13, 29, 53, 61]),
+  53 => MapSet.new([13, 29]),
+  61 => MapSet.new([13, 29, 53]),
+  75 => MapSet.new([13, 29, 47, 53, 61]),
+  97 => MapSet.new([13, 29, 47, 53, 61, 75])
+}
+```
+
+so rules from the input, like these:
+
+```
+47|53
+47|13
+47|61
+47|29
+```
+
+become:
+
+```elixir
+47 => MapSet.new([13, 29, 53, 61]),
+```
+
+nice little lookup table
+
+<br />
+
+```elixir
+check_valid = fn update ->
+  for {num, index} <- Enum.with_index(update) do
+    {before_updates, _after_updates} = update |> Enum.split(index)
+    for before_update <- before_updates do
+      Enum.member?(Map.get(rule_lookup, before_update, []), num)
+    end
+  end
+  |> List.flatten()
+  |> Enum.all?()
+end
+```
+
+lastly, here's a little function that checks to see if a given update is valid
+
+i iterate through each number in the list, with its index:
+```elixir
+for {num, index} <- Enum.with_index(update) do
+```
+
+i then split the list to get every number _before_ the number we're on:
+```elixir
+{before_updates, _after_updates} = update |> Enum.split(index)
+```
+
+then, go through each item before, and ensure that the number we have is a member
+of the rule lookup:
+```elixir
+for before_update <- before_updates do
+    Enum.member?(Map.get(rule_lookup, before_update, []), num)
+end
+```
+
+then, flatten this list, and expect all of the values to be true
+
+if any value isn't true, we've broken a rule
+
+<br />
+
+### part 1
+
+```elixir
+for update <- updates do
+  is_valid = check_valid.(update)
+  
+  if is_valid do
+    Enum.at(update, floor(length(update) / 2))
+  else
+    nil
+  end
+end
+|> Enum.filter(&(&1))
+|> Enum.sum()
+```
+
+with the handy valid function, we go through each update, and if its
+valid, we calculate the midpoint, fetch it, and sum all midpoints
+
+<br />
+
+### part 2
+
+```elixir
+for update <- updates do
+  is_valid = check_valid.(update)
+
+  if is_valid do
+    nil
+  else
+    update
+    |> Enum.sort(fn a, b ->
+      Enum.member?(Map.get(rule_lookup, a, []), b)
+    end)
+    |> Enum.at(floor(length(update) / 2))
+  end
+end
+|> Enum.filter(&(&1))
+|> Enum.sum()
+```
+
+part 2 took me a bit longer than expected, and i didn't first know the trick to it
+
+thankfully riley gave me a tip that a _sort_ function might be all you need, which
+did pass my mind as i was considering this problem, but i thought wouldn't be enough
+
+low and behold, you can indeed just `Enum.sort`
+
+so yeah, we use `check_valid` again, but this time, we find things that are _not_ valid,
+use `Enum.sort` with a lookup into the `rule_lookup` like before, get the midpoint, throw in
+a filter on the identity function to filter out `nil`, then sum
+
+amazin
+
+<br />
+
+the full solution can be found [[here]](https://github.com/jackharrhy/advent2024/blob/main/day5.livemd)
+
+<br />
+
+</details>
+
+---
+
+### others
+
+<Other person="eric" day="5" />
+
+> 200 line long go solution, quite lengthy!
+>
+> i must say though, good function usage
+>
+> ```go
+> func getCorrectOrders(filename string) ([][]int, error)
+> func splitInput(filename string) ([][]int, [][]int, error)
+> func isOrderCorrect(order []int, rules [][]int) bool
+> func reorderPages(order []int, rules [][]int) []int
+> func stringToSlices(line string, appendingSlice [][]int, splitChar string) ([][]int, error)
+> ```
+>
+> as well as nice variable names
+>
+> quite the hand rolled sorting function, but it does the thing
+>
+> nice
+
+<Other person="arafat" day="5" />
+
+> getting both answers at once, _nice_
+>
+> always like seeing `defaultdict` being pulled out, for anyone who doesn't know about it,
+> [[you should check it out]](https://docs.python.org/3/library/collections.html#collections.defaultdict),
+> it sparks joy
+>
+> getting both the ruleset backwards and forwards for validation, mine don't do that, but
+> yours does, and does counts and such with some comparisons?
+>
+> _interesting_
+>
+> nice
+
+<Other person="ethan" day="5" />
+
+> `defaultdict` would come in handy here to make code like this:
+>
+> ```python
+> rulebook = {}
+>
+> for rule in rules:
+>     if rule[0] in rulebook:
+>         rulebook[rule[0]].append(rule[1])
+>     else:
+>         rulebook[rule[0]] = [rule[1]]
+> ```
+>
+> not need to check the dict when inserting
+>
+> nice and simple rules though, tidy
+
+<Other person="alex" day="5" />
+
+> `defaultdict` usage! this is all i seem to have to say today!
+>
+> good variable names, good funcs, very nice and epic
+>
+> the logic is less easy to follow with a day like today, i can't tell
+> if people have similar solutions, or i can't tell the difference
+> between them very well
+
+<Other person="shevinu" day="5" />
+
+> `sort` is giving hadouken code
+>
+> nice check function though, pretty compact:
+>
+> ```go
+> func check(pageOrder map[int][]int, update []int) (bool, int) {
+>     for i := 0; i < len(update); i++ {
+>         val := update[i]
+>         for j := i; j < len(update); j++ {
+>            val2 := update[j]
+>            if postVals, exists := pageOrder[val2]; exists {
+>                for _, postVal := range postVals {
+>                    if postVal == val {
+>                        return false, j
+>                    }
+>                }
+>            }
+>         }
+>     }
+>     return true, -1
+> }
+> ```
+>
+> tidy
+
+<Other person="mudkip" day="5" />
+
+> mudkip pulling out good ol reduc for page cecking, with a `seen` lookup
+>
+> you could use [[`Enum.reduce_while`]](https://hexdocs.pm/elixir/1.12/Enum.html#reduce_while/3), so once you know
+> something is no longer valid, you can just `{:halt, false}` to break out of iteration
+>
+> since i myself have written this in elixir, who knew, i have stuff to actually say about this one!
+>
+> sort function, more busy than mine, but also more readable
+>
+> tidy, thank you mudkip
+
+<Other person="natalie" day="5" />
+
+> hello other elixir do-er
+>
+> a very sad
+>
+> ```elixir
+> defmodule Main do
+> end
+> ```
+>
+> at the top of your code
+>
+> mudkip had all the `defmodule`, you have none!
+>
+> you could also do with a `Enum.reduce_while`
+>
+> but wait... you don't break out your validation logic for part 1 for use in part 2, and your part 2
+> does sorting on _everything_, including things that are already valid, and you `Enum.sum()` all of them...
+>
+> but... you **_minus the result from part 2, from the result of everything, to get your part 2 answer_**
+>
+> clever bugger
+
+<Other person="daniel" day="5" />
+
+> much more input parsing than actual code for part 2
+>
+> also a sort, but woah, lets take a look at this sort:
+>
+> ```rust
+> update.sort_by(|a, b| match ordering_rules.get(a) {
+>     Some(rules) => {
+>         if rules.contains(b) {
+>             std::cmp::Ordering::Less
+>         } else {
+>             std::cmp::Ordering::Greater
+>         }
+>     }
+>     None => std::cmp::Ordering::Equal,
+> });
+> ```
+>
+> `std::cmp`, tidy
+
+<Other person="evan" day="5" />
+
+> ```go
+> if one == two {
+> ```
+>
+> nice code evan
+>
+> <iframe width="560" height="315" src="https://www.youtube.com/embed/hI9CaQD7P6I?si=Jxr2AMaXQVDHuZwb" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+>
+> evan out here doing maths
+>
+> one of the more compact solutions, i like the approach to use a labeled jump to the start after fixing the invalids,
+> and if you make it to the end of the loop, you add it to list of correct things
+>
+> tidy
+
+<Other person="djrideout" day="5" />
+
+> nice `get_matching_updates` function for either spitting out correct or invalid updataes
+>
+> and, tidy sort function, looks similar to mine, i think?
+>
+> love rusts `Ordering`, so tidy
+
+<Other person="riley" day="5" />
+
+> 41 lines of f#, nice
+>
+> ```fsharp
+> let originallySorted, originallyUnsorted =
+>     updates
+>     |> Array.map (fun update ->
+>         (update,
+>          update
+>          |> Array.sortWith (fun a b ->
+>              rules |> Map.tryFind (a, b) |> Option.defaultValue 0)))
+>     |> Array.partition (fun (original, sorted) -> original = sorted)
+> ```
+>
+> this is clever, sort everything, and then split apart the list depending on if the original and sorted versions are theh same, nice!
+
+<Other person="girish" day="5" />
+
+> some dicts, some sets, some appends, some code
+>
+> its python, not much to see, to be honest
+>
+> regardless, nice
+
+<Other person="gravyBoat" day="5" />
+
+> nice usage of `Result`, your validation function returns the indexes of a problem
+> once it bumps into it, and just swaps the values, until there is no more error
+> values returned by the finction
+>
+> ```rust
+> for mut pages in unordered_pages {
+>     loop {
+>         if let Err((one, two)) = is_abiding_by_rules(&pages, &before) {
+>             pages.swap(one, two)
+>         } else {
+>             ordered_pages.push(pages);
+>             break
+>         }
+>     }
+> }
+> ```
+>
+> tidy
+
+<Other person="grey" day="5" />
+
+> [[PEP 3136]](https://peps.python.org/pep-3136/) is rejected, sad, was about to be like
+> _um aktually use labled loops like others_, but not a python feature it seems
+>
+> line 14, is quite the line:
+>
+> ```python
+> orderings[len(orderings)-1][len(i.split(","))-1] = orderings[len(orderings)-1][len(i.split(","))-1].strip()
+> ```
+>
+> its giving jack the beanstalk
+
+<Other person="sven" day="5" />
+
+> stephen out here with sneaky advent of code internal tooling for input
+> parsing, clean
+>
+> ```go
+> import (
+>     ...
+> 
+>     "github.com/STollenaar/AdventOfCode/internal"
+> )
+> 
+> func main() {
+>     lines := internal.Reader()
+>     ...
+> }
+> ```
+>
+> looks like go does have the ability to [[jump to labels]](https://go.dev/ref/spec#Break_statements),
+> nice
+
+<br />
+
+finishing this up on day 11, before i've actually started my own day 11 solution...
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/0d6yBHDvKUw?si=SMNbyRUOWZKcknPQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+<br />
+
+<br />
+
+---
+
+<br />
+
+any thoughts about any of the above?
+
+reach out:
+
+import Letterbird from "@components/Letterbird.astro";
+
+<Letterbird />
+
+<br />
+<br />
+<br />
+
+we totally got this bread <Bread client:only="react" />
