@@ -27,6 +27,8 @@ import ConjamLink from "@components/jams/ConjamLink.astro";
 import EggjamLink from "@components/jams/EggjamLink.astro";
 import GamblejamLink from "@components/jams/GamblejamLink.astro";
 
+import notmglittleguyImage from "@images/notmg/notmglittleguy.png";
+
 const lastModified = new Intl.DateTimeFormat("en-US", {
   month: "long",
   day: "numeric",
@@ -317,6 +319,31 @@ const lastModified = new Intl.DateTimeFormat("en-US", {
   .jacks-cuppa img {
     height: 100%;
   }
+
+  .notmglittleguy-link {
+    margin: 0 auto;
+  }
+
+  .notmglittleguy {
+    padding-top: 1rem;
+    height: 5rem;
+    width: 5rem;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+    animation: sway 2s ease-in-out infinite;
+  }
+
+  @keyframes sway {
+    0% {
+      transform: rotate(-10deg);
+    }
+    50% {
+      transform: rotate(10deg);
+    }
+    100% {
+      transform: rotate(-10deg);
+    }
+  }
 </style>
 
 <Layout title="~jaharrhy">
@@ -378,6 +405,9 @@ const lastModified = new Intl.DateTimeFormat("en-US", {
           <GrowthjamLink />
           <p class="gamedev-header">games</p>
           <ChoiceLink />
+          <a href="https://notmg.com" class="notmglittleguy-link">
+            <img class="notmglittleguy" src={notmglittleguyImage.src} />
+          </a>
         </div>
         <div class="piclog">
           <Piclog />
