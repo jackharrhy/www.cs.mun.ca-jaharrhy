@@ -1,0 +1,17 @@
+body {
+  font-family: "Courier New", "Consolas", "Liberation Mono", monospace;
+  background-color: black;
+  color: white;
+  font-size: 1rem;
+  padding: 1rem;
+}
+
+a {
+  color: white;
+  text-decoration: none;
+  display: block;
+}
+
+a:hover {
+  text-decoration: underline;
+}

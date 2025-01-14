@@ -333,6 +333,17 @@ const lastModified = new Intl.DateTimeFormat("en-US", {
     animation: sway 2s ease-in-out infinite;
   }
 
+  .ldap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .ldap iframe {
+    width: 100%;
+    height: 7rem;
+  }
+
   @keyframes sway {
     0% {
       transform: rotate(-10deg);
@@ -390,6 +401,9 @@ const lastModified = new Intl.DateTimeFormat("en-US", {
         <div class="tamanotchi">
           <TamaNOTChi />
           <p>this is egg, please feed him</p>
+        </div>
+        <div class="ldap">
+          <iframe src="https://www.cs.mun.ca/~jaharrhy/phap/ldap.php"></iframe>
         </div>
         <div class="linkbox">
           <Linkbox />
@@ -450,7 +464,7 @@ const lastModified = new Intl.DateTimeFormat("en-US", {
       <a href="./void/bepis-rock/">
         <img src={bepisRockUrl.src} />
       </a>
-      <iframe src="https://jackharrhy.dev/urandom/ecoji" />
+      <iframe src="https://jackharrhy.dev/urandom/ecoji"></iframe>
     </div>
   </main>
   <div class="depths-spacer">
