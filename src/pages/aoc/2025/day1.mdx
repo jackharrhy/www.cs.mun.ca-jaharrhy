@@ -1,0 +1,430 @@
+---
+layout: "@layouts/AdventOfCodeLayoutDay.astro"
+title: day 1
+pubDate: 2025-12-01
+---
+
+import Other from "@components/aoc/Other2025.astro";
+
+another ramble another year another year another ramble
+
+a lot of you know the jig by now... but for the uninitiated...
+
+this is **jack's advent of code rambles**, where i ramble about
+my own advent of code solution for the day, and then discuss other
+solutions in comparison to mine / each other / etc.
+
+this will be my fourth year giving this a go, (although 2023 was a farce),
+and given that this advent of code is 12 days instead of 24... maybe...
+just maybe... i will get to the end!
+
+however
+
+_what a day 1_
+
+i think this checks out with being a lesser year, as its not a hard to think
+about problem, its just a... wonky part 2!
+
+i spent a _while_ trying to get my bound checking solution to work properly,
+to no avail, hence i'm so late with this post, usually i can pump out a day 1,
+and by the evening have time to sit down and sort out all of the infra needed
+in my mun website repo for this to exist
+
+but yeah that didn't happen this time...
+
+but i still solved it! expand the below if you're curious to year my approach
+
+---
+
+<details>
+<summary>click to view my solution</summary>
+
+<br />
+
+given the sample input:
+
+```
+L68
+L30
+R48
+L5
+R60
+L55
+L1
+L99
+R14
+L82
+```
+
+assuming `input` is the above as one big string,
+
+```elixir
+moves =
+input
+|> Kino.Input.read()
+|> String.split("\n")
+|> Enum.map(fn v ->
+  {dir, val} = String.split_at(v, 1)
+  {String.to_atom(dir), Integer.parse(val) |> elem(0)}
+end)
+```
+
+input parsin'
+
+- split on newline
+- map over each newline
+- split those on the first char, so we get `{"L", "68"}` and such
+- turn the `"L"` into `:L`, because atoms are cool
+- parse the string as an int, grab the 0th elem (since it returns things _not_ parsed as a number for some reason)
+
+we get:
+
+```elixir
+[L: 68, L: 30, R: 48, L: 5, R: 60, L: 55, L: 1, L: 99, R: 14, L: 82]
+```
+
+nice, lets solve the problem
+
+> btw, it formats it like this, since it thinks its a [keyword list](https://hexdocs.pm/elixir/Keyword.html)
+
+lets solve the problem
+
+### part 1
+
+```elixir
+defmodule Util do
+  def bounds(cur) when cur < 0, do: bounds(cur + 100)
+  def bounds(cur) when cur >= 100, do: bounds(cur - 100)
+  def bounds(cur), do: cur
+end
+```
+
+i first define this bounds checking system, so i can check to see if i've gone past 99 / before 0
+
+using some nice elixir guard syntax, and since i wanted recursion, i could not use an anon function in my solution, sad
+
+```elixir
+moves
+|> Enum.reduce({50, 0}, fn {dir, val}, {cur, seen_0} ->
+  cur = case dir do
+    :L -> cur - val
+    :R -> cur + val
+  end
+
+  cur = Util.bounds(cur)
+
+  if cur == 0 do
+    {cur, seen_0 + 1}
+  else
+    {cur, seen_0}
+  end
+end)
+```
+
+nice little reduce, take `{50, 0}` (starting value stated in the problem, and amount of zeros so far, starting at zero)
+
+handle adding to / taking away the value from the current value, depending on the direction atom
+
+use our bound utility to wrap it between 0-99
+
+did we land on 0? yeah? + 1 to the `seen_0`
+
+this gets the answer!
+
+### part 2
+
+and of course part 2 is _tricky_
+
+here we have to check if it loops around and hits zero _during_ a loop
+
+i spent a _while_ trying to come up with a solution similar to the above, but one that would handle
+counting more spins _within_ the bounds check, but i'd either be too high, or too low...
+
+so, i did it a way that feels stupid, but works:
+
+```elixir
+Enum.reduce(moves, {50, 0}, fn {dir, val}, {cur, seen_0} ->
+  1..val
+    |> Enum.reduce({cur, seen_0}, fn _x, {cur, seen_0} ->
+      cur = if dir == :L, do: cur - 1, else: cur + 1
+
+      cur = cond do
+        cur > 99 -> 0
+        cur < 0 -> 99
+        true -> cur
+      end
+
+      seen_0 = if cur == 0, do: seen_0 + 1, else: seen_0
+
+      {cur, seen_0}
+    end)
+end)
+```
+
+this is the entire solution, no need for a util
+
+you'll see we now have a nested reduce, that operats on `1..val`, which means i'm adding / subtracting `1` _one at a time_,
+and then i'm doing the `seen_0` check in that...
+
+this one is 'smaller', and more quaint, but obviously does not spark performance joy
+
+but its a solution, and i'm onto looking at other peoples stuff
+
+the full solution can be found [[here]](https://github.com/jackharrhy/advent2025/blob/main/day1.livemd)
+
+<br />
+
+</details>
+
+---
+
+as usual, i go through people who had repos in previous years, and see who's still active doing 2025,
+and maybe add a few more that i see being posted around
+
+we've got another assortment we do it seems!
+
+### others
+
+<Other person="keenan" day="1" />
+
+> ```py
+> for line in input1:
+>   comb_in = convert_to_int(line)
+>   pos += comb_in
+>   if mod100(pos) == 0:
+>     count += 1
+> ```
+>
+> nice part 1 solution, don't bother wrapping and just do mod on the value
+>
+> and part 2...
+>
+> ```py
+> for line in input2:
+>     comb_in = convert_to_int(line)
+> 
+>     prev_rotations = rotations
+>     rotations += comb_in
+> 
+>     mod_count += abs(rotations // 100 - prev_rotations // 100)
+> 
+>     dial_pos = rotations % 100
+> ```
+>
+> store prev rotations, calculate new one, which... means you're also
+> just calculating the thing you need not caring about bounding the value
+>
+> i think `dial_pos` isn't even needed in here you just need `mod_count` no?
+>
+> very clean
+>
+> me when i do a math degree and can do math
+
+<Other person="ethan" day="1" />
+
+> ```py
+> # 5984 Too Much
+> # 5978??
+> # 5789 Nope
+> # 5974 Don't know
+> # 5329 too low
+> ```
+>
+> this was me in part 2... glad to see i was not the only one
+>
+> pretty verbose but gets the job done python approach
+>
+> doing some mod stuff here, i think all of the print debugging if it was
+> cleaned up would make this nice
+>
+> good to have another year of gump
+
+<Other person="evan" day="1" />
+
+> a part 1 & 2 done in the same loop, short enough to include fully here inline
+>
+> ```py
+> pos = 50
+> part1 = 0
+> part2 = 0
+> 
+> with open("input.txt") as f:
+>    for line in f:
+>     initialPos = pos
+>     l = line.strip()
+>     dist = int(l[1:])
+>     direction = l[0] == "L"
+>     pos += dist * (-1 if direction else 1)
+>     part2 += dist // 100
+>     pos -= (dist // 100) * 100 * (-1 if direction else 1)
+>     if initialPos != 0 and pos < 0:
+>         part2 += 1
+>     elif pos > 100:
+>         part2 += 1
+>     pos %= 100
+>     if pos == 0 and initialPos != 0:
+>         part1 += 1
+>         part2 += 1
+> 
+> print("Part 1", part1)
+> print("Part 2", part2)
+> ```
+>
+> tidy tidy TIDY!
+>
+> i think this one is closer to what was in my head when i was thinking about this, the entire _was i just at 0?_,
+> if so don't count again sort of vibe
+>
+> evan aoc even aoc
+
+<Other person="riley" day="1" />
+
+> hello mr f#
+>
+> i see you've upgraded from `.fsx` to `.fs`, you pulling out _modules_ here
+>
+> i like this solution
+>
+> i forget what `.fold` does, therefore i do not understand it
+>
+> i think you explained this to me for a previous aoc, but alas
+>
+> brain is a siv
+
+<Other person="natalie" day="1" />
+
+> natalie _will_ be doing elixir, but cooked a day 1 solution in ruby,
+> as per mwln's request
+>
+> this is nice
+>
+> line 6 and 13 are a bit code golf though
+>
+> good nat ruby
+
+<Other person="sven" day="1" />
+
+> sven back at it again with the go, i would expect nothing less
+>
+> as always, some straightforward nice go, similar to evan's solution
+>
+> more verbose since its go, but also more tidy?
+
+<Other person="djrideout" day="1" />
+
+> rusty dj back again
+>
+> doing the parsing right next to handling the logic
+>
+> `#[aoc(day1, part1)]` is always cool syntax to see with the cargo aoc package
+>
+> i like the difference between part 1 & 2 being a `count_all` variable, tidy
+>
+> oh and you don't add the single count at the end when you end up on zero when
+> you are counting all!
+>
+> ```rust
+> if next == 0 && !count_all {
+>     count += 1;
+> }
+> ```
+>
+> nice and tidy
+
+<Other person="oscar" day="1" />
+
+> i saw a link to janet solution, so i just _had_ to include it here
+>
+> ```janet
+> (def- lock-rotation-grammar (peg/compile
+>   ~{:main (some :rotation)
+>     :rotation (* (+ :left :right) :newline?)
+>     :left (* "L" (/ (<- :d+) ,make-left))
+>     :right (* "R" (/ (<- :d+) ,make-right))
+>     :newline? (? "\n")}))
+> ```
+>
+> right off the bat we've got **this**, amazin'
+>
+> [`peg/compile`](https://janet-lang.org/api/peg.html) here is so cool...
+>
+> > Parsing Expression Grammars
+> >
+> > ...
+> >
+> > PEGs, or Parsing Expression Grammars, are another formalism for recognizing languages.
+> > PEGs are easier to write than a custom parser and more powerful than regular expressions.
+> > They also can produce grammars that are easily understandable and fast. PEGs can also be compiled to a bytecode format that can be reused. Janet offers the peg module for writing and evaluating PEGs.
+> >
+> > Janet's peg module borrows syntax and ideas from both LPeg and REBOL/Red parse module.
+> > **Janet has no built-in regex module because PEGs offer a superset of the functionality of regular expressions**.
+>
+> quite based to be like, _we have this thing that is better than regex, no regex for you in stdlib_
+>
+> based
+>
+> ```janet
+> (defn- apply-rotations-count-zeros [starting-position rotations]
+>   (var dial-position starting-position)
+>   (seq [r :in rotations]
+>     (let [prev-dial-position dial-position new-dial-position (+ dial-position r)]
+>       (set dial-position (normalize-dial-position new-dial-position))
+>      (sum (map |(if (zero? $0) 1 0) (iterate-clicks prev-dial-position new-dial-position))))))
+> ```
+>
+> however then you get here
+>
+> and even though i can understand the variables here, i lose focus
+>
+> i respect, but comprehension crashes
+>
+> i did try janet once, not for very long...
+>
+> still though, hyped to see more here as the days progress
+
+<Other person="mudkip" day="1" />
+
+> now here is a more proper elixir solution
+>
+> ```elixir
+> |> Enum.reduce({50, 0, 0}, fn {d, v}, {acc, crossings, lands} ->
+> ```
+>
+> the reducer counting both part 1 & 2 is better, i like the difference here in variables
+> from crossing / lands!
+>
+> and again, the trick where a right is just a div, but a left is a more busy one... i did not clock this...
+>
+> mudkip 'lixir
+>
+> (also your timezone is currently more aligned to aoc how dare you)
+
+<Other person="alex" day="1" />
+
+> alex came to my gdg st. john's talk, and asked a good question,
+> of which i felt like i had a pretty good response, to which his
+> response was just to do:
+>
+> <iframe src="https://giphy.com/embed/2rqEdFfkMzXmo" width="480" height="288" style="" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/stress-i-need-a-drink-brain-explode-2rqEdFfkMzXmo">via GIPHY</a></p>
+>
+> so of course when i see
+>
+> > Solved in Elixir, inspired by Jack.
+>
+> its going in the rant!
+>
+> nice shared input parsing, good module usage, and clever floor / rem usage...
+>
+> i feel like every other solution has stunted on me
+>
+> but thats ok
+
+---
+
+any thoughts about any of the above?
+
+reach out:
+
+import Letterbird from "@components/Letterbird.astro";
+
+<Letterbird />

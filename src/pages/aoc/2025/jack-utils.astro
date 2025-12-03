@@ -1,0 +1,31 @@
+---
+import AdventOfCodeLayout from "@layouts/AdventOfCodeLayout.astro";
+import { JackUtils } from "@components/aoc/react/JackUtils2025";
+---
+
+<style is:global>
+  textarea {
+    width: 100%;
+    min-height: 4rem;
+  }
+
+  pre {
+    background-color: black;
+    padding: 1rem;
+    overflow: scroll;
+  }
+
+  .person {
+    margin: 3rem 0;
+  }
+</style>
+
+<AdventOfCodeLayout year={2025} title="jack utils">
+  <p>jack utils</p>
+  <p>
+    when i'm making 'day' posts, i want to speed up creating the little blobs of
+    comments
+  </p>
+  <p>this is how i do that!</p>
+  <JackUtils client:only="react" />
+</AdventOfCodeLayout>
