@@ -1,0 +1,709 @@
+---
+layout: "@layouts/AdventOfCodeLayoutDay.astro"
+title: day 3
+pubDate: 2025-12-03
+---
+
+import Other from "@components/aoc/Other2025.astro";
+
+3/12 -> **1/4** through aoc!
+
+i liked todays more than previous days, didn't feel _easy_ out of the gate, but the code
+seemed to 'flow' a little easier out of me
+
+as i typed the previous sentence, maybe its just now i'm a bit more in the problem solving
+headspace than i was on day 1...
+
+i swear my usage of `Claude Opus 4.5 Max Mode Cursor Agent` sessions have contributed
+0% to this decline
+
+---
+
+<details>
+<summary>click to view my solution</summary>
+
+<br />
+
+given the sample input:
+
+```
+987654321111111
+811111111111119
+234234234234278
+818181911112111
+```
+
+assuming `input` is the above as one big string,
+
+### part 1
+
+define this module:
+
+```elixir
+defmodule TwoSlotBattery do
+  def find(bats) do
+    [x | [y | _l] = list] = bats
+
+    find({x, y}, list)
+  end
+
+  def find({x, y}, [a | [b | _r] = rest]) do
+    {x, y} = cond do
+      a > x -> {a, b}
+      a > y -> {x, a}
+      true -> {x, y}
+    end
+
+    find({x, y}, rest)
+  end
+
+  def find({x, y}, [a | []]) do
+    {x, y} = cond do
+      a > y -> {x, a}
+      true -> {x, y}
+    end
+
+    {x, y}
+  end
+end
+```
+
+and use it here:
+
+```elixir
+input
+|> Kino.Input.read()
+|> String.split("\n")
+|> Enum.map(fn bats ->
+  bats = bats |> String.graphemes() |> Enum.map(&String.to_integer/1)
+
+  {x, y} = TwoSlotBattery.find(bats)
+  x * 10 + y
+end)
+|> Enum.sum()
+```
+
+i'll cover input parsing before going into the module
+
+- split on newline, `\n`
+- split on `graphemes`
+- map those to integers
+
+we get this:
+
+```elixir
+[9, 8, 7, 6, 5, 4, 3, 2, 1, 1, 1, 1, 1, 1, 1]
+```
+
+then we call `TwoSlotBattery.find`, which gives us the two values for the two-sized battery!
+
+the `find/1` case is this:
+
+```elixir
+def find(bats) do
+  [x | [y | _l] = list] = bats
+
+  find({x, y}, list)
+end
+```
+
+lists in elixir are linked lists, so there is special syntax for extracting the head / tail of them
+
+say if you have `[1, 2, 3]`, and want to extract the `1`, and have the list `[2, 3]`, you can do:
+
+```elixir
+[x | y] = [1, 2, 3]
+```
+
+x will be `1`, `y` will be the _rest of the list_, i.e. `[2, 3]`
+
+```elixir
+[x | [y | _l] = list] = bats
+```
+
+so the first thing i do in find, is extract the 1st and 2nd element from the list, but i actually hold a
+reference to the list _with_ the second element in it still, so i'm only 'popping' one element
+from the list, and then call:
+
+```elixir
+find({x, y}, list)
+```
+
+which means i 'consume' the first item from the list here, put it in `x`, and then a combined
+version of them together is the first argument to the recursive step, its considering the first
+two values being a battery
+
+so for the input line `234234234234278`, we'd be starting off with `23`, and considering everything
+`3423...` onwards
+
+```elixir
+def find({x, y}, [a | [b | _r] = rest]) do
+  {x, y} = cond do
+    a > x -> {a, b}
+    a > y -> {x, a}
+    true -> {x, y}
+  end
+
+  find({x, y}, rest)
+end
+
+def find({x, y}, [a | []]) do
+  {x, y} = cond do
+    a > y -> {x, a}
+    true -> {x, y}
+  end
+
+  {x, y}
+end
+```
+
+i then define `find/2` with two matches, the first match will only hit when
+we have _two_ items left in the list we are considering, which means we're considering
+the current battery, with a potential _future_ battery
+
+```elixir
+[a | [b | _r] = rest]
+```
+
+we do the same trick to keep a reference to the lits after the _first_ item, even though
+we're
+
+```elixir
+{x, y} = cond do
+  a > x -> {a, b}
+  a > y -> {x, a}
+  true -> {x, y}
+end
+```
+
+i then use `cond`, which will return a value depending on a condition, no `case` matching here
+
+if `a` is greater than `x`, it means the value we're looking at is bigger than the largest digit
+in our two digit number, so we then make the battery equal to `{a, b}`, i.e. we ignore our current
+`{x, y}` battery, and start a _new_ battery based on where we are considering in the list
+
+if that isn't true, but the lesser value is greater than our current lesser value, we keep the `x`,
+but then replace the `y` with `a`
+
+if not, we just keep our existing `{x, y}` battery, as what we're looking at isn't better
+
+then, we hit a tail recursive call to keep going
+
+```elixir
+find({x, y}, rest)
+```
+
+with the rest of the list
+
+the only iffy thing about this, is we will eventually get to the _end_ of the list, so elixir
+will raise an exception once we get to the last element of the list, since our second argument
+won't hit the clause
+
+so, we do this:
+
+```elixir
+def find({x, y}, [a | []]) do
+  {x, y} = cond do
+    a > y -> {x, a}
+    true -> {x, y}
+  end
+
+  {x, y}
+end
+```
+
+its basically the same thing as before, but we can't replace `x` anymore, `x` is going to be the
+highest value we can store in that battery slot, so we're only concerned with replacing the `y`,
+or just keeping our current battery
+
+then, we just return the tuple, and its given right back to the caller
+
+```elixir
+...
+|> Enum.map(fn bats ->
+  bats = bats |> String.graphemes() |> Enum.map(&String.to_integer/1)
+
+  {x, y} = TwoSlotBattery.find(bats)
+  x * 10 + y
+end)
+|> Enum.sum()
+```
+
+back to here, we then just take these values, i make sure it goes from `{9, 2}` to `92`, and sum
+each line, to get the answer!
+
+### part 2
+
+my above solution would probably function... if i wanted a combinatorial explosion
+of handling cases... so lets see if i can take my previous approach, but make it work for
+any `n` list of batteries!
+
+here i hard code `12`, but there basically is no reason i couldn't make it of arbitrary
+size
+
+```elixir
+defmodule TwelveSlotBattery do
+  def find(list) do
+    power = 1..12 |> Enum.map(fn _x -> nil end)
+    find(power, list)
+  end
+
+  def find(power, [a | rest]) do
+    rest_len = length(rest)
+
+    replace = power
+    |> Enum.with_index()
+    |> Enum.find_index(fn {p, i} ->
+      cond do
+        p == nil -> true
+        a > p and (11 - i) <= rest_len -> true
+        true -> false
+      end
+    end)
+
+    power = if replace do
+      power = List.replace_at(power, replace, a)
+
+      power = power
+      |> Enum.with_index()
+      |> Enum.map(fn {elm, index} ->
+        if index > replace do
+          nil
+        else
+          elm
+        end
+      end)
+
+      power
+    else
+      power
+    end
+
+    find(power, rest)
+  end
+
+  def find(power, []) do
+    power
+  end
+end
+```
+
+```elixir
+def find(list) do
+  power = 1..12 |> Enum.map(fn _x -> nil end)
+  find(power, list)
+end
+```
+
+so, similar `find/1` call, but this time, our `{x, y}` is no more, we're going to create a list of
+`nil` values the size of the batteries we want, so we can fill it
+
+we pass in the _full_ list here, as we haven't slotted up the power with the list
+
+```elixir
+def find(power, [a | rest]) do
+  rest_len = length(rest)
+
+  replace = power
+  |> Enum.with_index()
+  |> Enum.find_index(fn {p, i} ->
+    cond do
+      p == nil -> true
+      a > p and (11 - i) <= rest_len -> true
+      true -> false
+    end
+  end)
+
+  power = if replace do
+    power = List.replace_at(power, replace, a)
+
+    power = power
+    |> Enum.with_index()
+    |> Enum.map(fn {elm, index} ->
+      if index > replace do
+        nil
+      else
+        elm
+      end
+    end)
+
+    power
+  else
+    power
+  end
+
+  find(power, rest)
+end
+```
+
+bit of a long function, but she's still tail recursive!
+
+we pluck out `a` from the list, which is going to be the
+value we consider if we're going to put into our batteries
+
+```elixir
+rest_len = length(rest)
+
+replace = power
+|> Enum.with_index()
+|> Enum.find_index(fn {p, i} ->
+  cond do
+    p == nil -> true
+    a > p and (11 - i) <= rest_len -> true
+    true -> false
+  end
+end)
+```
+
+we iterate over our existing list of twelve values (either nil if we have nothing, or filled with power),
+and we consider if we should replace the _index_ of the battery with the value we're on in the list
+
+- if the value in the battery slot is `nil`, _yeah!_, slot 'er up
+- if our `a > p`, _and we still have enough values left in the list that this replace wouldn't leave us with nils later on_, slot 'er up
+- if neither, no, don't replace
+
+```elixir
+power = if replace do
+  power = List.replace_at(power, replace, a)
+
+  power = power
+  |> Enum.with_index()
+  |> Enum.map(fn {elm, index} ->
+    if index > replace do
+      nil
+    else
+      elm
+    end
+  end)
+
+  power
+else
+  power
+end
+```
+
+so we have this `replace` index, and when we do so, we _clear_ all of the batteries after the slot we're replacing in,
+hence after we do the replace, we filter through the power list to make every value we had before `nil`, so future batteries
+will just slot into them
+
+and yeah, if we're not replacing, don't change power
+
+```elixir
+find(power, rest)
+```
+
+then the recursive step, and once rest is no more:
+
+```elixir
+def find(power, []) do
+  power
+end
+```
+
+we return power, no fancy steps here to clean up this time!
+
+this means my part 2 solution is a great solution for part 1, but i kinda like keeping
+my part one solution around for posterity of my thoughts on the part 1 way of solving the
+problem
+
+but yeah, same as before basically:
+
+```elixir
+input
+|> Kino.Input.read()
+|> String.split("\n")
+|> Enum.map(fn bats ->
+  bats = bats |> String.graphemes() |> Enum.map(&String.to_integer/1)
+
+  TwelveSlotBattery.find(bats) |> Enum.join("") |> Integer.parse() |> elem(0)
+end)
+|> Enum.sum()
+```
+
+input parsing and summing logic is similar, except this time i turn the list of numbers into
+a string, and then back into a number, and sum
+
+and there we go!
+
+the full solution can be found [[here]](https://github.com/jackharrhy/advent2025/blob/main/day3.livemd)
+
+<br />
+
+</details>
+
+---
+
+some fall offs, but also some additions...
+
+### others
+
+<Other person="mudkip" day="3" />
+
+> yooooo
+>
+> [`Integer.undigits`](https://hexdocs.pm/elixir/1.12.3/Integer.html#undigits/2) usage
+>
+> ```elixir
+> Integer.undigits([1, 2, 3])
+> # -> 123
+> ```
+>
+> very nice stdlib usage, didn't know about this one
+>
+> the meat of your solution is in:
+>
+> ```elixir
+> n = length(digits)
+> indexed = Enum.with_index(digits)
+>
+> {result, _} =
+>   Enum.reduce(0..(k - 1), {[], 0}, fn i, {acc, start_idx} ->
+>     end_idx = n - k + i
+>
+>     {max_val, max_idx} =
+>       indexed
+>       |> Enum.slice(start_idx..end_idx)
+>       |> Enum.max_by(fn {val, _} -> val end)
+>
+>     {acc ++ [max_val], max_idx + 1}
+>   end)
+> ```
+>
+> so you iterate over `0..(k-1)`..., the twelve slots i assume of the battery pack
+>
+> and your `acc` is `{[], 0}`, the first value being your 'answer', and your
+> `start_idx` being the _starting_ index of the values so far you will peer into...
+>
+> but you _don't_ go further than the `end_idx`... you just find the _max_ value of the
+> section you're in, and ensure the next value will be _after_ that!
+>
+> clever, i didn't see any recursion here so i wanted to actually understand this one
+>
+> nice
+
+<Other person="hking" day="3" />
+
+> > mfw Jack forgot Hking from ramblings
+>
+> hello hiking
+>
+> no cursed google sheets this year, but i do spy some _numpy_
+>
+> some `np.maximum.accumulate`, which i assume could just _not_ be numpy
+> but its fancy
+>
+> i like the part 2 here, feels similar in logic to mudkip's solution,
+> but with some while loop / stack stuff
+>
+> ill be here all day if i put this much effort into each solution,
+> so just know i _tried_ to come up with a quick answer to how yours works
+
+<Other person="ripu" day="3" />
+
+> hey guys
+>
+> a similar part 1 / 2 split here
+>
+> part 2 being a cleaner version than part 1 is always a good sight to behold
+>
+> oh its clever just to _find_ the max value first... and then just process the
+> rest, clever...
+>
+> ```py
+> required_nums = sorted(int_list[starting_value:], reverse=True)[
+>     :digits_required
+> ]
+> ```
+>
+> i saw `:digits_required` and thought this was a elixir atom in python...,
+> when i see its just python list iteration syntax, ha!
+
+<Other person="sven" day="3" />
+
+> how dare you sven require i add
+>
+> ```js
+> const sven = {
+>   display: "STollenaar/AdventOfCode",
+>   link: "https://github.com/STollenaar/AdventOfCode/",
+>   days: [1, 2, 3],
+>   dayLinkFunc: (day) => {
+>     if (day === 3) {
+>       return "https://github.com/STollenaar/AdventOfCode/blob/main/2025/day3/Day3.java";
+>     }
+>     return `https://github.com/STollenaar/AdventOfCode/blob/main/2025/day${day}/main.py`;
+>   },
+>   language: "go & java",
+> };
+> ```
+>
+> to my [`data`](https://github.com/jackharrhy/www.cs.mun.ca-jaharrhy/blob/main/src/data/aoc/2025/data.ts) file for 2025, _evil_
+>
+> i'm thankful i put time in previous years for building up the infrastructure
+> of this aoc ramble setup i have
+>
+> the one thing i don't have that i'd like is support for [astro collections](https://docs.astro.build/en/guides/content-collections/),
+> but this project started _before_ that was a thing...
+>
+> anyways, lets look at some java
+>
+> ```java
+> int removals = n - X; // how many digits we may drop
+> StringBuilder stack = new StringBuilder();
+> for (int i = 0; i < n; i++) {
+>     char c = digits.charAt(i);
+>     while (stack.length() > 0 && stack.charAt(stack.length() - 1) < c && removals > 0) {
+>         stack.deleteCharAt(stack.length() - 1);
+>         removals--;
+>     }
+>     stack.append(c);
+> }
+> ```
+>
+> a similar stack approach to hamzah it seems, nice!
+
+<Other person="alex" day="3" />
+
+> alex is still with us, the solution wasn't posted when i started this,
+> so i sent a gif of:
+>
+> <iframe src="https://giphy.com/embed/FyKfqRxVbzciY" width="480" height="360" style="" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/reaction-FyKfqRxVbzciY">via GIPHY</a></p>
+>
+> and soon enough, _alex solution_
+>
+> nice part 1 & 2 in one solution, and a bit of recursion!
+>
+> not a tail recursive version, but i _think_ it doesn't really matter
+> here, as you would only do this for the _size_ of max batteries, not the size of the list of batteries
+>
+> i like this one
+>
+> enough to include its meat inline:
+>
+> ```elixir
+> defp calc_max_joltage(bank, max_batteries) do
+>   search_window_size = length(bank) - max_batteries + 1
+>   search_window = Enum.take(bank, search_window_size)
+>
+>   {max_val, max_index} = search_window
+>     |> Enum.with_index()
+>     |> Enum.max_by(fn {val, _idx} -> val end)
+>
+>   remaining_bank = Enum.drop(bank, max_index + 1)
+>
+>   current_tens_place = max_val * 10 ** (max_batteries - 1)
+>
+>   current_tens_place + calc_max_joltage(remaining_bank, max_batteries - 1)
+> end
+> ```
+>
+> tidy
+
+<Other person="djrideout" day="3" />
+
+> a very quaint rust solution!
+>
+> another might as well just include inline!
+>
+> ```rust
+> fn joltage(input: &str, count: usize) -> u64 {
+>     let mut sum = 0;
+>     for l in input.lines() {
+>         let chars = l.chars().collect::<Vec<char>>();
+>         let mut digits: Vec<u64> = vec![0; count];
+>         let mut indices: Vec<usize> = vec![0; count + 1];
+>         let max_index = count - 1;
+>         for n in 0 ..= max_index {
+>             for i in indices[n] .. chars.len() - max_index + n {
+>                 let d: u64 = chars[i].to_digit(10).unwrap().into();
+>                 if d > digits[n] {
+>                     digits[n] = d;
+>                     indices[n + 1] = i + 1;
+>                     if digits[n] == 9 {
+>                         break;
+>                     }
+>                 }
+>             }
+>         }
+>         sum += digits.iter().fold(0, |acc: u64, elem| acc * 10 + elem);
+>     }
+>     sum
+> }
+> ```
+
+<Other person="oscar" day="3" />
+
+> another peg opener
+>
+> i tried adding janet as a language my syntax highlighter would
+> support here, but alas, that did not pan out...
+>
+> ```
+> (defn- update-joltage-span [span new-element]
+>   (label update
+>     (do
+>       (loop [i :range [0 (- (length span) 1)]]
+>         (when (< (get span i) (get span (+ i 1)))
+>           (return update [;(take i span) ;(take (- (length span) (+ i 1)) (drop (+ i 1) span)) new-element])
+>           ))
+> 
+>       (if (< (last span) new-element)
+>         [;(take (- (length span) 1) span) new-element]
+>         span))))
+> ```
+>
+> i picked one thing here to attempt to understand, and that was the usage
+> of the `label` _macro_
+>
+> the `defn- update-joltage-span [span new-element]` feels like a function def,
+> but `label update` is making a _label point that is lexically scoped_, as per the [docs](https://janet-lang.org/api/index.html#label)
+>
+> tidy
+>
+> i have 3/4 of aoc to look at more janet and maybe be able to understand these more...
+
+<Other person="evan" day="3" />
+
+> king evan out here with MORE tiny python
+>
+> i feel like each solution here is the same thing, with the part 1 / 2 in one approach
+>
+> ```py
+> part1 += (9-j)*(10**(1-i))
+> ```
+>
+> getting a bit code golfy with the above, but still nice
+
+<Other person="riley" day="3" />
+
+> last but not least, f# man
+> 
+> ```fsharp
+> [<TailCall>]
+> let rec findBankMaxValue
+> ```
+>
+> i do like the explicit tail call attribute here, which will cause
+> compiler warnings if you don't keep up the contract of it being
+> tail call recursable
+>
+> while its yet another different looking approach, it feels a bit closert to some of
+> the other iterative approaches
+>
+> i'm gonna ask leah what she thinks about your solution
+>
+> > _its fine_
+> >
+> > - leah
+>
+> there you are folks
+
+---
+
+any thoughts about any of the above?
+
+reach out:
+
+import Letterbird from "@components/Letterbird.astro";
+
+<Letterbird />

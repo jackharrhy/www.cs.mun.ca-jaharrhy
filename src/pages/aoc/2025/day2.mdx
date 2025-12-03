@@ -1,0 +1,388 @@
+---
+layout: "@layouts/AdventOfCodeLayoutDay.astro"
+title: day 2
+pubDate: 2025-12-02
+---
+
+import Other from "@components/aoc/Other2025.astro";
+
+day 2 of the _short_ aoc of 2025
+
+and i already feel like i'm pulling out some code that is _slow_, but gets there in the end...
+
+this one felt in some ways nicer than yesterday, as i had an idea for how to solve both
+part 1 & 2 after seeing them, however my ideas felt... slo
+
+i'm curious to see if anyone found tricks here, as i did not
+
+soon enough there will be a day that _needs_ finding of a trick
+
+---
+
+<details>
+<summary>click to view my solution</summary>
+
+<br />
+
+given the sample input:
+
+```
+11-22,95-115,998-1012,1188511880-1188511890,222220-222224,
+1698522-1698528,446443-446449,38593856-38593862,565653-565659,
+824824821-824824827,2121212118-2121212124
+```
+
+assuming `input` is the above as one big string,
+
+```elixir
+defmodule ListChecker do
+  def all_same?([]) do
+    true
+  end
+
+  def all_same?([head | tail]) do
+    Enum.all?(tail, fn element -> element == head end)
+  end
+end
+```
+
+a nice utility for seeing if a list is all the same value, so:
+
+```elixir
+["10", "10"] = true
+["2", "2", "2"] = true
+["1"] = true # foreshadowing...
+["123", "321"] = false
+```
+
+### part 1
+
+```elixir
+ranges =
+input
+|> Kino.Input.read()
+|> String.split(",")
+|> Enum.map(fn range ->
+  [start, ending] = range
+  |> String.split("-")
+  |> Enum.map(&String.to_integer/1)
+
+  start..ending
+  |> Enum.map(fn num_id ->
+    id = Integer.to_string(num_id)
+
+    if rem(String.length(id), 2) == 0 do
+      {l, r} = String.split_at(id, floor(String.length(id) / 2))
+
+      if l == r do
+        num_id
+      else
+        nil
+      end
+    else
+      nil
+    end
+  end)
+  |> Enum.filter(&(&1))
+end)
+|> List.flatten()
+|> Enum.sum()
+```
+
+we read, split on `,`, and map over each range
+
+split once again on `-`, and get the starting & ending of the range, as numbers
+
+in elixir, we can do just `start..ending`, to then iterate over each value in the range
+
+i then right away convert the value i'm on back to a string
+
+firstly check if its length is divisible by two (if its odd, then we can't split it
+into two strings, because they would be of different sizes)
+
+if it is, we then break it apart, and check if each 'part' is the same value
+
+if they are, we return the value, since we're in a `Enum.find_value`, the value we return here
+will be assumed to be the invalid id
+
+if not, we return nil
+
+we then filter out all of the nil values we collect when we're handling a range
+
+then when we jump out of that, for each range, we flatten the list to go from `[[11,22,33], [44,55,66]]`
+to `[11,22,33,44,55,66]`, and then sum it!
+
+it takes a while to run on my vps, but it works!
+
+### part 2
+
+```elixir
+ranges =
+input
+|> Kino.Input.read()
+|> String.split(",")
+|> Enum.map(fn range ->
+  [start, ending] = range
+  |> String.split("-")
+  |> Enum.map(&String.to_integer/1)
+
+  start..ending
+  |> Enum.map(fn num_id ->
+    id = Integer.to_string(num_id)
+
+    Enum.find_value(1..(ceil(String.length(id) / 2)), fn chunk_every ->
+      invalid_id = id
+      |> String.graphemes()
+      |> Enum.chunk_every(chunk_every)
+      |> ListChecker.all_same?()
+
+      if invalid_id and String.length(id) > 1 do
+        num_id
+      else
+        false
+      end
+    end)
+  end)
+  |> Enum.filter(&(&1))
+end)
+|> List.flatten()
+|> Enum.sum()
+```
+
+same as above, _except_, we create a range from `1..(ceil(String.length(id) / 2))`
+
+if we see the string `565656`, we'd first chunk it into `["5", "6", "5", "6", "5", "6"]`,
+use our `ListChecker.all_same?()` util to see if every value is the same (for 1, they are not)
+
+we then, on the next iteration (we're going from 1, to a value that is as big as half the size of the id,
+so in this case, we would not go higher than 3, since the length of `5656565` is 6)
+
+however, when we get to 2, we see `["56", "56", "56"]`, and our list util returns true!
+
+we then just return the `num_id`, but you'll see a `and String.length(id) > 1`
+
+eric is evil... not in the example input, but in the actual problem text, is `1-13` (or at least
+thats what was in mine, yours might have been similar but slightly different)
+
+this triggers a bug in my code, as if we see `["1"]` (we chunk by 1), well, all values are the same!
+
+but the problem explicitly states
+
+> Now, an ID is invalid if it is made only of some sequence of digits repeated at least twice.
+
+:oop:
+
+<br />
+
+the full solution can be found [[here]](https://github.com/jackharrhy/advent2025/blob/main/day2.livemd)
+
+<br />
+
+</details>
+
+---
+
+not a _ton_ of variation today, other than our opener mudkip...
+
+### others
+
+<Other person="mudkip" day="2" />
+
+> similar-ish range creation, but a nice `Enum.filter` _on_ the ranges
+>
+> the same length of string rem % 2 trick, and then some clicing, _tidy_
+>
+> `Enum.uniq()` is a nice touch, maybe not needed? maybe since i consider
+> mine range-by-range i don't run into this?
+>
+> but of course the part 2 is clever, i had heard mention of regex, but oh man:
+>
+> ```elixir
+> part_2 =
+>   Enum.filter(ranges, fn val ->
+>     Regex.match?(~r/^(\d+)\1+$/, Integer.to_string(val))
+>   end)
+>   |> Enum.uniq()
+>   |> Enum.sum()
+> ```
+>
+> **nice**, clever trick
+
+<Other person="keenan" day="2" />
+
+> `path = "/Users/keenan/Dev/GitHub/AdventOfCode/2025/Day2/input.txt"`
+>
+> oh he got that FULL path to the input, he's not kidding around
+>
+> nice usage of python range, and tidy functions for checking the patterns
+>
+> ```py
+> def has_repeating_pattern_twice(n):
+>     s = str(n)
+>     length = len(s)
+> 
+>     if length % 2 != 0:
+>         return False  
+> 
+>     half = length // 2
+>     pattern = s[:half]
+> 
+>     if pattern * 2 == s:
+>         return True
+>     return False
+> ```
+>
+> > keenan: im not doing part 2, im part 1 king
+> >
+> > mudkip: But that’s the solution to part 2
+> >
+> > keenan: WHAT
+>
+> tidy
+>
+> as much as  the `README.md` of your `2025` folder says:
+>
+> > I will be doing at most 2 days of this year
+>
+> i hope for more keenan
+
+<Other person="oscar" day="2" />
+
+> i am ready for more `peg`
+>
+> ```janet
+> (def- product-id-range-grammar (peg/compile 
+>   ~{:main (* (some :product-range) "\n")
+>     :product-range (* (/ (* :product-id "-" :product-id) ,make-range) (? ","))
+>     :product-id (/ (<- :d+) ,scan-number)}))
+> ```
+>
+> nice
+>
+> but oh my oh my
+>
+> janet do be a list processing language
+>
+> i do like the final print out
+>
+> ```janet
+> (with [f (file/open (get (dyn :args) 1))]
+>   (let [input (file/read f :all) product-id-ranges (peg/match product-id-range-grammar input)]
+>     (->>
+>       (iterate-product-id-ranges product-id-ranges)
+>       (filter is-id-part1-invalid?)
+>       (sum)
+>       (printf "day 01 part 1: %d"))
+> 
+>     (->>
+>       (iterate-product-id-ranges product-id-ranges)
+>       (filter is-id-part2-invalid?)
+>       (sum)
+>       (printf "day 01 part 2: %d"))))
+> ```
+>
+> things are always named great is seems, i feel like i know
+> whats happening here, with the iteration, and the filtering
+>
+> but then you get into the body of a function, say part 1:
+>
+> ```janet
+> (defn- is-id-part1-invalid? [id]
+>   (let [id-str (string id) id-str-len (length id-str)]
+>     (and 
+>       (even? id-str-len) 
+>       (= 
+>         (string/slice id-str 0 (div id-str-len 2)) 
+>         (string/slice id-str (div id-str-len 2))))))
+> ```
+>
+> aaannnddd there i go
+>
+> still, i must link and discuss, as i think janet is really cool
+
+<Other person="evan" day="2" />
+
+> another evan banger two-in-one
+>
+> ```py
+> part1 = 0
+> part2 = 0
+> 
+> with open("input.txt") as f:
+>     data = f.read().replace("\n", "").strip()
+>     sections = data.split(",")
+>     print(sections)
+>     for section in sections:
+>         startAndEnd = section.split('-')
+>         start = int(startAndEnd[0])
+>         end = int(startAndEnd[1])
+>         for i in range(start, end+1):
+>             numStr = str(i)
+>             if len(numStr) % 2 == 0:
+>                 if numStr[0:(len(numStr)//2)] == numStr[len(numStr)//2:]:
+>                     part1 += i
+>             if str(i) in (str(i) + str(i))[1:-1]:
+>                 part2 += i
+> 
+> print("Part 1", part1)
+> print("Part 2", part2)
+> ```
+>
+> still doesn't feel code-golfy just yet, just feels nice and to the point
+>
+> `str(i) in (str(i) + str(i))[1:-1]` is clever...
+
+<Other person="djrideout" day="2" />
+
+> another good dj rust solution
+>
+> i like the approach to do the chunking the entire time, but have a
+> property that dictates if you will be only considering two or not
+>
+> tidy
+
+<Other person="riley" day="2" />
+
+> clever off the bat to just expand all the values
+>
+> ```fsharp
+> let ids =
+>     inputData |> Array.map (fun (fst, snd) -> seq { fst..snd } |> Seq.toArray)
+> ```
+>
+> with some nice part 1 / part 2 logic
+>
+> this one i can understand, no foldin'
+
+<Other person="alex" day="2" />
+
+> more modules out here from alex
+>
+> nice usage of `Enum.any?`, and that being used as a filter rather than
+> a value finder like mine
+>
+> ```elixir
+> def part2(input) do
+>   parse_input(input)
+>   |> Enum.flat_map(fn [min, max] -> Enum.filter(min..max, &is_invalid_id_part2?/1) end)
+>   |> Enum.sum()
+> end
+> ```
+>
+> ends up with a tidy flat map, clean
+
+<Other person="sven" day="2" />
+
+> last but not least, a bit of sven golang
+>
+> good usage of utility functions, similar in logic to mine it feels still
+
+---
+
+any thoughts about any of the above?
+
+reach out:
+
+import Letterbird from "@components/Letterbird.astro";
+
+<Letterbird />
