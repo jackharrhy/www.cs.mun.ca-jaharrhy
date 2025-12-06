@@ -1,0 +1,433 @@
+---
+layout: "@layouts/AdventOfCodeLayoutDay.astro"
+title: day 5
+pubDate: 2025-12-05
+---
+
+import Other from "@components/aoc/Other2025.astro";
+
+i heard you liked ranges
+
+---
+
+<details>
+<summary>click to view my solution</summary>
+
+<br />
+
+given the sample input:
+
+```
+3-5
+10-14
+16-20
+12-18
+
+1
+5
+8
+11
+17
+32
+```
+
+assuming `input` is the above as one big string,
+
+```elixir
+[ranges, ingredients] = input |> Kino.Input.read() |> String.split("\n\n")
+
+ranges = ranges
+  |> String.split("\n")
+  |> Enum.map(fn range ->
+    [from, to] = String.split(range, "-")
+
+    (Integer.parse(from) |> elem(0))..(Integer.parse(to) |> elem(0))
+  end)
+
+ingredients = ingredients
+  |> String.split("\n")
+  |> Enum.map(fn ingredient ->
+    Integer.parse(ingredient) |> elem(0)
+  end)
+
+[ranges, ingredients]
+```
+
+love pulling out my classic `String.split("\n\n")` for the two different sections of input
+
+i turn the first chunk of `a..b` values into [`Range`](https://hexdocs.pm/elixir/Range.html)s, very nice module / datatype
+
+### part 1
+
+```elixir
+ingredients
+|> Enum.map(fn ingredient ->
+  ranges
+  |> Enum.any?(fn range ->
+    ingredient in range
+  end)
+end)
+|> Enum.filter(&(&1))
+|> Enum.count()
+```
+
+map through the ingredients, do they exist in a any range?, then they are valid
+
+filter out false values, count true values
+
+answer, easiest part 1 so far
+
+### part 2
+
+but how _many_ valid values are there?
+
+i did try and just sum all the ranges, but there are _overlapping_ ranges, oh no! what are we to do!
+
+we smush them, with `RangeSmush`:
+
+```elixir
+defmodule RangeSmush do
+  def smush_ranges([range | ranges]) do
+    smush_ranges([range], ranges)
+  end
+
+  def smush_ranges(existing, [range | rest]) do
+    to_smush = Enum.find(existing, fn r ->
+      not Range.disjoint?(range, r)
+    end)
+
+    if to_smush do
+      case smush(to_smush, range) do
+        :ignore ->
+          smush_ranges(existing, rest)
+        :replace ->
+          existing = existing |> Enum.filter(&(&1 != to_smush))
+          smush_ranges(existing, [range | rest])
+        range ->
+          smush_ranges(existing, [range | rest])
+      end
+    else
+      smush_ranges([range] ++ existing, rest)
+    end
+  end
+
+  def smush_ranges(existing, []) do
+    existing
+  end
+
+  def smush(existing, new) do
+    e1..e2//_ = existing
+    n1..n2//_ = new
+
+    cond do
+      # if new is within existing, ignore
+      e1 <= n1 and e2 >= n2 -> :ignore
+
+      # if new is over existing, replace
+      n1 < e1 and n2 > e2 -> :replace
+
+      # if new starts before existing, trimmed range
+      n1 < e1 -> n1..(e1 - 1)
+
+      # if new ends after existing, trimmed range
+      n2 > e2 -> (e2 + 1)..n2
+    end
+  end
+end
+
+smushed_ranges = RangeSmush.smush_ranges(ranges)
+```
+
+gives all the ranges to `RangeSmush.smush_ranges/1`, which just does this:
+
+```elixir
+def smush_ranges([range | ranges]) do
+  smush_ranges([range], ranges)
+end
+```
+
+pluck the first range out, consider that to be a 'valid' range, and process the rest of them
+
+`smush_ranges/2` is the meat
+
+```elixir
+def smush_ranges(existing, [range | rest]) do
+  to_smush = Enum.find(existing, fn r ->
+    not Range.disjoint?(range, r)
+  end)
+
+  if to_smush do
+    case smush(to_smush, range) do
+      :ignore ->
+        smush_ranges(existing, rest)
+      :replace ->
+        existing = existing |> Enum.filter(&(&1 != to_smush))
+        smush_ranges(existing, [range | rest])
+      range ->
+        smush_ranges(existing, [range | rest])
+    end
+  else
+    smush_ranges([range] ++ existing, rest)
+  end
+end
+```
+
+the main case, when we still have ranges left to parse, will take the item from the range,
+and see if one of the 'existing' ranges intersects with it, via `not Range.disjoint?(...)`
+
+if nothing needs smushing, then we append the range to the list of 'smushed' ranges:
+
+```elixir
+if to_smush do
+  ...
+else
+  smush_ranges([range] ++ existing, rest)
+end
+```
+
+but if we _do_ need to smush it, i.e. there is _some_ range we're touching...
+
+```elixir
+if to_smush do
+  case smush(to_smush, range) do
+    :ignore ->
+      smush_ranges(existing, rest)
+    :replace ->
+      existing = existing |> Enum.filter(&(&1 != to_smush))
+      smush_ranges(existing, [range | rest])
+    range ->
+      smush_ranges(existing, [range | rest])
+  end
+else
+  ...
+end
+```
+
+we call the `smush/2` function, which takes in two ranges, and _smushes_ them, returning different atoms,
+
+- `:ignore`, if it means that the range we're trying to add is within the other range, so we just keep our existing ranges and move on
+- `:replace`, if the new range encompases the old one, which means _goodbye_ old range, and consider the new one
+- and when we _modify_ the range, i.e. there was some values the new range handled the old one didn't, so we slice the range to not interact with the other range
+
+for both `:replace` and making a new range, we don't consider it 'valid', we put it back into consideration, as it might still interact with _other_ ranges, so we keep
+passing it through `existing` until there is nothing, or an `:ignore`
+
+the actual smush function is written as so:
+
+```elixir
+def smush(existing, new) do
+  e1..e2//_ = existing
+  n1..n2//_ = new
+
+  cond do
+    # if new is within existing, ignore
+    e1 <= n1 and e2 >= n2 -> :ignore
+
+    # if new is over existing, replace
+    n1 < e1 and n2 > e2 -> :replace
+
+    # if new starts before existing, trimmed range
+    n1 < e1 -> n1..(e1 - 1)
+
+    # if new ends after existing, trimmed range
+    n2 > e2 -> (e2 + 1)..n2
+  end
+end
+```
+
+we use some nice elixir syntax to 'break' each range up into its parts, and right for conditional statements
+
+and here... i'm using _comments_
+
+from people that know me, i'm not a comment guy, but writing this out helped me!
+
+once we get back the smushed ranges, we get just get the size of them, and sum!
+
+```elixir
+smushed_ranges |> Enum.map(&(Range.size(&1))) |> Enum.sum()
+```
+
+since none of the ranges intersect anymore, this gives us the answer
+
+the full solution can be found [[here]](https://github.com/jackharrhy/advent2025/blob/main/day5.livemd)
+
+<br />
+
+</details>
+
+---
+
+the herd things out
+
+### others
+
+<Other person="alex" day="5" />
+
+> similar input parsing, similar part 1, but the part _2_...
+>
+> ```elixir
+> [first_range | remaining_sorted_ranges] = Enum.sort(ranges)
+> ```
+>
+> you sort the ranges... and the smushing logic becomes a lot easier...
+>
+> ```elixir
+> def part2(input) do
+>   {ranges, _} = parse_input(input)
+>
+>   [first_range | remaining_sorted_ranges] = Enum.sort(ranges)
+> 
+>   {last_range, size_prev_ranges} = remaining_sorted_ranges
+>     |> Enum.reduce({first_range, 0}, &range_reducer/2)
+> 
+>   size_prev_ranges + Range.size(last_range)
+> end
+> 
+> defp range_reducer(curr_range, {prev_range, size_prev_ranges}) do
+>   if Range.disjoint?(curr_range, prev_range) do
+>     {curr_range, size_prev_ranges + Range.size(prev_range)}
+>   else
+>     max_last = max(prev_range.last, curr_range.last)
+>     merged_range = prev_range.first..max_last
+>     {merged_range, size_prev_ranges}
+>   end
+> end
+> ```
+>
+> its very similar to mine, but its just one `reduce` pass through the list,
+> with a similar disjoint check, but the logic of merging the ranges doesn't have to consider
+> one being of a lesser/greater size
+>
+> clever, lets see if other people do the same!
+
+<Other person="sven" day="5" />
+
+> the first thing i see:
+>
+> `// Sort ranges by start point`
+>
+> oh boy, im the odd one out again then maybe...
+>
+> otherwise this is a very go approach
+
+<Other person="djrideout" day="5" />
+
+> ```rust
+> fresh_ids.sort_by(|a, b| a.0.cmp(&b.0));
+> ```
+>
+> another one...
+>
+> ```rust
+> fresh_ids.sort_by(|a, b| a.0.cmp(&b.0));
+> let mut merged_fresh_ids = vec![];
+> merged_fresh_ids.push(fresh_ids[0]);
+> for (start, end) in fresh_ids.iter().skip(1) {
+>     let (_, last_end) = merged_fresh_ids.last_mut().unwrap();
+>     if start <= last_end {
+>         if end > last_end {
+>             *last_end = *end;
+>         }
+>     } else {
+>         merged_fresh_ids.push((*start, *end));
+>     }
+> }
+> (merged_fresh_ids, available_ids)
+> ``
+>
+> i like this iteration, and the `.skip(1)` is a good touch
+
+<Other person="riley" day="5" />
+
+> ```fsharp
+> freshIngredients
+>   |> Array.sortBy fst
+> ```
+>
+> im starting to see a pattern here
+>
+> everyone is my op
+>
+> ```fsharp
+> freshIngredients
+> |> Array.sortBy fst
+> |> Array.fold
+>     (fun acc (min, max) ->
+>         match acc with
+>         | [] -> [ (min, max) ]
+>         | (lastMin, lastMax) :: tail when min <= lastMax + 1L ->
+>             (lastMin, Math.Max(lastMax, max)) :: tail
+>         | _ -> (min, max) :: acc)
+>     []
+> |> List.sumBy (fun (min, max) -> max - min + 1L)
+> |> printfn "%d"
+> ```
+>
+> nice fold usage here, clever with the match with the `with` syntax
+>
+> probably one of the most elixir looking bits of f# i've seen!
+
+<Other person="mudkip" day="5" />
+
+> ```elixir
+> ranges
+> |> Enum.sort()
+> ```
+>
+> [...](https://www.youtube.com/watch?v=6ukmjBSQY-c)
+>
+> this one is an include inline type beat
+>
+> ```elixir
+> [ranges_str, products_str] =
+>   "5.in"
+>   |> File.read!()
+>   |> String.trim()
+>   |> String.split("\n\n")
+> 
+> ranges =
+>   for line <- String.split(ranges_str, "\n") do
+>     [s, e] = String.split(line, "-")
+>     {String.to_integer(s), String.to_integer(e)}
+>   end
+> 
+> products = products_str |> String.split("\n") |> Enum.map(&String.to_integer/1)
+> 
+> part_1 = Enum.count(products, fn p -> Enum.any?(ranges, fn {s, e} -> p in s..e end) end)
+> 
+> {part_2, _} =
+>   ranges
+>   |> Enum.sort()
+>   |> Enum.reduce({0, -1}, fn {s, e}, {count, prev} ->
+>     if e > prev, do: {count + e - max(s - 1, prev), e}, else: {count, prev}
+>   end)
+> 
+> IO.puts("Part 1: #{part_1}")
+> IO.puts("Part 2: #{part_2}")
+> ```
+>
+> very tidy
+
+<Other person="evan" day="5" />
+
+> ```py
+> sortedRanges = sorted(ranges, key=lambda r: r[0])
+> ```
+>
+> holy shit i did **NOT** get the memo
+>
+> this one feels less clean than other evan solutions...
+>
+> but is still only ~30 lines
+>
+> nice
+
+---
+
+any thoughts about any of the above?
+
+reach out:
+
+import Letterbird from "@components/Letterbird.astro";
+
+<Letterbird />

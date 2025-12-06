@@ -3,7 +3,7 @@ export const pad = (num, amount = 2) => String(num).padStart(amount, "0");
 const riley = {
   display: "nint8835/advent-of-code",
   link: "https://github.com/nint8835/advent-of-code/tree/main/2025",
-  days: [1, 2, 3, 4],
+  days: [1, 2, 3, 4, 5],
   dayLinkFunc: (day) =>
     `https://github.com/nint8835/advent-of-code/blob/main/2025/${pad(
       day
@@ -14,7 +14,7 @@ const riley = {
 const mudkip = {
   display: "Mudkip/AdventOfCode",
   link: "https://github.com/Mudkip/AdventOfCode/",
-  days: [1, 2, 3, 4],
+  days: [1, 2, 3, 4, 5],
   dayLinkFunc: (day) =>
     `https://github.com/Mudkip/AdventOfCode/blob/main/2025/day${pad(
       day
@@ -36,7 +36,7 @@ const ethan = {
 const sven = {
   display: "STollenaar/AdventOfCode",
   link: "https://github.com/STollenaar/AdventOfCode/",
-  days: [1, 2, 3, 4],
+  days: [1, 2, 3, 4, 5],
   dayLinkFunc: (day) => {
     if (day === 3) {
       return "https://github.com/STollenaar/AdventOfCode/blob/main/2025/day3/Day3.java";
@@ -49,7 +49,7 @@ const sven = {
 const evan = {
   display: "evaan/AdventOfCode",
   link: "https://github.com/evaan/AdventOfCode/blob/main/2025/",
-  days: [1, 2, 3, 4],
+  days: [1, 2, 3, 4, 5],
   dayLinkFunc: (day) =>
     `https://github.com/evaan/AdventOfCode/blob/main/2025/${day}/Day${day}.py`,
   language: "python",
@@ -58,7 +58,7 @@ const evan = {
 const djrideout = {
   display: "djrideout/advent2025",
   link: "https://github.com/djrideout/advent2025",
-  days: [1, 2, 3, 4],
+  days: [1, 2, 3, 4, 5],
   dayLinkFunc: (day) =>
     `https://github.com/djrideout/advent2025/blob/main/src/day${day}.rs`,
   language: "rust",
@@ -99,7 +99,7 @@ const marty = {
 const alex = {
   display: "terales/aoc-elixir",
   link: "https://github.com/terales/aoc-elixir/tree/main/2025",
-  days: [1, 2, 3, 4],
+  days: [1, 2, 3, 4, 5],
   dayLinkFunc: (day) =>
     `https://github.com/terales/aoc-elixir/blob/main/2025/d${day}/solution.exs`,
   language: "elixir",
