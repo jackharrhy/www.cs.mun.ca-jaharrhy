@@ -1,0 +1,576 @@
+---
+layout: "@layouts/AdventOfCodeLayoutDay.astro"
+title: day 4
+pubDate: 2025-12-04
+---
+
+import Other from "@components/aoc/Other2025.astro";
+
+day 1, day 2, day 3, _day 4 here we are_
+
+i enjoyed todays, i see grid problem, and shudder...
+
+but this felt like a really nice _first_ grid problem
+
+(i am going to regret that sentence the next time a grid
+problem pops up, 200%)
+
+we're all forklift certified now gang
+
+---
+
+<details>
+<summary>click to view my solution</summary>
+
+<br />
+
+given the sample input:
+
+```
+..@@.@@@@.
+@@@.@.@.@@
+@@@@@.@.@@
+@.@@@@..@.
+@@.@@@@.@@
+.@@@@@@@.@
+.@.@.@.@@@
+@.@@@.@@@@
+.@@@@@@@@.
+@.@.@@@.@.
+```
+
+assuming `input` is the above as one big string,
+
+### part 1
+
+```elixir
+grid = input
+  |> Kino.Input.read()
+  |> String.split("\n")
+  |> Enum.map(fn row ->
+    String.graphemes(row) |> Enum.map(fn
+      "." -> :.
+      "@" -> :@
+    end)
+  end)
+```
+
+input parse, turn the strings into atoms, this spits out:
+
+```elixir
+[
+  [:., :., :@, :@, :., :@, :@, :@, :@, :.],
+  [:@, :@, :@, :., :@, :., :@, :., :@, :@],
+  [:@, :@, :@, :@, :@, :., :@, :., :@, :@],
+  [:@, :., :@, :@, :@, :@, :., :., :@, :.],
+  [:@, :@, :., :@, :@, :@, :@, :., :@, :@],
+  [:., :@, :@, :@, :@, :@, :@, :@, :., :@],
+  [:., :@, :., :@, :., :@, :., :@, :@, :@],
+  [:@, :., :@, :@, :@, :., :@, :@, :@, :@],
+  [:., :@, :@, :@, :@, :@, :@, :@, :@, :.],
+  [:@, :., :@, :., :@, :@, :@, :., :@, :.]
+]
+```
+
+```elixir
+defmodule PaperBoy do
+  def get_at(grid, {x, y}) do
+    if x < 0 or y < 0 do
+      nil
+    else
+      row = Enum.at(grid, y)
+
+      if is_nil(row) do
+        nil
+      else
+        Enum.at(row, x)
+      end
+    end
+  end
+
+  def can_forklift(grid, {x, y}) do
+    value = get_at(grid, {x, y})
+
+    if value == :@ do
+      check_surronding(grid, {x, y})
+    else
+      :.
+    end
+  end
+
+  def check_surronding(grid, {x, y}) do
+    paper_count = for xp <- -1..1 do
+      for yp <- -1..1 do
+        if xp == 0 and yp == 0 do
+          0
+        else
+          x = xp + x
+          y = yp + y
+          value = get_at(grid, {x, y})
+
+          if value == :@ do
+            1
+          else
+            0
+          end
+        end
+      end
+    end
+    |> List.flatten()
+    |> Enum.sum()
+
+    if paper_count < 4 do
+      :x
+    else
+      :@
+    end
+  end
+end
+
+size = length(grid)
+
+marked_grid = for y <- 0..(size - 1) do
+  for x <- 0..(size - 1) do
+    PaperBoy.can_forklift(grid, {x, y})
+  end
+end
+```
+
+good ol `PaperBoy`
+
+i start by taking the grid i just parsed, and iterating over it
+using two for loops to get every `{x, y}` point on the grid:
+
+```elixir
+size = length(grid)
+
+marked_grid = for y <- 0..(size - 1) do
+  for x <- 0..(size - 1) do
+    PaperBoy.can_forklift(grid, {x, y})
+  end
+end
+```
+
+i loop from `y` then `x`, since when i address the grid, i'll first
+be handling its rows, then columns, so `y` first, _then_ `x`
+
+`can_forklift/2` takes in the grid, and a tuple of the `x/y` i'm checking
+
+```elixir
+def can_forklift(grid, {x, y}) do
+  value = get_at(grid, {x, y})
+
+  if value == :@ do
+    check_surronding(grid, {x, y})
+  else
+    :.
+  end
+end
+```
+
+we first get the value, using our own `get_at` util, and if its `:@`,
+we check its surrondings, if not, return `:.`, keeping it as-is
+
+`get_at/2` is defined as so:
+
+```elixir
+def get_at(grid, {x, y}) do
+  if x < 0 or y < 0 do
+    nil
+  else
+    row = Enum.at(grid, y)
+
+    if is_nil(row) do
+      nil
+    else
+      Enum.at(row, x)
+    end
+  end
+end
+```
+
+i'd love to be shown this exist somewhere in the stdlib, but `Enum.at` if
+passed a negative number, will wrap, which i don't want!
+
+so this function is a bit heavy, we basically just check to make sure if either
+number is negative (its out of bounds, and would trigger Enum.at wrapping), we
+return nil
+
+if not, we get the row, which might be out of bounds for being too big, so we
+also nil return, and if not, we get the `x`, which _might_ be nil, but that will
+then be handled by the caller
+
+```elixir
+def check_surronding(grid, {x, y}) do
+  paper_count = for xp <- -1..1 do
+    for yp <- -1..1 do
+      if xp == 0 and yp == 0 do
+        0
+      else
+        x = xp + x
+        y = yp + y
+        value = get_at(grid, {x, y})
+
+        if value == :@ do
+          1
+        else
+          0
+        end
+      end
+    end
+  end
+  |> List.flatten()
+  |> Enum.sum()
+
+  if paper_count < 4 do
+    :x
+  else
+    :@
+  end
+end
+```
+
+`check_surronding/2` is the meat
+
+this gets is a neighbor-finding matrix:
+
+```elixir
+for xp <- -1..1 do
+  for yp <- -1..1 do
+    # find real x,y, handle...
+  end
+end
+```
+
+we use this to find the value of each surronding
+location, with our existing 'safe' `get_at/1` function,
+we also skip when xp and yp are 0, i.e. we are on the
+cell we are checking, not a neighbor
+
+and yeah, we see if its a roll, i.e. `:@`, and return `1`,
+if its not, return 0
+
+we then sum each of these values, and if its less than 4,
+return `:x`, if not, return `:@`
+
+we return `:x` here, because then we actually end up with
+a grid that looks like how the sample displays it!
+
+```elixir
+[
+  [:., :., :x, :x, :., :x, :x, :@, :x, :.],
+  [:x, :@, :@, :., :@, :., :@, :., :@, :@],
+  [:@, :@, :@, :@, :@, :., :x, :., :@, :@],
+  [:@, :., :@, :@, :@, :@, :., :., :@, :.],
+  [:x, :@, :., :@, :@, :@, :@, :., :@, :x],
+  [:., :@, :@, :@, :@, :@, :@, :@, :., :@],
+  [:., :@, :., :@, :., :@, :., :@, :@, :@],
+  [:x, :., :@, :@, :@, :., :@, :@, :@, :@],
+  [:., :@, :@, :@, :@, :@, :@, :@, :@, :.],
+  [:x, :., :x, :., :@, :@, :@, :., :x, :.]
+]
+```
+
+```elixir
+marked_grid
+|> List.flatten()
+|> Enum.count(&(&1 == :x))
+```
+
+we than flatten the grid into a single list, an count the `:x` values!
+
+### part 2
+
+```elixir
+defmodule PaperMan do
+  def collect_rolls(grid, rolls \\ 0) do
+    size = length(grid)
+
+    marked_grid = for y <- 0..(size - 1) do
+      for x <- 0..(size - 1) do
+        PaperBoy.can_forklift(grid, {x, y})
+      end
+    end
+
+    marked_count = count_marked_grid(marked_grid)
+
+    if marked_count == 0 do
+      rolls
+    else
+      cleaned_grid = marked_grid
+        |> Enum.map(fn row ->
+          row
+          |> Enum.map(fn
+            :x -> :.
+            x -> x
+          end)
+        end)
+
+      collect_rolls(cleaned_grid, rolls + marked_count)
+    end
+  end
+
+  def count_marked_grid(marked_grid) do
+    marked_grid
+    |> List.flatten()
+    |> Enum.count(&(&1 == :x))
+  end
+end
+
+PaperMan.collect_rolls(grid)
+```
+
+when a `PaperBoy` isn't enough, you reach for a _`PaperMan`_...
+
+now thankfully, `PaperBoy` basically is intact from when i did my part 1,
+me trying to be clever and basically return a new grid with the `x`s marked
+was actually a good starting point for part 2
+
+```elixir
+def collect_rolls(grid, rolls \\ 0) do
+  size = length(grid)
+
+  marked_grid = for y <- 0..(size - 1) do
+    for x <- 0..(size - 1) do
+      PaperBoy.can_forklift(grid, {x, y})
+    end
+  end
+
+  marked_count = count_marked_grid(marked_grid)
+
+  ...
+```
+
+this is similar code as to before, we just get the `marked_grid` like we just did,
+and count the number of spaces a forklift can go
+
+```elixir
+  if marked_count == 0 do
+    rolls
+  else
+    cleaned_grid = marked_grid
+      |> Enum.map(fn row ->
+        row
+        |> Enum.map(fn
+          :x -> :.
+          x -> x
+        end)
+      end)
+
+    collect_rolls(cleaned_grid, rolls + marked_count)
+  end
+end
+```
+
+except now, if we found any forklifts, we clear them out by
+filtering over the grid, removing all the `:x` values, and parsing again!
+
+and right before we parse, we count how many we found marked on that run,
+and add it to a running total
+
+once we run into a grid that we can mark no more, we return how many rolls we marked
+
+nice!
+
+i think my answer is quite slow... but its an answer
+
+the full solution can be found [[here]](https://github.com/jackharrhy/advent2025/blob/main/day4.livemd)
+
+<br />
+
+</details>
+
+---
+
+### others
+
+<Other person="evan" day="4" />
+
+> starting off with mr evan today
+>
+> another _nice_ small python solution
+>
+> this time with no code golf, _nice_
+>
+> could write:
+>
+> ```py
+> count = int((loc[0]-1, loc[1]-1) in paperLocations)
+> count += int((loc[0]-1, loc[1]) in paperLocations)
+> count += int((loc[0]-1, loc[1]+1) in paperLocations)
+> count += int((loc[0], loc[1]-1) in paperLocations)
+> count += int((loc[0], loc[1]+1) in paperLocations)
+> count += int((loc[0]+1, loc[1]-1) in paperLocations)
+> count += int((loc[0]+1, loc[1]) in paperLocations)
+> count += int((loc[0]+1, loc[1]+1) in paperLocations)
+> ```
+>
+> as:
+>
+> ```py
+> count = 0
+> for dx in (-1, 0, 1):
+>   for dy in (-1, 0, 1):
+>     if dx == 0 and dy == 0:
+>       continue
+>     count += int((loc[0] + dx, loc[1] + dy) in paperLocations)
+> ```
+>
+> but as so far, i like
+
+<Other person="riley" day="4" />
+
+> oh riley got some [_grid utils_](https://github.com/nint8835/advent-of-code/blob/main/utils/Utils.fs) out here
+>
+> _nice_
+>
+> makes the function you have to fund removable paper so nice:
+>
+> ```fsharp
+> let locateRemovablePaper (input: int[,]) : (int * int)[] =
+>     input
+>     |> Array2D.findIndices ((=) 1)
+>     |> Array.filter (fun (x, y) ->
+>         (input |> Array2D.neighbourValuesWithDiagonals x y |> Array.sum) < 4)
+> ```
+>
+> nice
+
+<Other person="alex" day="4" />
+
+> this ramble is turning into _lets see how you handle your gridification and neighbor finding_!
+>
+> this is the alex one:
+>
+> ```elixir
+> defmodule Grid do
+>   def build_grid(input, cells_to_keep) do
+>     for {line, row} <- Enum.with_index(String.split(input, "\n", trim: true)),
+>         {cell, col} <- Enum.with_index(String.graphemes(line)),
+>         cell in cells_to_keep,
+>         into: %{},
+>         do: {{col, row}, cell}
+>   end
+>
+>   def neigbouring_positions({col, row}) do
+>     [
+>       { col - 1, row - 1 }, { col, row - 1 }, { col + 1, row - 1 },
+>       { col - 1, row     },                   { col + 1, row     },
+>       { col - 1, row + 1 }, { col, row + 1 }, { col + 1, row + 1 },
+>     ]
+>   end
+> end
+> ```
+>
+> i do like this neighboruing positon one, and leaving an explicit
+> empty space where the 'self' cell is
+>
+> i like this one, good usage of `map_size`, making me realize that
+> me making everything symbols to visualize things nicer was not the
+> call from making things work fast / be nice looking code perspective
+
+<Other person="mudkip" day="4" />
+
+> more 'lixir
+>
+> ```elixir
+> Code.require_file("../../utils/grid.exs")
+> ```
+>
+> [`Code`](https://hexdocs.pm/elixir/Code.html) usage in an `.exs` file to import util, very nice!
+>
+> this is an include inline one
+>
+> ```elixir
+> defmodule PaperFactoryMapper do
+>   def map(grid, first_count \\ nil, total_count \\ 0) do
+>     to_remove =
+>       GridUtils.each_cell(grid)
+>       |> Enum.filter(fn {{x, y}, cell} ->
+>         cell == "@" and
+>           length(GridUtils.get_neighbors({x, y}, grid, ["@"], MapSet.new(), :eight)) < 4
+>       end)
+>       |> Enum.map(fn {pos, _cell} -> pos end)
+>
+>     if to_remove == [] do
+>       {first_count || 0, total_count}
+>     else
+>       new_grid =
+>         Enum.reduce(to_remove, grid, fn pos, acc ->
+>           GridUtils.set_value(acc, pos, ".")
+>         end)
+>
+>       removed = length(to_remove)
+>       map(new_grid, first_count || removed, total_count + removed)
+>     end
+>   end
+> end
+> ```
+>
+> i really like the approach to have the same recursive function here
+> be used to keep track of the result of the 'first' paper removal, and
+> only set that if we have yet to set `first_count`, therefore set it to `removed`,
+> if we have `first_count`, it stays around 'til the end
+>
+> and nice utility function for grids making this _tidy_
+
+<Other person="djrideout" day="4" />
+
+> ```rust
+> use advent_grid::{Grid, Input, generate_input};
+> ```
+>
+> another grid util, but this is no mere other folder / crate in the same repo
+>
+> no dj has cooked [`advent-grid`](https://github.com/djrideout/advent-grid), an entire new repo!
+>
+> _which you can also have for yourself, simply by adding_:
+>
+> ```toml
+> advent-grid = { git = "https://github.com/djrideout/advent-grid.git", version = "0.1.0" }
+> ```
+>
+> _to your `Cargo.toml`_
+>
+> advertisement of your new repo aside, nice solution
+
+<Other person="hking" day="4" />
+
+> another day another `numpy`
+>
+> hking break your neighbor finding code into a function you have it ctrl-c `->` ctrl-v'd in your part 1 & 2!
+>
+> tidy up your room!
+>
+> a pretty readable for the most part solution though
+>
+> im ready for some _real_ numpy magic later on though i feel...
+
+<Other person="sven" day="4" />
+
+> return to form (golang), thank you sven
+>
+> i feel something like this would make your neighbor function better
+>
+> ```go
+> for _, dx := range []int{-1, 0, 1} {
+> 	for _, dy := range []int{-1, 0, 1} {
+> 		if dx == 0 && dy == 0 {
+> 			continue
+> 		}
+> 		// use dx, dy
+> 	}
+> }
+> ```
+>
+> nice bit of go otherwise
+
+---
+
+any thoughts about any of the above?
+
+reach out:
+
+import Letterbird from "@components/Letterbird.astro";
+
+<Letterbird />
