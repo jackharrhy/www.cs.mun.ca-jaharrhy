@@ -3,7 +3,7 @@ export const pad = (num, amount = 2) => String(num).padStart(amount, "0");
 const riley = {
   display: "nint8835/advent-of-code",
   link: "https://github.com/nint8835/advent-of-code/tree/main/2025",
-  days: [1, 2, 3, 4, 5],
+  days: [1, 2, 3, 4, 5, 6],
   dayLinkFunc: (day) =>
     `https://github.com/nint8835/advent-of-code/blob/main/2025/${pad(
       day
@@ -58,7 +58,7 @@ const evan = {
 const djrideout = {
   display: "djrideout/advent2025",
   link: "https://github.com/djrideout/advent2025",
-  days: [1, 2, 3, 4, 5],
+  days: [1, 2, 3, 4, 5, 6],
   dayLinkFunc: (day) =>
     `https://github.com/djrideout/advent2025/blob/main/src/day${day}.rs`,
   language: "rust",
@@ -67,12 +67,12 @@ const djrideout = {
 const natalie = {
   display: "ncashin/aoc2025",
   link: "https://github.com/ncashin/Advent-Of-Code",
-  days: [1],
+  days: [1, 6],
   dayLinkFunc: (day) => {
     if (day === 1) {
       return "https://github.com/ncashin/Advent-Of-Code/blob/main/2025/day1.rb";
     }
-    return `https://github.com/ncashin/Advent-Of-Code/blob/main/2025/day${day}.exs`;
+    return `https://github.com/ncashin/Advent-Of-Code/blob/main/2025/day${day}/day${day}.livemd`;
   },
   language: "elixir",
 };
@@ -99,7 +99,7 @@ const marty = {
 const alex = {
   display: "terales/aoc-elixir",
   link: "https://github.com/terales/aoc-elixir/tree/main/2025",
-  days: [1, 2, 3, 4, 5],
+  days: [1, 2, 3, 4, 5, 6],
   dayLinkFunc: (day) =>
     `https://github.com/terales/aoc-elixir/blob/main/2025/d${day}/solution.exs`,
   language: "elixir",

@@ -41,6 +41,7 @@ const ShowPeople = ({ day }) =>
 
 export function JackUtils() {
   const [day, setDay] = useState(new Date().getDate());
+  const [copied, setCopied] = useState(false);
 
   const allPeopleTemplate = useMemo(
     () =>
@@ -52,6 +53,15 @@ export function JackUtils() {
     [day]
   );
 
+  const fullTemplate = dayTemplate(day, allPeopleTemplate);
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(fullTemplate).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
   return (
     <>
       day:{" "}
@@ -61,9 +71,12 @@ export function JackUtils() {
       />
       <br />
       <br />
-      <p>full template</p>
+      <p>
+        full template{" "}
+        <button onClick={copyToClipboard}>{copied ? "copied!" : "copy"}</button>
+      </p>
       <div>
-        <pre>{dayTemplate(day, allPeopleTemplate)}</pre>
+        <pre>{fullTemplate}</pre>
       </div>
       <p>just others</p>
       <div>

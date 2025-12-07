@@ -1,0 +1,451 @@
+---
+layout: "@layouts/AdventOfCodeLayoutDay.astro"
+title: day 6
+pubDate: 2025-12-06
+---
+
+import Other from "@components/aoc/Other2025.astro";
+
+i really liked this one...
+
+input parsing my beloved
+
+---
+
+<details>
+<summary>click to view my solution</summary>
+
+<br />
+
+given the sample input:
+
+```
+123 328  51 64 
+ 45 64  387 23 
+  6 98  215 314
+*   +   *   +  
+```
+
+assuming `input` is the above as one big string,
+
+## part 1
+
+```elixir
+maths = input
+|> Kino.Input.read()
+|> String.split("\n")
+|> Enum.map(fn line ->
+  line
+  |> String.split(" ")
+  |> Enum.filter(&(&1 != ""))
+  |> Enum.map(fn val ->
+    case Integer.parse(val) do
+      {val, _} -> val
+        :error -> String.to_atom(val)
+    end
+  end)
+end)
+|> Enum.zip()
+|> Enum.map(&(Tuple.to_list(&1)))
+```
+
+input parsing! hell yeah!
+
+this spits out:
+
+```elixir
+[
+  [123, 45, 6, :*],
+  [328, 64, 98, :+],
+  [51, 387, 215, :*],
+  [64, 23, 314, :+]
+]
+```
+
+the first chunk here turns things into nice little chunks:
+
+```elixir
+...
+|> String.split("\n")
+|> Enum.map(fn line ->
+  line
+  |> String.split(" ")
+end)
+```
+
+this spits out out this
+
+```elixir
+[
+  ["123", "328", "", "51", "64", ""],
+  ["", "45", "64", "", "387", "23", ""],
+  ["", "", "6", "98", "", "215", "314"],
+  ["*", "", "", "+", "", "", "*", "", "", "+", "", ""]
+]
+```
+
+then we filter out empty strings, and parse said non empty strings
+
+```elixir
+...
+|> Enum.filter(&(&1 != ""))
+|> Enum.map(fn val ->
+   case Integer.parse(val) do
+    {val, _} -> val
+    :error -> String.to_atom(val)
+   end
+end)
+```
+
+we attempt to parse as integer, if we fail, we know its a `+` or `*`, so
+we cast that to an atom, and get `:+`  / `:*`
+
+this gets us:
+
+```elixir
+[
+  [123, 328, 51, 64],
+  [45, 64, 387, 23],
+  [6, 98, 215, 314],
+  [:*, :+, :*, :+]
+]
+```
+
+this is great, buts its the wrong way!, so we `Enum.zip`, and `Tuple`ify the results of that
+
+```elixir
+|> Enum.zip()
+|> Enum.map(&(Tuple.to_list(&1)))
+```
+
+```elixir
+[
+  [123, 45, 6, :*],
+  [328, 64, 98, :+],
+  ...
+]
+```
+
+nice
+
+```elixir
+maths
+|> Enum.map(fn math ->
+  {op, nums} = List.pop_at(math, length(math) - 1)
+
+  Enum.reduce(nums, fn num, acc ->
+    apply(Kernel, op, [num, acc])
+  end)
+end)
+|> Enum.sum()
+```
+
+and then yeah, we take each list, pop the last value (the operation),
+and reduce down the list of numbers using the operation to a single value
+and sum all of the math
+
+my fav thing above is:
+
+```elixir
+apply(Kernel, op, [num, acc])
+```
+
+apply is very useful, it allows you to invoke a function on a module,
+now `Kernel` in elixir is the sort of 'root' namespace everything lives on,
+which includes multiplication and addition, so lets say we're accumulated `10`, and our num is
+`5`, and our `op` is `:+`, we'd invoke:
+
+```elixir
+apply(Kernel, :+, [5, 10])
+```
+
+and this would work!
+
+## part 2
+
+```elixir
+proper_maths = input
+|> Kino.Input.read()
+|> String.split("\n")
+|> Enum.map(&(String.graphemes(&1)))
+|> Enum.zip()
+|> Enum.map(fn tuple ->
+  tuple
+  |> Tuple.to_list()
+  |> Enum.filter(&(&1 !== " "))
+  |> Enum.map(fn val ->
+    case Integer.parse(val) do
+      {val, _} -> val
+        :error -> String.to_atom(val)
+    end
+  end)
+end)
+|> Enum.chunk_by(&(&1 == []))
+|> Enum.take_every(2)
+```
+
+output:
+
+> the `~c"\b"` bit, is because lists of certain bytes sometimes are read as ascii in elixir/erlang...
+>
+> you can configure it not to do that, which i usually do, but i felt like leaving it in there to 
+> show this oddity
+
+```elixir
+[
+  [[1, :*], [2, 4], [3, 5, 6]],
+  [[3, 6, 9, :+], [2, 4, 8], ~c"\b"],
+  [[3, 2, :*], [5, 8, 1], [1, 7, 5]],
+  [[6, 2, 3, :+], [4, 3, 1], [4]]
+]
+```
+
+how i approaches this, was realizing that i could `Enum.zip` the output of `String.graphemes`:
+
+```elixir
+proper_maths = input
+|> Kino.Input.read()
+|> String.split("\n")
+|> Enum.map(&(String.graphemes(&1)))
+```
+
+which gives me 
+
+```elixir
+[
+  ["1", "2", "3", " ", "3", "2", "8", " ", " ", "5", "1", " ", "6", "4", " "],
+  [" ", "4", "5", " ", "6", "4", " ", " ", "3", "8", "7", " ", "2", "3", " "],
+  [" ", " ", "6", " ", "9", "8", " ", " ", "2", "1", "5", " ", "3", "1", "4"],
+  ["*", " ", " ", " ", "+", " ", " ", " ", "*", " ", " ", " ", "+", " ", " "]
+]
+```
+
+in this case, i actually like the empty space characters!
+
+when you `Enum.zip` that, you get:
+
+```elixir
+[
+  {"1", " ", " ", "*"},
+  {"2", "4", " ", " "},
+  {"3", "5", "6", " "},
+  {" ", " ", " ", " "},
+  {"3", "6", "9", "+"},
+  {"2", "4", "8", " "},
+  ...
+]
+```
+
+nice! so the sections of numbers are seperated by `{" ", " ", " ", " "}`,
+and the first numbers last row is going to be the 'operator'
+
+now lets map over that and clean it up a bit:
+
+```elixir
+|> Enum.map(fn tuple ->
+  tuple
+  |> Tuple.to_list()
+  |> Enum.filter(&(&1 !== " "))
+  |> Enum.map(fn val ->
+    case Integer.parse(val) do
+      {val, _} -> val
+        :error -> String.to_atom(val)
+    end
+  end)
+end)
+```
+
+we get this:
+
+```elixir
+[
+  [1, :*],
+  [2, 4],
+  [3, 5, 6],
+  [],
+  [3, 6, 9, :+],
+  [2, 4, 8],
+  ...
+]
+```
+
+so each time we see an empty list, we should start a new 'chunk'
+
+then we do so:
+
+```elixir
+...
+|> Enum.chunk_by(&(&1 == []))
+|> Enum.take_every(2)
+```
+
+(take every is because we still get some empty lists, which we want to scrape away)
+
+and then yeah, parsed:
+
+```elixir
+[
+  [[1, :*], [2, 4], [3, 5, 6]],
+  [[3, 6, 9, :+], [2, 4, 8], ...]
+  ...
+]
+```
+
+so then we loop over these new 'problems', and pop the
+first list out to get its first item, modify it so we remove the `:op`,
+and then basically do the same thing before (except using `Integer.undigits`
+as i saw mudkip using the other day to turn out list of numbers into an
+actual digit)
+
+```elixir
+proper_maths
+|> Enum.map(fn math ->
+  [first | rest] = math
+
+  {op, first} = List.pop_at(first, length(first)-1)
+
+  nums = [first | rest] |> Enum.map(&(Integer.undigits(&1)))
+
+  Enum.reduce(nums, fn num, acc ->
+    apply(Kernel, op, [num, acc])
+  end)
+end)
+|> Enum.sum()
+```
+
+tidy!
+
+the full solution can be found [[here]](https://github.com/jackharrhy/advent2025/blob/main/day6.livemd)
+
+<br />
+
+</details>
+
+---
+
+four solutions to ramble on today...
+
+however i know why this is
+
+a combination of flying in late, and some
+folks having a work christmas party at a brewery...
+
+less work for me, more focus for those that did to todays by the night of the day!
+
+### others
+
+<Other person="alex" day="6" />
+
+> clever trick here to reverse the list so the operator is the first thing rather than the last thing in the list!
+>
+> some interesting code to do zipping with padding and such, grabbing the 'longest' enumerable to use here is clever as well
+>
+> i like this solution
+
+<Other person="riley" day="6" />
+
+> extracting the operators before you dig into the problem is clever:
+>
+> ```fsharp
+> let operators =
+>     inputData
+>     |> Array.map (
+>         String.split " " >> Array.filter (String.IsNullOrEmpty >> not)
+>     )
+>     |> Array.last
+>     |> Array.map (function
+>         | "+" -> (+)
+>         | "*" -> (*)
+>         | _ -> failwith "Invalid operator")
+> ```
+>
+> i like the mapping of string values to just `+` and `*`
+>
+> `transpose` being used here, i assume similar to the `zip` myself and alex pulled out
+>
+> the evaluation being a zip with the operators is cool
+>
+> ```fsharp
+> let evaluateNumbers (numberArray: int64[][]) : int64 =
+>    numberArray
+>    |> Array.zip operators
+>    |> Array.sumBy (fun (op, numbers) -> numbers |> Array.reduce op)
+> ```
+>
+> but wait, you have a `zip` so a `transpose` isn't a `zip`?
+>
+> oh wait! it looks like the `Enum.zip_with(&1)` from earlier in alexes
+> solution was the same sort of thing, its not just zipping two things together,
+> but _`n`_ things together, _cool_
+
+<Other person="natalie" day="6" />
+
+> natalie is here!!! hello natalie!!!
+>
+> she starts out with
+>
+> ```elixir
+> defmodule Main do
+>   def transpose(rows) do
+>     rows
+>     |> Enum.zip()
+>     |> Enum.map(&Tuple.to_list/1)
+>   end
+> end
+> ```
+> 
+> oh god its sorting the input beforehand all over again
+>
+> gonna include your _entire_ part 2 in one chunk, because its _nice_
+>
+> ```elixir
+> problems =
+>   input
+>   |> Kino.Input.read()
+>   |> String.split("\n", trim: true)
+>   |> Enum.map(&String.graphemes/1)
+>   |> then(&Enum.zip(&1))
+>   |> Enum.map(fn tuple -> tuple |> Tuple.to_list() |> Enum.join() end)
+>   |> Enum.chunk_by(fn a -> a |> String.trim() |> String.length() == 0 end)
+>   |> Enum.filter(fn a -> a |> Enum.at(0) |> String.trim() |> String.length() != 0 end)
+> 
+> problems
+> |> Enum.map(fn problem ->
+>   operator =
+>     problem |> Enum.at(0) |> String.last()
+> 
+>   problem
+>   |> Enum.map(&String.replace(&1, ~r/[^0-9]/, ""))
+>   |> Enum.map(&String.to_integer(&1))
+>   |> Enum.reduce(fn value, acc ->
+>     apply(Kernel, operator |> String.to_atom(), [value, acc])
+>   end)
+> end)
+> |> Enum.sum()
+> ```
+>
+> nice, cool seeing people get good use out of an inline `then` in a pipeline
+>
+> also lets go `apply(Kernel, operator, ...)`
+
+<Other person="djrideout" day="6" />
+
+> regex being pulled out here for data parsing, sensible!
+>
+> very parsing heavy, and no `zip`ping of any kind, the odd one out today
+>
+> but still an epic solution nonetheless
+
+godspeed to the soldiers we lost today, for they shall return tomorrow for day 7 i am sure...
+
+also... this is the halfway mark! **1/2** the way there! lets go!
+
+---
+
+any thoughts about any of the above?
+
+reach out:
+
+import Letterbird from "@components/Letterbird.astro";
+
+<Letterbird />
