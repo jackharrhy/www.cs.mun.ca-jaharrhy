@@ -4,14 +4,13 @@ import type { AstroIntegration } from "astro";
 import { unescape as decode } from "html-escaper";
 import { ELEMENT_NODE, parse, walkSync } from "ultrahtml";
 
-const images = new Set([".avif", ".gif", ".jpeg", ".jpg", ".png", ".svg", ".webp"]);
 const documents = new Set([
   ".pdf", ".txt", ".md", ".csv", ".doc", ".docx", ".odt", ".ods",
   ".xls", ".xlsx", ".ppt", ".pptx", ".epub", ".zip", ".7z", ".tar",
   ".gz", ".bz2", ".xz", ".mp3", ".wav", ".ogg", ".flac", ".mp4",
   ".webm", ".mov", ".obj", ".glb", ".gltf",
 ]);
-const excludedDirectories = new Set(["private", "phap/bot"]);
+const excludedDirectories = new Set(["private", "phap/bot", "_astro"]);
 const namespace = "http://www.sitemaps.org/schemas/sitemap/0.9";
 
 function escapeXml(value: string): string {
@@ -55,22 +54,20 @@ export async function generateSitemap(directory: URL, site: URL) {
     throw new Error("Sitemap site must be an absolute HTTP(S) URL ending in a slash");
   }
   const files = await contentFiles(directory);
-  const available = new Map(files.map((path) => [fileUrl(path, site).href, path]));
-  const entries = new Map<string, Set<string>>();
+  const entries = new Set<string>();
   let pageCount = 0;
   let assetCount = 0;
 
   for (const path of files) {
     const extension = extname(path).toLowerCase();
-    if (images.has(extension) || documents.has(extension)) {
-      entries.set(fileUrl(path, site).href, new Set());
+    if (documents.has(extension)) {
+      entries.add(fileUrl(path, site).href);
       assetCount++;
       continue;
     }
     if (![".html", ".htm", ".php"].includes(extension) || path === "404.html") continue;
 
     const url = pageUrl(path, site);
-    const pageImages = new Set<string>();
     let noindex = false;
     let canonical: string | undefined;
     // PHP is listed by its URL, never executed or parsed as static HTML.
@@ -85,37 +82,21 @@ export async function generateSitemap(directory: URL, site: URL) {
         if (node.name === "link" && /\bcanonical\b/i.test(attributes.rel ?? "") && attributes.href) {
           canonical = new URL(decode(attributes.href), url).href;
         }
-        const references: string[] = [];
-        if (node.name === "img" && attributes.src) references.push(attributes.src);
-        if (["img", "source"].includes(node.name) && attributes.srcset) {
-          references.push(...attributes.srcset.split(",").map((candidate) => candidate.trim().split(/\s+/)[0]!));
-        }
-        if (node.name === "video" && attributes.poster) references.push(attributes.poster);
-        for (const reference of references) {
-          const image = new URL(decode(reference), url);
-          image.hash = "";
-          image.search = "";
-          if (available.has(image.href) && images.has(extname(image.pathname).toLowerCase())) {
-            pageImages.add(image.href);
-          }
-        }
+
       });
     }
     if (noindex || (canonical && canonical !== url.href)) continue;
-    entries.set(url.href, pageImages);
+    entries.add(url.href);
     pageCount++;
   }
 
-  const urls = [...entries].sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0).map(([url, associatedImages]) => {
-    const imageTags = [...associatedImages].sort().slice(0, 1000).map((image) =>
-      `    <image:image><image:loc>${escapeXml(image)}</image:loc></image:image>`
-    );
-    return ["  <url>", `    <loc>${escapeXml(url)}</loc>`, ...imageTags, "  </url>"].join("\n");
-  });
+  const urls = [...entries].sort().map((url) =>
+    ["  <url>", `    <loc>${escapeXml(url)}</loc>`, "  </url>"].join("\n")
+  );
   const xml = [
     '<?xml version="1.0" encoding="UTF-8"?>',
     `<?xml-stylesheet type="text/xsl" href="${escapeXml(new URL("sitemap.xsl", site).pathname)}"?>`,
-    `<urlset xmlns="${namespace}" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">`,
+    `<urlset xmlns="${namespace}">`,
     ...urls,
     "</urlset>\n",
   ].join("\n");
@@ -137,7 +118,7 @@ export default function sitemap(): AstroIntegration {
       "astro:build:done": async ({ dir, logger }) => {
         const { xml, pageCount, assetCount } = await generateSitemap(dir, site);
         await writeFile(new URL("sitemap.xml", dir), xml);
-        logger.info(`sitemap.xml: ${pageCount} pages, ${assetCount} images and downloads`);
+        logger.info(`sitemap.xml: ${pageCount} pages, ${assetCount} downloads`);
       },
     },
   };

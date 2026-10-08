@@ -9,7 +9,7 @@ import { generateSitemap } from "./sitemap.ts";
 
 const site = new URL("https://example.com/~jack/");
 
-test("finds unlinked pages, PHP, documents and images while excluding non-content and private files", async (context) => {
+test("finds unlinked pages, PHP, documents while excluding images, build assets and private files", async (context) => {
   const root = await mkdtemp(join(tmpdir(), "website-sitemap-"));
   context.after(() => rm(root, { recursive: true, force: true }));
   const files = {
@@ -23,6 +23,8 @@ test("finds unlinked pages, PHP, documents and images while excluding non-conten
     "images/cat.webp": "image",
     "_astro/photo.webp": "image",
     "_astro/client.js": "script",
+    "_astro/generated.html": "generated",
+    "_astro/data.pdf": "generated",
     "fonts/font.woff2": "font",
     "josh.pem": "key",
     "phap/bot/index.php": "webhook",
@@ -50,23 +52,16 @@ test("finds unlinked pages, PHP, documents and images while excluding non-conten
   const locations = urls.map((url) => url.getElementsByTagName("loc").item(0)!.textContent);
   assert.deepEqual(locations, [
     "https://example.com/~jack/",
-    "https://example.com/~jack/_astro/photo.webp",
     "https://example.com/~jack/downloads/%E7%8C%AB%20%26%20tea.pdf",
     "https://example.com/~jack/downloads/game.zip",
-    "https://example.com/~jack/images/cat%20%26%20tea.png",
-    "https://example.com/~jack/images/cat.webp",
     "https://example.com/~jack/phap/index.php",
     "https://example.com/~jack/play/game.html",
     "https://example.com/~jack/unlinked/",
   ].sort());
   assert.equal(document.documentElement!.namespaceURI, "http://www.sitemaps.org/schemas/sitemap/0.9");
-  const associatedImages = Array.from(urls[0]!.getElementsByTagName("image:loc")).map((image) => image.textContent);
-  assert.deepEqual(associatedImages, [
-    "https://example.com/~jack/images/cat%20%26%20tea.png",
-    "https://example.com/~jack/images/cat.webp",
-  ]);
+  assert.equal(document.getElementsByTagName("image:loc").length, 0);
   assert.equal(result.pageCount, 4);
-  assert.equal(result.assetCount, 5);
+  assert.equal(result.assetCount, 2);
   assert.equal(result.xml, (await generateSitemap(directory, site)).xml);
   assert.equal(document.getElementsByTagName("lastmod").length, 0);
 });
