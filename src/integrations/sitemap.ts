@@ -114,6 +114,7 @@ export async function generateSitemap(directory: URL, site: URL) {
   });
   const xml = [
     '<?xml version="1.0" encoding="UTF-8"?>',
+    `<?xml-stylesheet type="text/xsl" href="${escapeXml(new URL("sitemap.xsl", site).pathname)}"?>`,
     `<urlset xmlns="${namespace}" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">`,
     ...urls,
     "</urlset>\n",
