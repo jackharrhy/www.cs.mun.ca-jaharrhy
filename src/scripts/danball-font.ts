@@ -47,6 +47,7 @@ const loadImage = async (url: string, elem: HTMLImageElement) =>
 
 export const setupContext = (canvas: HTMLCanvasElement) => {
   const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("A 2D canvas context is required");
   ctx.imageSmoothingEnabled = false;
   ctx.imageSmoothingQuality = "high";
   return ctx;
@@ -102,6 +103,7 @@ export const setupDanballFont = async (
   const charHeight = danballFont.height;
   const offscreen = new OffscreenCanvas(charWidth, charHeight);
   const offscreenCtx = offscreen.getContext("2d");
+  if (!offscreenCtx) throw new Error("An offscreen 2D context is required");
 
   const charToPosInImage = (char: string) => {
     const charCode = char.charCodeAt(0);

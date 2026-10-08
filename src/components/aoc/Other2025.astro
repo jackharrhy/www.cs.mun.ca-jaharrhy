@@ -1,6 +1,11 @@
 ---
 import { people } from "@data/aoc/2025/data";
 
+interface Props {
+  person: keyof typeof people;
+  day: number | string;
+}
+
 const { person: personKey, day } = Astro.props;
 const person = people[personKey];
 const dayLink = person.dayLinkFunc(Number(day));

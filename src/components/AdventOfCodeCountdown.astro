@@ -16,7 +16,7 @@
   const currentYear = now.getFullYear();
 
   const aocYear = document.getElementById("aoc-year");
-  aocYear.innerText = currentYear.toString();
+  if (aocYear) aocYear.innerText = currentYear.toString();
 
   const aocStart = new Date(currentYear, 11, 1);
   const aocEnd = new Date(currentYear, 11, 25);
@@ -32,12 +32,12 @@
   } else if (beforeAocStart) {
     // days until aoc
     const daysUntilAoc = Math.ceil(
-      ((aocStart as any) - (now as any)) / (1000 * 60 * 60 * 24)
+      (aocStart.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
     );
     text = `in ${daysUntilAoc} days!`;
   } else if (afterAocEnd) {
     text = "again near year!";
   }
 
-  aocHappening.innerText = text;
+  if (aocHappening) aocHappening.innerText = text;
 </script>

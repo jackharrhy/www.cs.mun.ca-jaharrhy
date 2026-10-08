@@ -1,6 +1,6 @@
 <script>
 class Snow extends HTMLElement {
-	static random(min, max) {
+	static random(min: number, max: number) {
 		return min + Math.floor(Math.random() * (max - min) + 1);
 	}
 
@@ -10,7 +10,7 @@ class Snow extends HTMLElement {
 		text: "text", // text in snow flake (emoji, too)
 	}
 
-	generateCss(mode, count) {
+	generateCss(mode: string, count: number) {
 		let css = [];
 		css.push(`
 :host([mode="element"]) {
@@ -49,7 +49,7 @@ class Snow extends HTMLElement {
 		let dimensions = { width: 100, height: 100 };
 		let units = { x: "vw", y: "vh"};
 
-		if(mode === "element") {
+		if(mode === "element" && this.firstElementChild) {
 			dimensions = {
 				width: this.firstElementChild.clientWidth,
 				height: this.firstElementChild.clientHeight,
@@ -106,11 +106,11 @@ class Snow extends HTMLElement {
 
 		console.log("December, its time for snowflakes");
 
-		let count = parseInt(this.getAttribute(Snow.attrs.count)) || 100;
+		let count = parseInt(this.getAttribute(Snow.attrs.count) ?? "100") || 100;
 
 		let mode;
 		if(this.hasAttribute(Snow.attrs.mode)) {
-			mode = this.getAttribute(Snow.attrs.mode);
+			mode = this.getAttribute(Snow.attrs.mode) ?? "page";
 		} else {
 			mode = this.firstElementChild ? "element" : "page";
 			this.setAttribute(Snow.attrs.mode, mode);
@@ -133,7 +133,7 @@ class Snow extends HTMLElement {
 	}
 }
 
-customElements.define("snow-fall", Snow);
+if (!customElements.get("snow-fall")) customElements.define("snow-fall", Snow);
 </script>
 
 <snow-fall></snow-fall>

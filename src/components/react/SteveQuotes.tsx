@@ -1,3 +1,4 @@
+/** @jsxRuntime automatic */
 const steveQuotes = [
   "If you can't accept me at my worst, you don't deserve me at my best",
   "I am halfway in between the age of you and your Dad so I'm a good mediator",

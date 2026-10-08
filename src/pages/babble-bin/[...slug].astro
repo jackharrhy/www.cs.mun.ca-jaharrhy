@@ -1,17 +1,21 @@
 ---
 import BabbleBinLayout from "@layouts/BabbleBinLayout.astro";
 
-import { getCollection } from "astro:content";
+import { getCollection, render, type CollectionEntry } from "astro:content";
+
+interface Props {
+  entry: CollectionEntry<"babble-bin">;
+}
 export async function getStaticPaths() {
   const babbles = await getCollection("babble-bin");
 
   return babbles.map((entry) => ({
-    params: { slug: entry.slug },
+    params: { slug: entry.id },
     props: { entry },
   }));
 }
 const { entry } = Astro.props;
-const { Content } = await entry.render();
+const { Content } = await render(entry);
 ---
 
 <BabbleBinLayout title={entry.data.title}>

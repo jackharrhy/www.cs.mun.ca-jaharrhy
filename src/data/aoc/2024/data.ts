@@ -1,6 +1,6 @@
-export const pad = (num, amount = 2) => String(num).padStart(amount, "0");
+export const pad = (num: number, amount = 2) => String(num).padStart(amount, "0");
 
-const dayToName = {
+const dayToName: Record<number, string> = {
   1: "one",
   2: "two",
   3: "three",
@@ -14,7 +14,7 @@ const riley = {
   display: "nint8835/advent-of-code",
   link: "https://github.com/nint8835/advent-of-code/tree/main/2024",
   days: [1, 2, 3, 4, 5],
-  dayLinkFunc: (day) =>
+  dayLinkFunc: (day: number) =>
     `https://github.com/nint8835/advent-of-code/blob/main/2024/${pad(
       day
     )}/Day${day}.fsx`,
@@ -25,7 +25,7 @@ const mudkip = {
   display: "Mudkip/AdventOfCode",
   link: "https://github.com/Mudkip/AdventOfCode/",
   days: [1, 2, 3, 4, 5],
-  dayLinkFunc: (day) =>
+  dayLinkFunc: (day: number) =>
     `https://github.com/Mudkip/AdventOfCode/blob/main/2024/day${pad(
       day
     )}/${day}.exs`,
@@ -36,7 +36,7 @@ const daniel = {
   display: "DanielPower/AdventOfCode",
   link: "https://github.com/DanielPower/AdventOfCode/2023",
   days: [1, 2, 3, 4, 5],
-  dayLinkFunc: (day) =>
+  dayLinkFunc: (day: number) =>
     `https://github.com/DanielPower/AdventOfCode/tree/main/2024/rust/${pad(
       day
     )}`,
@@ -47,7 +47,7 @@ const ethan = {
   display: "mynameisgump/advent-of-code",
   link: "https://github.com/mynameisgump/advent-of-code/tree/main/2024",
   days: [1, 2, 3, 4, 5],
-  dayLinkFunc: (day) =>
+  dayLinkFunc: (day: number) =>
     `https://github.com/mynameisgump/advent-of-code/tree/main/2024/${pad(day)}`,
   language: "python",
 };
@@ -56,7 +56,7 @@ const sven = {
   display: "STollenaar/AdventOfCode",
   link: "https://github.com/STollenaar/AdventOfCode/",
   days: [1, 2, 3, 4, 5],
-  dayLinkFunc: (day) =>
+  dayLinkFunc: (day: number) =>
     `https://github.com/STollenaar/AdventOfCode/blob/main/2024/day${day}/main.go`,
   language: "golang",
 };
@@ -65,7 +65,7 @@ const arafat = {
   display: "M-ArafatZaman/advent-of-code-2024",
   link: "https://github.com/M-ArafatZaman/advent-of-code-2024",
   days: [1, 2, 3, 4, 5],
-  dayLinkFunc: (day) =>
+  dayLinkFunc: (day: number) =>
     `https://github.com/M-ArafatZaman/advent-of-code-2024/blob/main/${day}/sol.py`,
   language: "python",
 };
@@ -74,7 +74,7 @@ const evan = {
   display: "evaan/AdventOfCode",
   link: "https://github.com/evaan/AdventOfCode/blob/main/2024/",
   days: [1, 2, 3, 4, 5],
-  dayLinkFunc: (day) =>
+  dayLinkFunc: (day: number) =>
     `https://github.com/evaan/AdventOfCode/blob/main/2024/${day}/main.go`,
   language: "golang",
 };
@@ -83,7 +83,7 @@ const eric = {
   display: "ericthomasca/adventofcode2024",
   link: "https://github.com/ericthomasca/adventofcode2024",
   days: [1, 2, 3, 4, 5],
-  dayLinkFunc: (day) =>
+  dayLinkFunc: (day: number) =>
     `https://github.com/ericthomasca/adventofcode2024/blob/main/day${pad(
       day
     )}/solution.go`,
@@ -94,7 +94,7 @@ const djrideout = {
   display: "djrideout/advent2024",
   link: "https://github.com/djrideout/advent2024",
   days: [1, 2, 3, 4, 5],
-  dayLinkFunc: (day) =>
+  dayLinkFunc: (day: number) =>
     `https://github.com/djrideout/advent2024/blob/main/src/day${day}.rs`,
   language: "rust",
 };
@@ -103,7 +103,7 @@ const zachVaters = {
   display: "zcvaters/adventofcode2024",
   link: "https://github.com/zcvaters/adventofcode2024",
   days: [1],
-  dayLinkFunc: (day) =>
+  dayLinkFunc: (day: number) =>
     `https://github.com/zcvaters/adventofcode2024/blob/main/adventofcode2024/day${pad(
       day
     )}/day${pad(day)}.swift`,
@@ -114,7 +114,7 @@ const natalie = {
   display: "ncashin/aoc2024",
   link: "https://github.com/ncashin/aoc2024",
   days: [1, 2, 3, 4, 5],
-  dayLinkFunc: (day) =>
+  dayLinkFunc: (day: number) =>
     `https://github.com/ncashin/aoc2024/blob/main/day${day}/day${day}.exs`,
   language: "elixir",
 };
@@ -123,7 +123,7 @@ const josh = {
   display: "ranguli/advent-of-code",
   link: "https://github.com/ranguli/advent-of-code/tree/main/2024",
   days: [1, 2, 3],
-  dayLinkFunc: (day) =>
+  dayLinkFunc: (day: number) =>
     `https://github.com/ranguli/advent-of-code/blob/main/2024/${pad(
       day
     )}`,
@@ -134,7 +134,7 @@ const shevinu = {
   display: "ShevinuM/Advent-of-Code-2024",
   link: "https://github.com/ShevinuM/Advent-of-Code-2024",
   days: [1, 2, 3, 4, 5],
-  dayLinkFunc: (day) =>
+  dayLinkFunc: (day: number) =>
     `https://github.com/ShevinuM/Advent-of-Code-2024/blob/main/Day${day}/Day${day}.go`,
   language: "golang",
 };
@@ -143,7 +143,7 @@ const brianna = {
   display: "briannamcdonald/advent-of-code-2024",
   link: "https://github.com/briannamcdonald/advent-of-code-2024/",
   days: [1, 2],
-  dayLinkFunc: (day) =>
+  dayLinkFunc: (day: number) =>
     `https://github.com/briannamcdonald/advent-of-code-2024/blob/main/day${pad(
       day
     )}`,
@@ -154,7 +154,7 @@ const neiro = {
   display: "omega7379/Advent-of-Code",
   link: "https://github.com/omega7379/Advent-of-Code/tree/2024",
   days: [1, 2, 3, 4],
-  dayLinkFunc: (day) =>
+  dayLinkFunc: (day: number) =>
     `https://github.com/omega7379/Advent-of-Code/tree/2024/day${day}`,
   language: "python",
 };
@@ -163,7 +163,7 @@ const gravyBoat = {
   display: "ThatGravyBoat/Advent-of-Code-2024",
   link: "https://github.com/ThatGravyBoat/Advent-of-Code-2024",
   days: [1, 2, 3, 4, 5],
-  dayLinkFunc: (day) =>
+  dayLinkFunc: (day: number) =>
     `https://github.com/ThatGravyBoat/Advent-of-Code-2024/blob/main/src/days/${dayToName[day]}/mod.rs`,
   language: "rust",
 };
@@ -172,7 +172,7 @@ const keenan = {
   display: "Keenan-Nicholson/AdventOfCode",
   link: "https://github.com/Keenan-Nicholson/AdventOfCode/tree/main/2024",
   days: [1],
-  dayLinkFunc: (day) =>
+  dayLinkFunc: (day: number) =>
     `https://github.com/Keenan-Nicholson/AdventOfCode/blob/main/2024/day${day}.go`,
   language: "golang",
 };
@@ -180,7 +180,7 @@ const keenan = {
 const hamzahBaseUrl =
   "https://docs.google.com/spreadsheets/d/1gBxJZyg7Yz0zTW_zDOyB4UesNy0lJXY7bri7TJyEqnk/";
 
-const hamzahSheets = {
+const hamzahSheets: Record<number, string> = {
   1: `${hamzahBaseUrl}/edit?gid=0`,
   2: `${hamzahBaseUrl}/edit?gid=704506467`,
   3: `${hamzahBaseUrl}/edit?gid=893505817`,
@@ -192,7 +192,7 @@ const hamzah = {
   link: hamzahBaseUrl,
   days: [1, 2, 3, 4],
   language: "sheets",
-  dayLinkFunc: (day) => hamzahSheets[day],
+  dayLinkFunc: (day: number) => hamzahSheets[day],
 };
 
 const grey = {
@@ -200,7 +200,7 @@ const grey = {
   link: "https://github.com/GreyGrisGrey/aoc2024day2",
   days: [2, 3, 4, 5],
   language: "python",
-  dayLinkFunc: (day) =>
+  dayLinkFunc: (day: number) =>
     `https://github.com/GreyGrisGrey/aoc2024day2/blob/main/day${day}.py`,
 };
 
@@ -209,14 +209,14 @@ const alex = {
   link: "https://github.com/terales/advent-of-code/",
   days: [1, 2, 3, 4, 5],
   language: "python",
-  dayLinkFunc: (day) =>
+  dayLinkFunc: (day: number) =>
     `https://github.com/terales/advent-of-code/blob/main/`,
 };
 
 const marty = {
   display: "mwln/aoc",
   link: "https://github.com/mwln/aoc/blob/main/2024/",
-  dayLinkFunc: (day) =>
+  dayLinkFunc: (day: number) =>
     `https://github.com/mwln/aoc/blob/main/2024/${day}-2.lua`,
   days: [1, 2, 3, 4],
   language: "lua",
@@ -225,7 +225,7 @@ const marty = {
 const girish = {
   display: "GirishVerm/aoc2024",
   link: "https://github.com/GirishVerm/aoc2024",
-  dayLinkFunc: (day) =>
+  dayLinkFunc: (day: number) =>
     `https://github.com/GirishVerm/aoc2024/tree/main/day${day}`,
   days: [1, 2, 3, 4, 5, 6],
   language: "python",

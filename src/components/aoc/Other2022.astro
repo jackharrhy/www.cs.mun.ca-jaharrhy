@@ -1,10 +1,15 @@
 ---
 import { people } from "@data/aoc/2022/data";
 
+interface Props {
+  person: keyof typeof people;
+  day: number | string;
+}
+
 const { person: personKey, day } = Astro.props;
 const person = people[personKey];
 const dayLink = person.dayLinkFunc(Number(day));
 ---
 
 <a href={dayLink}>[{person.display}]</a>
-{person.language}
+{"language" in person ? person.language : undefined}

@@ -1,14 +1,18 @@
-import { Component, onMount } from "solid-js";
+/** @jsxImportSource solid-js */
+import { onCleanup, onMount, type Component } from "solid-js";
 import "maplibre-gl/dist/maplibre-gl.css";
 
-import maplibregl, { Map } from "maplibre-gl";
+import { Map, setWorkerUrl } from "maplibre-gl";
+import workerUrl from "maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url";
+
+setWorkerUrl(workerUrl);
 
 export const Hikes: Component = () => {
-  let maplibreContainer: HTMLElement;
-  let map: Map;
+  let maplibreContainer!: HTMLDivElement;
+  let map: Map | undefined;
 
   onMount(async () => {
-    map = new maplibregl.Map({
+    map = new Map({
       container: maplibreContainer,
       center: [-52.6626711, 47.6248345],
       zoom: 10,
@@ -31,6 +35,8 @@ export const Hikes: Component = () => {
       // TODO
     });
   });
+
+  onCleanup(() => map?.remove());
 
   return (
     <div

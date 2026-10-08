@@ -1,17 +1,18 @@
+/** @jsxRuntime automatic */
 import { useMemo } from "react";
 import { useState } from "react";
 
 import { people } from "@data/aoc/2025/data";
 import { dayTemplate } from "@data/aoc/2025/day-template";
 
-const personTemplate = (personKey, day) =>
+const personTemplate = (personKey: string, day: number) =>
   `
 <Other person="${personKey}" day="${day}" />
 
 >
 `.trim();
 
-const ShowPeople = ({ day }) =>
+const ShowPeople = ({ day }: { day: number }) =>
   Object.entries(people)
     .sort(() => Math.random() - 0.5)
     .map(([key, person]) => (
@@ -47,7 +48,7 @@ export function JackUtils() {
     () =>
       Object.entries(people)
         .sort(() => Math.random() - 0.5)
-        .filter(([_personKey, person]) => person.days.includes(day))
+        .filter(([_personKey, person]) => (person.days as number[]).includes(day))
         .map(([personKey, _person]) => `${personTemplate(personKey, day)}\n\n`)
         .join(""),
     [day]
@@ -85,13 +86,13 @@ export function JackUtils() {
       <br />
       <ul>
         {Object.entries(people).map(([key, person]) => (
-          <li>
+          <li key={key}>
             {key} -&gt; <a href={person.link}>[{person.display}]</a>
           </li>
         ))}
       </ul>
       <br />
-      <ShowPeople people={people} day={day} />
+      <ShowPeople day={day} />
     </>
   );
 }

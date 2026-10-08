@@ -3,12 +3,26 @@ import basicSsl from "@vitejs/plugin-basic-ssl";
 import react from "@astrojs/react";
 import mdx from "@astrojs/mdx";
 import solidJs from "@astrojs/solid-js";
-import svelte from "@astrojs/svelte";
 
-// https://astro.build/config
 export default defineConfig({
+  compressHTML: true,
   vite: {
     plugins: [basicSsl()],
+    css: {
+      postcss: {
+        plugins: [{
+          postcssPlugin: "fix-98-css-hover-query",
+          AtRule: {
+            media(rule) {
+              // 98.css 0.1.21 has invalid media syntax rejected by Lightning CSS.
+              if (rule.params === "(not(hover))" && rule.source?.input.file?.includes("/98.css/")) {
+                rule.params = "(hover: none)";
+              }
+            },
+          },
+        }],
+      },
+    },
     server: {
       https: true,
     },
@@ -20,7 +34,6 @@ export default defineConfig({
     solidJs({
       include: ["**/solid/*"],
     }),
-    svelte(),
     mdx(),
   ],
   base: "/~jaharrhy/",

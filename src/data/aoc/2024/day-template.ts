@@ -1,6 +1,6 @@
 import { pad } from "./data";
 
-export const dayTemplate = (day, others) => `---
+export const dayTemplate = (day: number, others: string) => `---
 layout: "@layouts/AdventOfCodeLayoutDay.astro"
 title: day ${day}
 pubDate: 2024-12-${pad(day)}

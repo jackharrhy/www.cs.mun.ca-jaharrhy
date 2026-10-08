@@ -43,12 +43,10 @@ type PeopleNames = (typeof people)[number]["name"];
 
 export const peopleByName = people.reduce(
   (acc, person) => {
-    acc[person.name as any] = person;
+    acc[person.name] = person;
     return acc;
   },
-  {} as {
-    [key in PeopleNames]: Extract<(typeof people)[number], { name: key }>;
-  }
+  {} as Record<PeopleNames, Person>
 );
 
 export const jams = (
@@ -74,12 +72,10 @@ type JamNames = (typeof jams)[number]["name"];
 
 export const jamsByName = jams.reduce(
   (acc, jam) => {
-    acc[jam.name as any] = jam;
+    acc[jam.name] = jam;
     return acc;
   },
-  {} as {
-    [key in JamNames]: Extract<(typeof jams)[number], { name: key }>;
-  }
+  {} as Record<JamNames, Jam>
 );
 
 import growthjamJackGame from "@images/gamedev/jams/growthjam/jack-game.jpg";
@@ -112,13 +108,11 @@ export const games = [
   },
 ] as const satisfies Game[];
 
-type GameNames = (typeof games)[number]["name"];
-
 export const gamesByJam = games.reduce((acc, game) => {
   const jamName = game.forJam.name;
   if (!acc[jamName]) {
     acc[jamName] = [];
   }
-  acc[jamName].push(game as any);
+  acc[jamName].push(game);
   return acc;
-}, {} as Record<JamNames, Game[]>);
+}, {} as Record<string, Game[]>);

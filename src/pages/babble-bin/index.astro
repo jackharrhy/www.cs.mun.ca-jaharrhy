@@ -11,10 +11,8 @@ const babbles = (await getCollection("babble-bin"))
 <BabbleBinLayout title="babble bin">
   <ul>
     {
-      babbles.map(({ data: { title }, slug }) => (
-        <a href={`./${slug}`}>
-          <li>{title}</li>
-        </a>
+      babbles.map(({ data: { title }, id }) => (
+        <li><a href={`./${id}/`}>{title}</a></li>
       ))
     }
   </ul>

@@ -1,29 +1,31 @@
 {
+  "extends": "astro/tsconfigs/strict",
+  "include": [
+    ".astro/types.d.ts",
+    "src/**/*",
+    "astro.config.mjs"
+  ],
+  "exclude": [
+    "dist",
+    "public",
+    "node_modules"
+  ],
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "types": [
-      "astro/client"
-    ],
-    "baseUrl": ".",
     "paths": {
       "@components/*": [
-        "src/components/*"
+        "./src/components/*"
       ],
       "@data/*": [
-        "src/data/*"
+        "./src/data/*"
       ],
       "@layouts/*": [
-        "src/layouts/*"
+        "./src/layouts/*"
       ],
       "@images/*": [
-        "src/images/*"
+        "./src/images/*"
       ],
       "@sounds/*": [
-        "src/sounds/*"
+        "./src/sounds/*"
       ]
     },
     "jsx": "preserve"

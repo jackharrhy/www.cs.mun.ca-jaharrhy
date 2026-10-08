@@ -1,17 +1,8 @@
 push-to-garfield:
-  npm run build
-  rsync --progress dist/ jaharrhy@garfield.cs.mun.ca:~/.www/ -r
+  npm run deploy
+
+preview-push-to-garfield:
+  npm run deploy:preview
 
 push-most-to-garfield:
-  npm run build
-  rsync \
-    --progress \
-    --exclude "*" \
-    --include '*/' \
-    --include "*.html" \
-    --include "*.css" \
-    --include "*.js" \
-    --include "*.xml" \
-    dist/ \
-    jaharrhy@garfield.cs.mun.ca:~/.www/ \
-    -r
+  npm run deploy

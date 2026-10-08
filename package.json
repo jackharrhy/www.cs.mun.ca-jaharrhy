@@ -5,32 +5,38 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
+    "deploy:preview": "npm run build && bash scripts/deploy.sh",
+    "deploy": "npm run build && bash scripts/deploy.sh --apply",
     "preview": "astro preview",
-    "ncu": "ncu -u"
+    "ncu": "ncu -u",
+    "check": "astro check"
   },
   "devDependencies": {
-    "@astrojs/react": "^4.1.4",
-    "@vitejs/plugin-basic-ssl": "^1.2.0",
-    "astro": "^5.1.6",
-    "npm-check-updates": "^17.1.13",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "@astrojs/check": "^0.9.10",
+    "@astrojs/react": "^7.0.1",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@types/three": "^0.186.0",
+    "@vitejs/plugin-basic-ssl": "^2.3.0",
+    "astro": "^7.3.8",
+    "npm-check-updates": "^23.1.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "typescript": "^6.0.3"
   },
   "dependencies": {
-    "@astrojs/mdx": "^4.0.5",
-    "@astrojs/rss": "^4.0.11",
-    "@astrojs/solid-js": "^5.0.2",
-    "@astrojs/svelte": "^7.0.3",
-    "@react-spring/three": "^9.7.5",
-    "@react-three/fiber": "^8.17.12",
-    "@xmldom/xmldom": "^0.9.6",
-    "98.css": "^0.1.20",
-    "htmlparser2": "^10.0.0",
-    "maplibre-gl": "^5.0.1",
-    "react-spring": "^9.7.5",
-    "solid-js": "^1.9.4",
-    "svelte": "^5.17.5",
-    "three": "^0.172.0",
-    "xpath": "^0.0.34"
+    "@astrojs/mdx": "^8.0.3",
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/solid-js": "^7.0.2",
+    "@react-spring/three": "^10.1.2",
+    "@react-three/fiber": "^9.8.1",
+    "@xmldom/xmldom": "^0.9.12",
+    "98.css": "^0.1.21",
+    "maplibre-gl": "^6.13.0",
+    "solid-js": "^1.9.17",
+    "three": "^0.186.1"
+  },
+  "engines": {
+    "node": ">=22.12.0"
   }
 }

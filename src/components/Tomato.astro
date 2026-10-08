@@ -1,0 +1,21 @@
+---
+interface Props {
+  color?: string;
+  size?: number;
+}
+
+const { color = "red", size = 50 } = Astro.props;
+---
+
+<div
+  style={{ backgroundColor: color, width: `${size}px`, height: `${size}px`, borderRadius: "50%" }}
+></div>
+<p>tomato</p>
+
+<style>
+  p {
+    color: red;
+    font-weight: bold;
+    padding: 0 1rem;
+  }
+</style>

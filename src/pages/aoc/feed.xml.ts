@@ -4,8 +4,8 @@ export const GET = async () => {
   const items = await pagesGlobToRssItems(import.meta.glob("./**/*.mdx"));
 
   items.sort((a, b) => {
-    const aDate = new Date(a.pubDate);
-    const bDate = new Date(b.pubDate);
+    const aDate = new Date(a.pubDate ?? 0);
+    const bDate = new Date(b.pubDate ?? 0);
     return bDate.getTime() - aDate.getTime();
   });
 

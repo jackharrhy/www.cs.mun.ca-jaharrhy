@@ -1,16 +1,18 @@
+/** @jsxRuntime automatic */
 import { useMemo } from "react";
 import { useState } from "react";
 import { people } from "../../../data/aoc/2022/data";
 import { dayTemplate } from "../../../data/aoc/2022/day-template";
 
-const personTemplate = (personKey, day) =>
+const personTemplate = (personKey: string, day: number) =>
   `
 <Other person="${personKey}" day="${day}" />
 
 >
 `.trim();
 
-const ShowPeople = ({ people, day }) =>
+type People = typeof people;
+const ShowPeople = ({ people, day }: { people: People; day: number }) =>
   Object.entries(people).map(([key, person]) => (
     <div key={key} className="person">
       <p>
@@ -19,7 +21,7 @@ const ShowPeople = ({ people, day }) =>
           [{person.display}] -&gt; {person.link}
         </a>
       </p>
-      <p>language: {person.language}</p>
+      <p>language: {("language" in person ? person.language : undefined)}</p>
       <p>days:</p>
       <ul>
         {person.days?.map((day) => (
@@ -42,7 +44,7 @@ export function JackUtils() {
   const allPeopleTemplate = useMemo(
     () =>
       Object.entries(people)
-        .filter(([_personKey, person]) => person.days.includes(day))
+        .filter(([_personKey, person]) => (person.days as number[]).includes(day))
         .map(([personKey, _person]) => `${personTemplate(personKey, day)}\n\n`)
         .join(""),
     [day]
@@ -68,7 +70,7 @@ export function JackUtils() {
       <br />
       <ul>
         {Object.entries(people).map(([key, person]) => (
-          <li>
+          <li key={key}>
             {key} -&gt; <a href={person.link}>[{person.display}]</a>
           </li>
         ))}
