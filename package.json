@@ -9,20 +9,25 @@
     "deploy": "npm run build && bash scripts/deploy.sh --apply",
     "preview": "astro preview",
     "ncu": "ncu -u",
-    "check": "astro check"
+    "check": "astro check",
+    "test:sitemap": "node --experimental-strip-types --test src/integrations/sitemap.test.ts"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
     "@astrojs/react": "^7.0.1",
+    "@types/html-escaper": "^3.0.4",
+    "@types/node": "^26.6.4",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@types/three": "^0.186.0",
     "@vitejs/plugin-basic-ssl": "^2.3.0",
     "astro": "^7.3.8",
+    "html-escaper": "^3.0.3",
     "npm-check-updates": "^23.1.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "ultrahtml": "^1.7.0"
   },
   "dependencies": {
     "@astrojs/mdx": "^8.0.3",
@@ -38,5 +43,6 @@
   },
   "engines": {
     "node": ">=22.12.0"
-  }
+  },
+  "type": "module"
 }

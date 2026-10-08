@@ -3,6 +3,7 @@ import basicSsl from "@vitejs/plugin-basic-ssl";
 import react from "@astrojs/react";
 import mdx from "@astrojs/mdx";
 import solidJs from "@astrojs/solid-js";
+import sitemap from "./src/integrations/sitemap.ts";
 
 export default defineConfig({
   compressHTML: true,
@@ -35,6 +36,7 @@ export default defineConfig({
       include: ["**/solid/*"],
     }),
     mdx(),
+    sitemap(),
   ],
   base: "/~jaharrhy/",
   site: "https://www.cs.mun.ca/~jaharrhy/",
