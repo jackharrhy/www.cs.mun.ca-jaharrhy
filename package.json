@@ -32,7 +32,7 @@
   "dependencies": {
     "@astrojs/mdx": "^8.0.3",
     "@astrojs/rss": "^4.0.19",
-    "@astrojs/solid-js": "^7.0.2",
+    "@astrojs/solid-js": "^7.1.2",
     "@react-spring/three": "^10.1.2",
     "@react-three/fiber": "^9.8.1",
     "@xmldom/xmldom": "^0.9.12",
